@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+    ">
+    
+	<!-- @Component, @Service, @Controller, @Repository, @Configuration -->
+    <context:component-scan base-package="org.bordylek.service" />
+
+    <!-- Properties -->
+    <context:property-placeholder location="classpath:/config.properties"/>
+    
+	<!-- Mongo -->
+    <mongo:repositories base-package="org.bordylek.service.repository" />
+	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+		<property name="host" value="localhost" />
+	</bean>
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongo" ref="mongo" />
+		<constructor-arg name="databaseName" value="bordylek" />
+	</bean>
+
+	<!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+	<bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator" />
+	
+	<bean class="org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener">
+        <constructor-arg>
+	        <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+	    </constructor-arg>
+    </bean>
+    
+	<!-- Async execution config -->
+	<task:annotation-driven executor="slowExecutor" />
+    <task:executor id="slowExecutor" pool-size="2"/>
+	
+	<!-- Services -->
+    <bean id="notificationService" class="org.bordylek.service.NotificationService">
+        <property name="mailSender">
+            <bean class="org.springframework.mail.javamail.JavaMailSenderImpl">
+                <property name="port" value="25" />
+            </bean>
+        </property>
+        <property name="configuration">
+            <bean class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+                <property name="templateLoaderPath">
+                    <value>classpath:/email-templates/</value>
+                </property>
+            </bean>
+        </property>
+    </bean>
+	
+</beans>

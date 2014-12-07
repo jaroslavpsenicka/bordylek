@@ -1,0 +1,175 @@
+package org.bordylek.service.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "user")
+public class User implements Unique {
+
+	@Id
+	private String id;
+	
+	@Indexed(unique = true, sparse = true)
+	private String regId;
+		
+	@NotNull (message="name may not be null")
+	private String name;
+	
+	@Email
+	private String email;
+	private String locale;
+
+	@NotNull (message="reg may not be null")
+	private Registrar reg;
+	private boolean deleted;
+	private boolean disabled;
+	
+	@NotNull
+	private Date createDate;
+	private String iconId;
+	private String url;
+	private double[] location;
+
+	private String[] roles;
+	
+	private List<String> joinedCommunities = new ArrayList<String>();
+
+	public User() {
+	}
+	
+	public User(String name, String email, String... roles) {
+		this.name = name;
+		this.email = email;
+		this.roles = roles;
+		this.reg = Registrar.GOOGLE;
+	}
+
+	public User(String name, String email, Collection<String> roles) {
+		this.name = name;
+		this.email = email;
+		this.roles = roles.toArray(new String[roles.size()]);
+		this.reg = Registrar.GOOGLE;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+	public boolean isDeleted() {
+		return this.deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Date getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getIconId() {
+		return this.iconId;
+	}
+
+	public void setIconId(String iconId) {
+		this.iconId = iconId;
+	}
+
+	public Registrar getReg() {
+		return reg;
+	}
+
+	public void setReg(Registrar reg) {
+		this.reg = reg;
+	}
+
+	public String getRegId() {
+		return regId;
+	}
+
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public double[] getLocation() {
+		return location;
+	}
+	
+	public void setLocation(double[] location) {
+		this.location = location;
+	}
+	
+	public String[] getRoles() {
+		return roles;
+	}
+
+	public void setRoles(String[] roles) {
+		this.roles = roles;
+	}
+	
+	public List<String> getJoinedCommunities() {
+		return joinedCommunities;
+	}
+	
+	public void setJoinedCommunities(List<String> joinedCommunities) {
+		this.joinedCommunities = joinedCommunities;
+	}
+
+}
