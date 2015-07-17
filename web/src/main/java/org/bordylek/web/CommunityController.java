@@ -2,7 +2,6 @@ package org.bordylek.web;
 
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventQueue;
-import org.bordylek.service.event.JoinCommunityEvent;
 import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +57,7 @@ public class CommunityController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public Community create(@RequestBody Community comm) {
+	public Community create(@Valid @RequestBody Community comm) {
 		comm.setCreateDate(new Date());
 		Community community = this.communityRepository.save(comm);
 		LOG.info("New community created: "+community.getTitle());
@@ -68,8 +68,8 @@ public class CommunityController {
 	@RequestMapping(value = "/comm/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@PreAuthorize("hasPermission(#s, 'OWNER') or hasRole('ADMIN')")
-	public Community update(@PathVariable("id") String id, @RequestBody Community comm) {
+	@PreAuthorize("hasPermission(#comm, 'OWNER') or hasRole('ADMIN')")
+	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
 		comm.setId(id);
 		return (Community) this.communityRepository.save(comm);
 	}
@@ -99,20 +99,6 @@ public class CommunityController {
 		}
 		
 		return communityRepository.findAll(request).getContent();
-	}
-	
-	@RequestMapping(value = "/comm/{id}/join", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public void join(@PathVariable("id") String id) {
-		Community community = this.communityRepository.findOne(id);
-		if (community == null)  throw new NotFoundException(id);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User) auth.getPrincipal();
-		user.getJoinedCommunities().add(community.getId());
-		userRepository.save(user);
-		LOG.info("New member of community "+community.getTitle()+": "+user.getName());
-		eventQueue.send(new JoinCommunityEvent(user, community));
 	}
 	
 	@ExceptionHandler(ValidationException.class)

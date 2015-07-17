@@ -1,22 +1,18 @@
 package org.bordylek.web;
 
-import java.util.Collections;
-
 import com.github.fakemongo.Fongo;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.bordylek.service.event.EventDomain;
 import org.bordylek.service.event.NewUserEvent;
 import org.bordylek.service.model.Registrar;
 import org.bordylek.service.model.User;
-import org.bordylek.web.client.UserTestClient;
-import org.bordylek.web.security.RemoteUserAuthentication;
 import org.bordylek.web.HTTPErrorCodeErrorHandler.BadRequestException;
 import org.bordylek.web.HTTPErrorCodeErrorHandler.NotFoundException;
 import org.bordylek.web.HTTPErrorCodeErrorHandler.UnauthorizedException;
+import org.bordylek.web.client.UserTestClient;
 import org.bordylek.web.server.JettyServer;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.After;
@@ -28,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.DefaultAuthorizationRequest;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -44,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context-basic.xml", "/test-context.xml"})
 public class UserTest {
 
 	@Autowired
@@ -210,10 +203,10 @@ public class UserTest {
 	private User configureAuthentication(String token, String email, String role) {
 		User user = new User(email, email, role);
 		user.setId("admin1");
-		OAuth2Authentication auth = new OAuth2Authentication(
-    		new DefaultAuthorizationRequest(token, Collections.singleton("read")), 
-    		new RemoteUserAuthentication(user));
-        tokenStore.storeAccessToken(new DefaultOAuth2AccessToken(token), auth);
+//		OAuth2Authentication auth = new OAuth2Authentication(
+//    		new DefaultAuthorizationRequest(token, Collections.singleton("read")),
+//    		new RemoteUserAuthentication(user));
+//        tokenStore.storeAccessToken(new DefaultOAuth2AccessToken(token), auth);
         return user;
 	}
 

@@ -1,17 +1,17 @@
 package org.bordylek.web.security;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bordylek.service.model.Authored;
 import org.bordylek.service.model.User;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimplePermissionEvaluator implements PermissionEvaluator {
 
@@ -32,7 +32,7 @@ public class SimplePermissionEvaluator implements PermissionEvaluator {
 	}
 
 	public boolean hasPermission(Authentication auth, Object domainObject, Object perm) {
-		LOG.debug("evaluating " + auth.getPrincipal() + "'s perm " + perm + " on " + domainObject);
+		LOG.debug("evaluating " + auth.getName() + "'s perm " + perm + " on " + domainObject);
 		if ((domainObject != null) && ("OWNER".equalsIgnoreCase(perm.toString()))) {
 			String cn = domainObject.getClass().getName();
 			OwnerEvaluator oe = (OwnerEvaluator) this.ownerEvaluators.get(cn);
@@ -41,12 +41,12 @@ public class SimplePermissionEvaluator implements PermissionEvaluator {
 			}
 			if (oe != null) {
 				boolean status = oe.isOwner(auth, domainObject);
-				LOG.debug("rejecting " + auth.getName());
+				LOG.debug("evaluated " + auth.getName() + ": " + status);
 				return status;
 			}
-			throw new IllegalStateException("no evaluator found for " + domainObject);
 		}
-		LOG.debug("rejecting " + auth.getName() + ", not evaluated");
+		LOG.debug("rejecting " + auth.getName() + (domainObject == null ? ", domain object not given" :
+			", no evaluator registered for " + domainObject.getClass() + ", known: " + this.ownerEvaluators.keySet()));
 		return false;
 	}
 

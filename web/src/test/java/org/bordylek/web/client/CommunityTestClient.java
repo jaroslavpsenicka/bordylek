@@ -1,5 +1,6 @@
 package org.bordylek.web.client;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bordylek.service.model.Community;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +16,11 @@ public class CommunityTestClient {
 	
 	public CommunityTestClient(String url, String host, int port) {
 		this.base = String.format(url, host, port);
+	}
+
+	public void setCredentials(String credentials) {
 		this.requestHeaders = new HttpHeaders();
-		this.requestHeaders.set("Authorization", "Bearer token1");
+		this.requestHeaders.set("Authorization", "Basic " + new String(Base64.encodeBase64(credentials.getBytes())));
 	}
 
 	public void setTemplate(RestTemplate template) {
@@ -25,8 +29,7 @@ public class CommunityTestClient {
 
 	public Community insert(Community comm) {
 		HttpEntity<Community> request = new HttpEntity<>(comm, requestHeaders);
-		ResponseEntity<Community> response = template.exchange(base, HttpMethod.POST, 
-			request, Community.class);
+		ResponseEntity<Community> response = template.exchange(base, HttpMethod.POST, request, Community.class);
 		return response.getBody();
 	}
 
@@ -44,9 +47,9 @@ public class CommunityTestClient {
 		return response.getBody();
 	}
 
-	public void delete(Community comm) {
+	public void delete(String id) {
 		HttpEntity<?> request = new HttpEntity<Object>(requestHeaders);
-		template.exchange(base+"/"+comm.getId(), HttpMethod.DELETE, request, Void.class);
+		template.exchange(base+"/"+id, HttpMethod.DELETE, request, Void.class);
 	}
 
 	public void join(Community comm) {

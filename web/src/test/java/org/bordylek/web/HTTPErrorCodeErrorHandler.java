@@ -1,17 +1,19 @@
 package org.bordylek.web;
 
-import java.io.IOException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResponseErrorHandler;
+
+import java.io.IOException;
 
 public class HTTPErrorCodeErrorHandler implements ResponseErrorHandler {
 
 	@Override
 	public void handleError(ClientHttpResponse response) throws IOException {
 		if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+			throw new UnauthorizedException();
+		} else if (response.getStatusCode() == HttpStatus.FORBIDDEN) {
 			throw new UnauthorizedException();
 		} else if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
 			throw new BadRequestException();

@@ -1,12 +1,11 @@
 package org.bordylek.service.model;
 
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Document(collection = "community")
 public class Community implements Unique {
@@ -30,13 +29,16 @@ public class Community implements Unique {
 	private double[] location;
 
 	public Community() {
+		this.createDate = new Date();
 	}
 	
 	public Community(String title) {
+		this.createDate = new Date();
 		this.title = title;
 	}
 
 	public Community(String title, double[] location) {
+		this.createDate = new Date();
 		this.title = title;
 		this.location = location;
 	}

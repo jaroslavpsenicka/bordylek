@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basic HTML Page</title>
+    <style>
+        svg {
+        background-color: #f0f0f0;
+        }
+        #inputparameters {
+        margin: 20px;
+        }
+    </style>
+
+    <script src="libs/jquery-2.1.0.min.js"></script>
+    <script>
+        $(function() {
+            function log( message ) {
+                $( "<div>" ).text( message ).prependTo( "#log" );
+                $( "#log" ).scrollTop( 0 );
+            }
+            $( "#username" ).autocomplete({
+                source: "/find",
+                minLength: 3,
+                select: function( event, ui ) {
+                    log( ui.item ?
+                            "Selected: " + ui.item.value + " aka " + ui.item.id :
+                            "Nothing selected, input was " + this.value );
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/callback&response_type=code&client_id=731387529912-v6a64s25b8vf4dbnhpfnha9atmnmkkhl.apps.googleusercontent.com&scope=email+profile">
+   REQ
+</a>
+</body>
+</html>
