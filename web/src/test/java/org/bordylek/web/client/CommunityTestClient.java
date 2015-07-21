@@ -42,9 +42,7 @@ public class CommunityTestClient {
 
 	public Community update(Community comm) {
 		HttpEntity<Community> request = new HttpEntity<>(comm, requestHeaders);
-		ResponseEntity<Community> response = template.exchange(base+"/"+comm.getId(), 
-			HttpMethod.PUT, request, Community.class);
-		return response.getBody();
+		return template.exchange(base+"/"+comm.getId(), HttpMethod.PUT, request, Community.class).getBody();
 	}
 
 	public void delete(String id) {

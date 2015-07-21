@@ -152,7 +152,7 @@ public class CommunityTest {
 		Community comm = communityClient.insert(new Community("abc"));
 		Assert.assertNotNull(comm);
 		Assert.assertNotNull(comm.getId());
-		communityClient.setCredentials("");
+		communityClient.setCredentials("illegal:wrong");
 
 		comm.setTitle("def");
 		communityClient.update(comm);
@@ -175,7 +175,7 @@ public class CommunityTest {
 		Community comm = communityClient.insert(new Community("abc"));
 		Assert.assertNotNull(comm);
 		Assert.assertNotNull(comm.getId());
-		communityClient.setCredentials("");
+		communityClient.setCredentials("illegal:wrong");
 
 		communityClient.delete(comm.getId());
 	}
