@@ -83,8 +83,6 @@ public class CommunityTest {
 		communityClient.setTemplate(template);
 		communityClient.setCredentials(ADMIN);
 
-		userClient = new UserTestClient(USER_URL, jetty.getHost(), jetty.getLocalPort());
-		userClient.setTemplate(template);
 		communityCol = fongo.getDB("bordylek").getCollection("community");
 
 		testEventQueue.clear();

@@ -1,5 +1,6 @@
 package org.bordylek.web.client;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bordylek.service.model.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,12 +16,15 @@ public class UserTestClient {
 	
 	public UserTestClient(String url, String host, int port) {
 		this.base = String.format(url, host, port);
-		requestHeaders = new HttpHeaders();
-		requestHeaders.set("Authorization", "Bearer token1");
 	}
-	
+
 	public void setTemplate(RestTemplate template) {
 		this.template = template;
+	}
+
+	public void setCredentials(String credentials) {
+		this.requestHeaders = new HttpHeaders();
+		this.requestHeaders.set("Authorization", "Basic " + new String(Base64.encodeBase64(credentials.getBytes())));
 	}
 	
 	public User insert(User user) {

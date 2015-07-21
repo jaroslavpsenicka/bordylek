@@ -60,11 +60,12 @@ public class SimplePermissionEvaluator implements PermissionEvaluator {
 		}
 
 		public boolean isOwner(Authentication auth, Object domainObject) {
-			if (User.class.equals(domainObject.getClass())) {
+			if (User.class.equals(domainObject.getClass()) && auth.getPrincipal() instanceof User) {
 				String userId = ((User) auth.getPrincipal()).getId();
 				return userId != null && userId.equals(((User) domainObject).getId());
 			}
-			throw new IllegalStateException("illegal " + domainObject.getClass());
+
+			return false;
 		}
 	}
 }
