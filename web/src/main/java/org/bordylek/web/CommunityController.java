@@ -68,7 +68,7 @@ public class CommunityController {
 	@RequestMapping(value = "/comm/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	@PreAuthorize("hasPermission(#comm, 'OWNER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
 		comm.setId(id);
 		return (Community) this.communityRepository.save(comm);
