@@ -11,7 +11,7 @@
         <title>ACME Inc.</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="ACME Inc.">
+        <meta name="description" content="hH">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -23,13 +23,12 @@
 
     <body ng-app="tutorialWebApp">
 <!--[if lt IE 7]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-            your browser</a> to improve your experience.</p>
+        <p class="browsehappy">{{app.unsupportedBrowser | i18n}}</p>
 <![endif]-->
 
-        <div ng-include='"templates/header.html"'></div>
+        <div ng-include='"header.html"'></div>
         <div ng-view></div>
-        <div ng-include='"templates/footer.html"'></div>
+        <div ng-include='"footer.html"'></div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -37,5 +36,6 @@
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
 
         <script src="app.js"></script>
+        <script src="i18n.js"></script>
     </body>
 </html>
