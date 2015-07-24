@@ -112,16 +112,6 @@ public class UserTest {
 	}
 	
 	@Test
-	@Ignore
-	public void updateByOwner() throws Exception {
-		user = userClient.insert(user);
-		user.setName("John O'Doe");
-		User user2 = userClient.update(user);
-		Assert.assertNotNull(user2);
-		assertEquals("John O'Doe", user2.getName());
-	}
-
-	@Test
 	public void updateByAdmin() throws Exception {
 		user = userClient.insert(user);
 		user.setName("John O'Doe");

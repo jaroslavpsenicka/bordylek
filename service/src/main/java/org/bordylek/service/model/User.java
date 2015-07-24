@@ -1,16 +1,15 @@
 package org.bordylek.service.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @Document(collection = "user")
 public class User implements Unique {
@@ -35,7 +34,7 @@ public class User implements Unique {
 	
 	@NotNull
 	private Date createDate;
-	private String iconId;
+	private String imageUrl;
 	private String url;
 	private double[] location;
 
@@ -116,12 +115,12 @@ public class User implements Unique {
 		this.createDate = createDate;
 	}
 
-	public String getIconId() {
-		return this.iconId;
+	public String getImageUrl() {
+		return this.imageUrl;
 	}
 
-	public void setIconId(String iconId) {
-		this.iconId = iconId;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	public Registrar getReg() {

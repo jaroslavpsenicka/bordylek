@@ -22,7 +22,8 @@ app.config(['$routeProvider', function ($routeProvider) {
     .when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
     .when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
     .when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
-    .when("/comms", {templateUrl: "comms/index.html", controller: "CommCtrl"})
+    .when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
+    .when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
     .when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
     // Blog
     .when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
@@ -31,7 +32,7 @@ app.config(['$routeProvider', function ($routeProvider) {
     .otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
 }]);
 
-app.controller('CommCtrl', function (/* $scope, $location, $http */) {
+app.controller('CommsCtrl', function (/* $scope, $location, $http */) {
   console.log("Community controller reporting for duty.");
 });
 

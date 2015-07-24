@@ -1,0 +1,83 @@
+package org.bordylek.web.security;
+
+import org.bordylek.service.model.Registrar;
+import org.bordylek.service.model.User;
+import org.bordylek.service.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
+import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
+
+public class GoogleUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private String[] defaultAuthorities;
+
+    private static final String EMAIL = "email";
+    private static final String USER_ID = "user_id";
+    private static final String DISPLAY_NAME = "displayName";
+    private static final String IMAGE = "image";
+
+    public void setDefaultAuthorities(String[] defaultAuthorities) {
+        this.defaultAuthorities = defaultAuthorities;
+    }
+
+    public Authentication extractAuthentication(Map<String, ?> map) {
+        if (map.containsKey(USER_ID) && map.containsKey(EMAIL) && map.containsKey(DISPLAY_NAME)) {
+            User user = updateUser(findOrCreateUser(map), map);
+            List<GrantedAuthority> auths = commaSeparatedStringToAuthorityList(arrayToCommaDelimitedString(user.getRoles()));
+            return new UsernamePasswordAuthenticationToken(user, "", auths);
+        }
+
+        return null;
+    }
+
+    private User findOrCreateUser(Map<String, ?> map) {
+        String regId = (String) map.get(USER_ID);
+        User user = userRepository.findByRegId(regId);
+        if (user == null) {
+            user = new User();
+            user.setRegId(regId);
+            user.setReg(Registrar.GOOGLE);
+            user.setCreateDate(new Date());
+            user.setRoles(defaultAuthorities);
+        }
+
+        return user;
+    }
+
+    private User updateUser(User user, Map<String, ?> map) {
+        boolean save = false;
+
+        String name = (String) map.get(DISPLAY_NAME);
+        String email = (String) map.get(EMAIL);
+        if (!name.equals(user.getName()) || !email.equals(user.getEmail())) {
+            user.setName(name);
+            user.setEmail(email);
+            save = true;
+        }
+
+        Map image = (Map) map.get(IMAGE);
+        if (image != null && image.containsKey("url") && !image.get("url").equals(user.getImageUrl())) {
+            user.setImageUrl((String) image.get("url"));
+            save = true;
+        }
+
+        if (save) {
+            userRepository.save(user);
+        }
+
+        return user;
+    }
+
+}

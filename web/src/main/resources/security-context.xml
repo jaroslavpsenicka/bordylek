@@ -37,12 +37,13 @@
 
     <beans:bean id="tokenServices" class="org.bordylek.web.security.GoogleTokenServices">
         <beans:property name="checkTokenEndpointUrl" value="https://www.googleapis.com/oauth2/v1/tokeninfo"/>
+        <beans:property name="userInfoEndpointUrl" value="https://www.googleapis.com/plus/v1/people/me"/>
         <beans:property name="clientId" value="${google.client.id}"/>
         <beans:property name="clientSecret" value="${google.client.secret}"/>
         <beans:property name="accessTokenConverter">
             <beans:bean class="org.bordylek.web.security.GoogleAccessTokenConverter">
                 <beans:property name="userTokenConverter">
-                    <beans:bean class="org.bordylek.web.security.DefaultUserAuthenticationConverter">
+                    <beans:bean class="org.bordylek.web.security.GoogleUserAuthenticationConverter">
                         <beans:property name="defaultAuthorities">
                             <beans:list>
                                 <beans:value>ROLE_USER</beans:value>

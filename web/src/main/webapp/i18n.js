@@ -13,10 +13,9 @@ angular.module('localization', [])
     // managing the translation dictionary
     .provider('localize', function localizeProvider() {
 
-        this.languages = ['en-US'];
-        this.defaultLanguage = 'en-US';
-        this.ext = 'js';
-        this.baseUrl = 'i18n/';
+        this.defaultLanguage = navigator.language || navigator.userLanguage;
+        this.ext = 'json';
+        this.baseUrl = '/';
 
         var provider = this;
 
@@ -26,7 +25,7 @@ angular.module('localization', [])
                 // use the $window service to get the language of the user's browser
                 language:'',
                 // array to hold the localized resource string entries
-                dictionary:[],
+                dictionary:{},
                 // location of the resource file
                 url: undefined,
                 // flag to indicate if the service hs loaded the resource file
@@ -49,19 +48,6 @@ angular.module('localization', [])
                 },
 
                 fallbackLanguage: function(value) {
-
-                    value = String(value);
-
-                    if (provider.languages.indexOf(value) > -1) {
-                        return value;
-                    }
-
-                    value = value.split('-')[0];
-
-                    if (provider.languages.indexOf(value) > -1) {
-                        return value;
-                    }
-
                     return provider.defaultLanguage;
                 },
 
@@ -88,7 +74,7 @@ angular.module('localization', [])
                         // set language
                         localize.language = this.fallbackLanguage(lang);
                     }
-                    return baseUrl + 'resources-locale_' + localize.language + '.' + provider.ext;
+                    return baseUrl + 'messages-' + localize.language + '.' + provider.ext;
                 },
 
                 // loads the language resource file from the server
@@ -98,7 +84,7 @@ angular.module('localization', [])
                     // request the resource file
                     $http({ method:"GET", url:url, cache:false }).success(localize.successCallback).error(function () {
                         // the request failed set the url to the default resource file
-                        var url = provider.baseUrl + 'resources-locale_default' + '.' + provider.ext;
+                        var url = provider.baseUrl + 'messages' + '.' + provider.ext;
                         // request the default resource file
                         $http({ method:"GET", url:url, cache:false }).success(localize.successCallback);
                     });
@@ -118,7 +104,7 @@ angular.module('localization', [])
                             }
                         );
                         // set the result
-                        result = entry[0] ? entry[0].value : value;
+                        result = entry[value] ? entry[value] : value;
                     }
                     // return the value to the call
                     return result;

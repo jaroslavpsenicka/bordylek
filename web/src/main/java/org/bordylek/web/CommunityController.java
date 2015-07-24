@@ -76,7 +76,7 @@ public class CommunityController {
 
 	@RequestMapping(value = "/comm/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasPermission(#s, 'OWNER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public void delete(@PathVariable("id") String id) {
 		this.communityRepository.delete((Community) this.communityRepository.findOne(id));
 	}

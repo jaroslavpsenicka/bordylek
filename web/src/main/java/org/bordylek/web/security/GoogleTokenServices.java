@@ -30,17 +30,14 @@ import java.util.Map;
  */
 public class GoogleTokenServices extends RemoteTokenServices {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GoogleTokenServices.class);
-
     private RestOperations restTemplate;
-
     private String checkTokenEndpointUrl;
-
+    private String userInfoEndpointUrl;
     private String clientId;
-
     private String clientSecret;
-
     private AccessTokenConverter tokenConverter = new GoogleAccessTokenConverter();
+
+    private static Logger LOG = LoggerFactory.getLogger(GoogleTokenServices.class);
 
     public GoogleTokenServices() {
         restTemplate = new RestTemplate();
@@ -63,6 +60,10 @@ public class GoogleTokenServices extends RemoteTokenServices {
         this.checkTokenEndpointUrl = checkTokenEndpointUrl;
     }
 
+    public void setUserInfoEndpointUrl(String userInfoEndpointUrl) {
+        this.userInfoEndpointUrl = userInfoEndpointUrl;
+    }
+
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
@@ -77,17 +78,22 @@ public class GoogleTokenServices extends RemoteTokenServices {
 
     @Override
     public OAuth2Authentication loadAuthentication(String accessToken) throws AuthenticationException, InvalidTokenException {
-        Map<String, Object> checkTokenResponse = checkToken(accessToken);
-
-        if (checkTokenResponse.containsKey("error")) {
-            logger.debug("check_token returned error: " + checkTokenResponse.get("error"));
+        Map<String, Object> response = transformToStandardValues(checkToken(accessToken));
+        Assert.state(response.containsKey("client_id"), "Client id must be present in response from auth server");
+        if (response.containsKey("error")) {
+            logger.debug("check_token returned error: " + response.get("error"));
             throw new InvalidTokenException(accessToken);
         }
 
-        transformNonStandardValuesToStandardValues(checkTokenResponse);
+        Map<String, Object> userInfoResponse = readUser(accessToken);
+        if (userInfoResponse.containsKey("error")) {
+            logger.debug("read_user returned error: " + response.get("error"));
+            throw new InvalidTokenException(accessToken);
+        }
 
-        Assert.state(checkTokenResponse.containsKey("client_id"), "Client id must be present in response from auth server");
-        return tokenConverter.extractAuthentication(checkTokenResponse);
+        response.putAll(userInfoResponse);
+        LOG.info("Google authentication response: " + response);
+        return tokenConverter.extractAuthentication(response);
     }
 
     private Map<String, Object> checkToken(String accessToken) {
@@ -99,11 +105,18 @@ public class GoogleTokenServices extends RemoteTokenServices {
         return postForMap(accessTokenUrl, formData, headers);
     }
 
-    private void transformNonStandardValuesToStandardValues(Map<String, Object> map) {
-        LOGGER.debug("Original map = " + map);
+    private Map<String, Object> readUser(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", getAuthorizationHeader(clientId, clientSecret));
+        String accessTokenUrl = new StringBuilder(userInfoEndpointUrl).append("?access_token=").append(accessToken).toString();
+        ParameterizedTypeReference<Map<String, Object>> map = new ParameterizedTypeReference<Map<String, Object>>() {};
+        return restTemplate.exchange(accessTokenUrl, HttpMethod.GET, new HttpEntity<>(headers), map).getBody();
+    }
+
+    private Map<String, Object> transformToStandardValues(Map<String, Object> map) {
         map.put("client_id", map.get("issued_to")); // Google sends 'client_id' as 'issued_to'
         map.put("user_name", map.get("user_id")); // Google sends 'user_name' as 'user_id'
-        LOGGER.debug("Transformed = " + map);
+        return map;
     }
 
     private String getAuthorizationHeader(String clientId, String clientSecret) {

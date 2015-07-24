@@ -16,7 +16,7 @@ public class GoogleAccessTokenConverter extends DefaultAccessTokenConverter {
     private UserAuthenticationConverter userTokenConverter;
 
     public GoogleAccessTokenConverter() {
-        setUserTokenConverter(new DefaultUserAuthenticationConverter());
+        setUserTokenConverter(new GoogleUserAuthenticationConverter());
     }
 
     /**
