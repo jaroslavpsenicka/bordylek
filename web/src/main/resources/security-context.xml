@@ -43,6 +43,7 @@
                 <beans:property name="userTokenConverter">
                     <beans:bean class="org.bordylek.web.security.GoogleUserAuthenticationConverter">
                         <beans:property name="defaultAuthorities" value="ROLE_USER"/>
+                        <beans:property name="registrar" value="GOOGLE"/>
                     </beans:bean>
                 </beans:property>
             </beans:bean>

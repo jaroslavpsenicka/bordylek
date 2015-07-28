@@ -27,6 +27,7 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
     @Autowired
     private EventQueue eventQueue;
 
+    private String registrar;
     private String defaultAuthorities;
 
     private static final String EMAIL = "email";
@@ -37,13 +38,18 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
     private static Logger LOG = LoggerFactory.getLogger(GoogleUserAuthenticationConverter.class);
 
     @Required
+    public void setRegistrar(String registrar) {
+        this.registrar = registrar;
+    }
+
+    @Required
     public void setDefaultAuthorities(String defaultAuthorities) {
         this.defaultAuthorities = defaultAuthorities;
     }
 
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USER_ID) && map.containsKey(EMAIL) && map.containsKey(DISPLAY_NAME)) {
-            User user = updateUser(findOrCreateUser(map), map);
+            User user = findOrCreateUser(map);
             List<GrantedAuthority> auth = commaSeparatedStringToAuthorityList(defaultAuthorities);
             return new UsernamePasswordAuthenticationToken(user, "", auth);
         }
@@ -52,7 +58,7 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
     }
 
     private User findOrCreateUser(Map<String, ?> map) {
-        String regId = "GOOGLE/" + map.get(USER_ID);
+        String regId = registrar + "/" + map.get(USER_ID);
         User user = userRepository.findByRegId(regId);
         if (user == null) {
             user = new User();
@@ -60,33 +66,19 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
             user.setCreateDate(new Date());
         }
 
-        return user;
-    }
-
-    private User updateUser(User user, Map<String, ?> map) {
-        boolean save = false;
-
-        String name = (String) map.get(DISPLAY_NAME);
-        String email = (String) map.get(EMAIL);
-        if (!name.equals(user.getName()) || !email.equals(user.getEmail())) {
-            user.setName(name);
-            user.setEmail(email);
-            save = true;
-        }
+        user.setName((String) map.get(DISPLAY_NAME));
+        user.setEmail((String) map.get(EMAIL));
 
         Map image = (Map) map.get(IMAGE);
         if (image != null && image.containsKey("url") && !image.get("url").equals(user.getImageUrl())) {
             user.setImageUrl((String) image.get("url"));
-            save = true;
         }
 
-        if (save) {
-            boolean newUser = user.getId() == null;
-            userRepository.save(user);
-            if (newUser) {
-                LOG.info("New user created: " + user.getName());
-                eventQueue.send(new NewUserEvent(user));
-            }
+        boolean newUser = user.getId() == null;
+        userRepository.save(user);
+        if (newUser) {
+            LOG.info("New user created: " + user.getName());
+            eventQueue.send(new NewUserEvent(user));
         }
 
         return user;
