@@ -2,12 +2,12 @@ package org.bordylek.web.security;
 
 import org.bordylek.service.event.EventQueue;
 import org.bordylek.service.event.NewUserEvent;
-import org.bordylek.service.model.Registrar;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
-import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 public class GoogleUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
 
@@ -28,7 +27,7 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
     @Autowired
     private EventQueue eventQueue;
 
-    private String[] defaultAuthorities;
+    private String defaultAuthorities;
 
     private static final String EMAIL = "email";
     private static final String USER_ID = "user_id";
@@ -37,29 +36,28 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
 
     private static Logger LOG = LoggerFactory.getLogger(GoogleUserAuthenticationConverter.class);
 
-    public void setDefaultAuthorities(String[] defaultAuthorities) {
+    @Required
+    public void setDefaultAuthorities(String defaultAuthorities) {
         this.defaultAuthorities = defaultAuthorities;
     }
 
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USER_ID) && map.containsKey(EMAIL) && map.containsKey(DISPLAY_NAME)) {
             User user = updateUser(findOrCreateUser(map), map);
-            List<GrantedAuthority> auths = commaSeparatedStringToAuthorityList(arrayToCommaDelimitedString(user.getRoles()));
-            return new UsernamePasswordAuthenticationToken(user, "", auths);
+            List<GrantedAuthority> auth = commaSeparatedStringToAuthorityList(defaultAuthorities);
+            return new UsernamePasswordAuthenticationToken(user, "", auth);
         }
 
         return null;
     }
 
     private User findOrCreateUser(Map<String, ?> map) {
-        String regId = (String) map.get(USER_ID);
+        String regId = "GOOGLE/" + map.get(USER_ID);
         User user = userRepository.findByRegId(regId);
         if (user == null) {
             user = new User();
             user.setRegId(regId);
-            user.setReg(Registrar.GOOGLE);
             user.setCreateDate(new Date());
-            user.setRoles(defaultAuthorities);
         }
 
         return user;

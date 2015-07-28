@@ -1,141 +1,159 @@
 package org.bordylek.web;
 
-import com.github.fakemongo.Fongo;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.bordylek.service.event.EventDomain;
-import org.bordylek.service.event.NewUserEvent;
-import org.bordylek.service.model.Registrar;
+import org.apache.commons.lang.StringUtils;
 import org.bordylek.service.model.User;
-import org.bordylek.web.HTTPErrorCodeErrorHandler.BadRequestException;
-import org.bordylek.web.HTTPErrorCodeErrorHandler.NotFoundException;
-import org.bordylek.web.client.UserTestClient;
-import org.bordylek.web.server.JettyServer;
-import org.eclipse.jetty.server.ServerConnector;
-import org.junit.*;
+import org.bordylek.service.repository.UserRepository;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import javax.servlet.ServletException;
+import java.util.ArrayList;
+import java.util.Date;
+
+import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context-basic.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
 public class UserTest {
 
-	@Autowired
-	private UserController userService;
-	
-	@Autowired
-	private WebApplicationContext applicationContext;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+	private WebApplicationContext webApplicationContext;
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	@Autowired
-	private TestEventQueue testEventQueue;
-
-	@Autowired
-	private Fongo fongo;
-
-	private RestTemplate template;
-	private HttpClient httpClient;
-	private ServerConnector jetty;
-
+    private MockMvc mockMvc;
 	private User user;
-	private UserTestClient userClient;
-	private DBCollection userCol;
-
-	private static final String USER_URL = "http://%s:%s/bordylek/service/user";
-	private static final String USER = "user:test";
-	private static final String ADMIN = "admin:test";
 
 	@Before
 	public void before() throws Exception {
 		mongoTemplate.remove(new Query(), "user");
-		httpClient = HttpClientBuilder.create().build();
-		template = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
-		template.setErrorHandler(new HTTPErrorCodeErrorHandler());
-		userService.setEventQueue(testEventQueue);
-		JettyServer jettyServer = new JettyServer();
-		jettyServer.setApplicationContext(applicationContext);
-		jetty = jettyServer.start();
-
-		userClient = new UserTestClient(USER_URL, jetty.getHost(), jetty.getLocalPort());
-		userClient.setTemplate(template);
-		userClient.setCredentials(ADMIN);
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
 		user = new User();
-		user.setReg(Registrar.GOOGLE);
-		user.setRegId("1");
+		user.setRegId("GOOGLE/1");
 		user.setName("John Doe");
 		user.setEmail("john@doe.com");
-		userCol = fongo.getDB("bordylek").getCollection("user");
+        user.setCreateDate(new Date());
+        user = userRepository.save(user);
+        authenticate(user, "ROLE_USER");
 	}
 	
 	@After
 	public void after() throws Exception {
-		jetty.shutdown();
+        SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	@Test
-	public void registerNewUser() throws Exception {
-        user = userClient.insert(user);
-        Assert.assertNotNull(user);
-		Assert.assertNotNull(user.getId());
-		User user2 = userClient.find(user.getId());
-		Assert.assertNotNull(user2);
-		assertEquals(EventDomain.USER, testEventQueue.getLastEvent().getDomainName());
-		assertEquals(NewUserEvent.NAME, testEventQueue.getLastEvent().getEventName());
+	public void findExistingUser() throws Exception {
+        mockMvc.perform(get("/user/" + user.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("id", is(user.getId())))
+            .andExpect(jsonPath("name", is(user.getName())))
+            .andExpect(jsonPath("email", is(user.getEmail())));
 	}
 
-	@Test(expected=NotFoundException.class)
-	public void findUnknownUser() throws Exception {
-        userClient.find("unknown");
-	}
-	
-	@Test(expected=BadRequestException.class)
-	public void insertNullName() {
-        user.setName(null);
-        userClient.insert(user);
-	}
-	
-	@Test
-	public void updateByAdmin() throws Exception {
-		user = userClient.insert(user);
-		user.setName("John O'Doe");
-		userClient.setCredentials(ADMIN);
-		User user2 = userClient.update(user);
-		Assert.assertNotNull(user2);
-		assertEquals("John O'Doe", user2.getName());
-	}
+    @Test
+    public void findUnknownUser() throws Exception {
+        mockMvc.perform(get("/user/unknown")).andExpect(status().isNotFound());
+    }
 
-	@Test
-	public void delete() throws Exception {
-        user = userClient.insert(user);
-		userClient.setCredentials(ADMIN);
-        userClient.delete(user);
+    @Test(expected = ServletException.class)
+    public void findAsNonAuthenticated() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        mockMvc.perform(get("/user/" + user.getId()));
+    }
 
-		DBObject dbObject = userCol.findOne();
-		assertEquals("John Doe", dbObject.get("name"));
-		assertTrue((Boolean) dbObject.get("deleted"));
-	}
+    @Test
+    public void updateName() throws Exception {
+        String content = "{\"name\": \"J.F. Doe\", \"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("id", is(user.getId())))
+            .andExpect(jsonPath("name", is("J.F. Doe")))
+            .andExpect(jsonPath("email", is(user.getEmail())));
+    }
 
-	@Test(expected=NotFoundException.class)
-	public void deleteUnknown() throws Exception {
-		userClient.setCredentials(ADMIN);
-        userClient.delete(user);
-	}
+    @Test
+    public void cannotUpdateAnotherUser() throws Exception {
+        authenticate(new User(), "ROLE_USER");
+        String content = "{\"name\": \"Mary Doe\", \"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void cannotUpdateWithoutName() throws Exception {
+        String content = "{\"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cannotUpdateWithEmptyName() throws Exception {
+        String content = "{\"name\": \"\", \"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cannotUpdateWithShortName() throws Exception {
+        String content = "{\"name\": \"A\", \"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cannotUpdateWithTooLongName() throws Exception {
+        String content = "{\"name\": \"" + StringUtils.repeat("A", 256) + "\", \"location\": \"1\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cannotUpdateWithoutLocation() throws Exception {
+        String content = "{\"name\": \"Mary Doe\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void cannotUpdateWithEmptyLocation() throws Exception {
+        String content = "{\"name\": \"Mary Doe\", \"location\": \"\"}";
+        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    private void authenticate(User user, final String role) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, "pwd", new ArrayList() {{
+            add(new SimpleGrantedAuthority(role));
+        }}));
+    }
 
 }

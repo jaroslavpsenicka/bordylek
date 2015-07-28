@@ -13,9 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -90,13 +87,13 @@ public class CommunityController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) auth.getPrincipal();
 		Pageable request = new PageRequest(pageNumber, pageSize);
-		double[] loc = user.getLocation();
-		if (loc != null) {
-	        Point pos = new Point(loc[0], loc[1]);
-			int distValue = (distance != null) ? distance.intValue() : this.defaultDistance;
-	        Distance dist = new Distance(distValue, Metrics.KILOMETERS);
-			return communityRepository.findByLocationNear(pos, dist, request).getContent();
-		}
+//		double[] loc = user.getLocation();
+//		if (loc != null) {
+//	        Point pos = new Point(loc[0], loc[1]);
+//			int distValue = (distance != null) ? distance.intValue() : this.defaultDistance;
+//	        Distance dist = new Distance(distValue, Metrics.KILOMETERS);
+//			return communityRepository.findByLocationNear(pos, dist, request).getContent();
+//		}
 		
 		return communityRepository.findAll(request).getContent();
 	}
