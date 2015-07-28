@@ -1,15 +1,11 @@
 package org.bordylek.web;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ValidationException;
-
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventQueue;
 import org.bordylek.service.event.NewUserEvent;
+import org.bordylek.service.event.UpdateUserEvent;
 import org.bordylek.service.model.User;
+import org.bordylek.service.model.UserStatus;
 import org.bordylek.service.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -42,15 +37,15 @@ public class UserController {
 	private int pageSize;
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
-	
+
 	public void setEventQueue(EventQueue queue) {
 		this.eventQueue = queue;
 	}
-	
+
 	@RequestMapping(value = "/user", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public User create(@RequestBody User user) {
 		user.setCreateDate(new Date());
 		user = this.repository.save(user);
@@ -64,8 +59,15 @@ public class UserController {
 	@ResponseBody
 	@PreAuthorize("hasPermission(#user, 'OWNER') or hasRole('ADMIN')")
 	public User update(@PathVariable("id") String id, @RequestBody User user) {
-		user.setId(id);
-		return (User) this.repository.save(user);
+		User dbUser = this.repository.findOne(id);
+		if (dbUser == null) throw new NotFoundException(id);
+		dbUser.setName(user.getName());
+		dbUser.setEmail(user.getEmail());
+		dbUser.setLocation(user.getLocation());
+		calculateStatus(dbUser);
+		LOG.info("User updated: " + dbUser.getName() + "(" + id + ")");
+		eventQueue.send(new UpdateUserEvent(dbUser));
+		return (User) this.repository.save(dbUser);
 	}
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
@@ -96,7 +98,7 @@ public class UserController {
 		Pageable request = new PageRequest(pageNumber, pageSize);
         return repository.findAll(request).getContent();
 	}
-	
+
 	@ExceptionHandler(ValidationException.class)
 	public void handleConstraintViolationException(ValidationException ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -107,4 +109,18 @@ public class UserController {
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 	}
 
+	private void calculateStatus(User user) {
+		user.setStatus(isAnyEmpty(user.getName(), user.getEmail(), user.getLocation()) ?
+			UserStatus.INCOMPLETE : UserStatus.VALID);
+	}
+
+	private boolean isAnyEmpty(String... values) {
+		for (String value : values) {
+			if (StringUtils.isEmpty(value)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

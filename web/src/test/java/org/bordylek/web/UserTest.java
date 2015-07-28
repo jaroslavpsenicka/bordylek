@@ -74,7 +74,7 @@ public class UserTest {
 
 		userClient = new UserTestClient(USER_URL, jetty.getHost(), jetty.getLocalPort());
 		userClient.setTemplate(template);
-		userClient.setCredentials(USER);
+		userClient.setCredentials(ADMIN);
 
 		user = new User();
 		user.setReg(Registrar.GOOGLE);

@@ -1,23 +1,24 @@
 package org.bordylek.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Document(collection = "user")
 public class User implements Unique {
 
 	@Id
 	private String id;
-	
+
+	@NotNull (message="regId may not be null")
 	@Indexed(unique = true, sparse = true)
+	@JsonIgnore
 	private String regId;
 		
 	@NotNull (message="name may not be null")
@@ -26,22 +27,24 @@ public class User implements Unique {
 	@Email
 	private String email;
 	private String locale;
+	private UserStatus status;
 
 	@NotNull (message="reg may not be null")
+	@JsonIgnore
 	private Registrar reg;
+	@JsonIgnore
 	private boolean deleted;
+	@JsonIgnore
 	private boolean disabled;
 	
 	@NotNull
+	@JsonIgnore
 	private Date createDate;
 	private String imageUrl;
-	private String url;
-	private double[] location;
+	private String location;
 
 	private String[] roles;
 	
-	private List<String> joinedCommunities = new ArrayList<String>();
-
 	public User() {
 	}
 	
@@ -50,6 +53,7 @@ public class User implements Unique {
 		this.email = email;
 		this.roles = roles;
 		this.reg = Registrar.GOOGLE;
+		this.status = UserStatus.INCOMPLETE;
 	}
 
 	public User(String name, String email, Collection<String> roles) {
@@ -57,6 +61,7 @@ public class User implements Unique {
 		this.email = email;
 		this.roles = roles.toArray(new String[roles.size()]);
 		this.reg = Registrar.GOOGLE;
+		this.status = UserStatus.INCOMPLETE;
 	}
 
 	public String getId() {
@@ -99,14 +104,6 @@ public class User implements Unique {
 		this.deleted = deleted;
 	}
 
-	public String getUrl() {
-		return this.url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public Date getCreateDate() {
 		return this.createDate;
 	}
@@ -147,11 +144,11 @@ public class User implements Unique {
 		this.disabled = disabled;
 	}
 
-	public double[] getLocation() {
+	public String getLocation() {
 		return location;
 	}
 	
-	public void setLocation(double[] location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 	
@@ -163,12 +160,12 @@ public class User implements Unique {
 		this.roles = roles;
 	}
 	
-	public List<String> getJoinedCommunities() {
-		return joinedCommunities;
+	public UserStatus getStatus() {
+		return status;
 	}
-	
-	public void setJoinedCommunities(List<String> joinedCommunities) {
-		this.joinedCommunities = joinedCommunities;
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
 	}
 
 }

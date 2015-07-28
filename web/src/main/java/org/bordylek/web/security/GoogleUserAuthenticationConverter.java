@@ -1,8 +1,12 @@
 package org.bordylek.web.security;
 
+import org.bordylek.service.event.EventQueue;
+import org.bordylek.service.event.NewUserEvent;
 import org.bordylek.service.model.Registrar;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,12 +25,17 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EventQueue eventQueue;
+
     private String[] defaultAuthorities;
 
     private static final String EMAIL = "email";
     private static final String USER_ID = "user_id";
     private static final String DISPLAY_NAME = "displayName";
     private static final String IMAGE = "image";
+
+    private static Logger LOG = LoggerFactory.getLogger(GoogleUserAuthenticationConverter.class);
 
     public void setDefaultAuthorities(String[] defaultAuthorities) {
         this.defaultAuthorities = defaultAuthorities;
@@ -74,7 +83,12 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
         }
 
         if (save) {
+            boolean newUser = user.getId() == null;
             userRepository.save(user);
+            if (newUser) {
+                LOG.info("New user created: " + user.getName());
+                eventQueue.send(new NewUserEvent(user));
+            }
         }
 
         return user;
