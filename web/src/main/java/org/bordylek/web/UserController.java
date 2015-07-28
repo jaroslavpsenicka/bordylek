@@ -34,15 +34,24 @@ public class UserController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/user/me", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
-	public User findOne(@PathVariable("id") String id) {
-		User user = this.repository.findOne(id);
-		if (user == null) throw new NotFoundException(id);
-		return user;
+	public User findMe() {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return this.repository.findOne(principal.getId());
 	}
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @PreAuthorize("hasRole('USER')")
+    public User findOne(@PathVariable("id") String id) {
+        User user = this.repository.findOne(id);
+        if (user == null) throw new NotFoundException(id);
+        return user;
+    }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)

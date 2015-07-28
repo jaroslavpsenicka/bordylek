@@ -67,7 +67,17 @@ public class UserTest {
         SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
-	@Test
+    @Test
+    public void findMe() throws Exception {
+        mockMvc.perform(get("/user/me"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("id", is(user.getId())))
+            .andExpect(jsonPath("name", is(user.getName())))
+            .andExpect(jsonPath("email", is(user.getEmail())));
+    }
+
+    @Test
 	public void findExistingUser() throws Exception {
         mockMvc.perform(get("/user/" + user.getId()))
             .andExpect(status().isOk())
