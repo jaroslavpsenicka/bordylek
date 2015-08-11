@@ -1,0 +1,128 @@
+package org.bordylek.web;
+
+import com.google.common.base.Function;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.junit.Assert.*;
+
+public class UISteps {
+
+	protected WebDriver driver;
+    protected WebDriverWait wait;
+    protected EmbeddedHttpServer server;
+
+    public static final int PORT = 8082;
+    public static final String URL = "http://localhost:" + PORT;
+    public static final int INITIAL_TIMEOUT = 20;
+
+    @Before
+	public void before() throws Exception {
+        server = new EmbeddedHttpServer();
+        server.start(PORT);
+		driver = new SharedDriver();
+		driver.get(URL + "/rest");
+		wait = new WebDriverWait(driver, INITIAL_TIMEOUT);
+	}
+
+	@After
+	public void afterScenario() throws Exception {
+        server.stop();
+	}
+
+    @Given("^the ([\\w-]+) page is shown$")
+    public void pageShown(String uri) throws InterruptedException {
+        driver.get(URL + "/" + ("index".equals(uri) ? "" : uri));
+        driver.findElement(By.xpath("//body"));
+    }
+
+    @Then("^([\\w-]+) is shown$")
+    public void shown(final String entityId)  {
+        wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(entityId));
+                return element.isDisplayed() ? element : null;
+            }
+        });
+    }
+
+    @Then("^([\\w-]+) is shown with value (\\w+)$")
+    public void shownValue(final String entityId, String value)  {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(entityId));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+
+        assertEquals(value, element.getText());
+    }
+
+    @Then("^([\\w-]+) is shown with value \"([^\"]*)\"$")
+    public void shownValueQuotes(final String entityId, String value)  {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(entityId));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+
+        assertEquals(value, element.getText());
+    }
+
+    @Then("^([\\w-]+) is shown with value containing (\\w+)$")
+    public void shownValueContaining(final String entityId, String value)  {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(entityId));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+
+        assertTrue(element.getText() + " does not contain " + value, element.getText().contains(value));
+    }
+
+    @And("^([\\w-]+) is shown with value containing \"([^\"]*)\"$")
+    public void shownValueContainingQuotes(final String entityId, String value) throws Throwable {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(entityId));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+
+        assertTrue(element.getText() + " does not contain " + value, element.getText().contains(value));
+    }
+
+    @Then("^([\\w-]+) is shown empty$")
+    public void shownEmpty(final String elementId)  {
+        final WebElement element = driver.findElement(By.id(elementId));
+        assertEquals("", element.getText());
+    }
+
+    @Then("^([\\w-]+) is not shown$")
+    public void notShown(final String elementId)  {
+        try {
+            assertNull(driver.findElement(By.id(elementId)));
+        } catch (NoSuchElementException ignored) {
+        }
+    }
+
+    @When("^([\\w-]+) is (disabled|enabled)")
+    public void disabled(final String elementId, String state) throws InterruptedException {
+        assertEquals("disabled".equals(state) ? "true" : null, driver.findElement(By.id(elementId)).getAttribute("disabled"));
+    }
+
+    @And("^(\\w+) key is pressed$")
+    public void keyPressed(Keys key) throws Throwable {
+        driver.switchTo().activeElement().sendKeys(key);
+        Thread.sleep(500);
+    }
+
+}

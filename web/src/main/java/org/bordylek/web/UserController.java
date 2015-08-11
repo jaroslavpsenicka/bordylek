@@ -35,7 +35,6 @@ public class UserController {
 	private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping(value = "/user/me", method = RequestMethod.GET, produces = "application/json")
-	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	public User findMe() {
@@ -44,7 +43,6 @@ public class UserController {
 	}
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     public User findOne(@PathVariable("id") String id) {
@@ -54,7 +52,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     public User update(@PathVariable("id") String id, @RequestBody @Valid UserUpdateReq req) throws Exception {
@@ -65,7 +62,7 @@ public class UserController {
         dbUser.setName(req.getName());
         dbUser.setLocation(req.getLocation());
         dbUser.setStatus(UserStatus.VALID);
-        return (User) this.repository.save(dbUser);
+        return this.repository.save(dbUser);
     }
 
 	@ExceptionHandler(NotFoundException.class)
@@ -80,11 +77,11 @@ public class UserController {
 
     public static class UserUpdateReq {
 
-        @NotEmpty(message="name may not be null")
+        @NotEmpty(message = "name may not be null")
         @Length(min = 3, max = 255, message = "name should be 3-255 characters long")
         private String name;
 
-        @NotEmpty(message="location may not be null")
+        @NotEmpty(message = "location may not be null")
         private String location;
 
         public String getName() {
