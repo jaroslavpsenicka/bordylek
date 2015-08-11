@@ -1,6 +1,6 @@
 language: java
 
-mvn install -Puat
+script: mvn install -Puat
 
 before_install:
   - "export DISPLAY=:99.0"
