@@ -1,35 +1,35 @@
-/**
- * AngularJS Tutorial 1
- * @author Nick Kaye <nick.c.kaye@gmail.com>
- */
 
-/**
- * Main AngularJS Web Application
- */
 var app = angular.module('tutorialWebApp', [
   'ngRoute',
-  'localization'
+  'localize'
 ]);
 
-/**
- * Configure the Routes
- */
 app.config(['$routeProvider', function ($routeProvider) {
-  $routeProvider
-    // Home
-    .when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
-    // Pages
-    .when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
-    .when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
-    .when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
-    .when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
-    .when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
-    .when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
-    // Blog
-    .when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
-    .when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
-    // else 404
-    .otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
+	$routeProvider
+		.when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
+		.when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
+
+		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
+		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
+		.when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
+		.when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
+		.when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
+		.when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
+		.when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
+		.otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
+}]);
+
+app.run(["$http", "$rootScope", function($http, $rootScope) {
+	var language = window.navigator.userLanguage || window.navigator.language;
+	if (language) {
+		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
+			window.i18n = messages;
+		});
+	}
+
+	$http({url: '/rest/user/me'}).success(function(user) {
+		$rootScope.user = user;
+	});
 }]);
 
 app.controller('CommsCtrl', function (/* $scope, $location, $http */) {

@@ -1,14 +1,31 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Login</h1>
+            <h1 class="page-header" localize>Login</h1>
         </div>
     </div>
 
     <div class="row">
 
-        <div class="col-md-6">
-            <a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/callback&response_type=code&client_id=731387529912-v6a64s25b8vf4dbnhpfnha9atmnmkkhl.apps.googleusercontent.com&scope=profile+email&approval_prompt=force">Login with Google</a>
+        <div class="col-md-8" localize>
+            <p>Please login using one of the available services.</p>
+            <p>Please note that the system does not keep any passwords.</p>
+        </div>
+
+        <div class="col-md-2">
+            <a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/callback&response_type=code&client_id=731387529912-v6a64s25b8vf4dbnhpfnha9atmnmkkhl.apps.googleusercontent.com&scope=profile+email&approval_prompt=force">
+                <div id="login-google" class="login-google">
+                    <span class="login-text" localize>Login with<br>Google</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-2">
+            <a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/callback&response_type=code&client_id=731387529912-v6a64s25b8vf4dbnhpfnha9atmnmkkhl.apps.googleusercontent.com&scope=profile+email&approval_prompt=force">
+                <div id="login-facebook" class="login-facebook">
+                    <span class="login-text" localize>Login with<br>Facebook</span>
+                </div>
+            </a>
         </div>
 
     </div>
