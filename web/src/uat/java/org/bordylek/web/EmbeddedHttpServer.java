@@ -40,7 +40,7 @@ public class EmbeddedHttpServer {
         springHandler.addServlet(dispatcherServlet, "/rest/*");
         springHandler.addEventListener(new ContextLoaderListener());
         springHandler.addEventListener(new RequestContextListener());
-        springHandler.setInitParameter("contextConfigLocation", "classpath:/service-context.xml, classpath:/web-context.xml, classpath:/security-context.xml");
+        springHandler.setInitParameter("contextConfigLocation", "classpath:/dispatcher-servlet.xml");
 
         FilterHolder springSecurityFilterChain = new FilterHolder(new DelegatingFilterProxy("springSecurityFilterChain"));
         springHandler.addFilter(springSecurityFilterChain, "/*", EnumSet.allOf(DispatcherType.class));
