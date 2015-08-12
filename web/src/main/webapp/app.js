@@ -1,37 +1,31 @@
-/**
- * AngularJS Tutorial 1
- * @author Nick Kaye <nick.c.kaye@gmail.com>
- */
 
-/**
- * Main AngularJS Web Application
- */
 var app = angular.module('tutorialWebApp', [
   'ngRoute',
   'localize'
 ]);
 
-app.filter('html', ['$sce', function ($sce) {
-    return function (text) {
-        return $sce.trustAsHtml(text);
-    };
+app.config(['$routeProvider', function ($routeProvider) {
+	$routeProvider
+		.when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
+		.when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
+
+		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
+		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
+		.when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
+		.when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
+		.when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
+		.when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
+		.when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
+		.otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
 }]);
 
-/**
- * Configure the Routes
- */
-app.config(['$routeProvider', function ($routeProvider) {
-  $routeProvider
-    .when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
-    .when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
-    .when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
-    .when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
-    .when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
-    .when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
-    .when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
-    .when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
-    .when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
-    .otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
+app.run(["$http", function($http) {
+	var language = window.navigator.userLanguage || window.navigator.language;
+	if (language) {
+		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
+			window.i18n = messages;
+		});
+	}
 }]);
 
 app.controller('CommsCtrl', function (/* $scope, $location, $http */) {
