@@ -26,14 +26,12 @@ app.run(["$http", "$rootScope", function($http, $rootScope) {
 			window.i18n = messages;
 		});
 	}
-
-	$http({url: '/rest/user/me'}).success(function(user) {
-		$rootScope.user = user;
-	});
 }]);
 
-app.controller('CommsCtrl', function (/* $scope, $location, $http */) {
-  console.log("Community controller reporting for duty.");
+app.controller('HeaderCtrl', function ($rootScope, $http) {
+  	$http({url: '/rest/user/me'}).success(function(user) {
+  		$rootScope.user = user;
+  	});
 });
 
 /**
