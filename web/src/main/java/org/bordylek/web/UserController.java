@@ -38,7 +38,6 @@ public class UserController {
 
 	@RequestMapping(value = "/user/me", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	@PreAuthorize("hasRole('USER')")
 	public User findMe() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {

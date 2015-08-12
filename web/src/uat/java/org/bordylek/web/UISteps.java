@@ -18,7 +18,7 @@ public class UISteps {
     protected WebDriverWait wait;
     protected EmbeddedHttpServer server;
 
-    public static final int PORT = 8082;
+    public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
     public static final int INITIAL_TIMEOUT = 20;
 
@@ -134,7 +134,7 @@ public class UISteps {
         wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 WebElement element = driver.findElement(By.id(elementId));
-                return element.isDisplayed() ? element : null;
+                return element.isEnabled() ? element : null;
             }
         }).click();
         Thread.sleep(500);
