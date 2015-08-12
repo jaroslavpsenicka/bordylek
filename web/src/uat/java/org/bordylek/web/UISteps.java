@@ -38,7 +38,7 @@ public class UISteps {
 
     @Given("^the ([\\w-]+) page is shown$")
     public void pageShown(String uri) throws InterruptedException {
-        driver.get(URL + "/" + ("index".equals(uri) ? "" : uri));
+        driver.get(URL + "/" + ("index".equals(uri) ? "" : "#/" + uri));
         driver.findElement(By.xpath("//body"));
     }
 
@@ -122,6 +122,17 @@ public class UISteps {
     @And("^(\\w+) key is pressed$")
     public void keyPressed(Keys key) throws Throwable {
         driver.switchTo().activeElement().sendKeys(key);
+        Thread.sleep(500);
+    }
+
+    @When("^(.+) is clicked$")
+    public void clickId(final String elementId) throws InterruptedException {
+        wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(elementId));
+                return element.isDisplayed() ? element : null;
+            }
+        }).click();
         Thread.sleep(500);
     }
 
