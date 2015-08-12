@@ -39,7 +39,11 @@ public class UISteps {
     @Given("^the ([\\w-]+) page is shown$")
     public void pageShown(String uri) throws InterruptedException {
         driver.get(URL + "/" + ("index".equals(uri) ? "" : "#/" + uri));
-        driver.findElement(By.xpath("//body"));
+        wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                return driver.findElement(By.xpath("//body"));
+            }
+        });
     }
 
     @Then("^([\\w-]+) is shown$")
@@ -136,4 +140,14 @@ public class UISteps {
         Thread.sleep(500);
     }
 
+    @When("^(.+) input field value is (.+)$")
+    public void fieldValueIs(final String elementId, String value) throws Throwable {
+        final WebElement field = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(elementId));
+                return element.isDisplayed() ? element : null;
+            }
+        });
+        field.sendKeys(value);
+    }
 }

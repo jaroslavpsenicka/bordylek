@@ -38,8 +38,7 @@ public class UserController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	public User findMe() {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return this.repository.findOne(principal.getId());
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")

@@ -31,7 +31,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#/login" localize>Login</a>
+                    <a href="#/profile" ng-show="user" localize>{{user.name}}</a>
+                    <a id="username" href="#/login" ng-show="!user" localize>Login</a>
                 </li>
 <!--
                 <li>

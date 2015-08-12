@@ -19,13 +19,17 @@ app.config(['$routeProvider', function ($routeProvider) {
 		.otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
 }]);
 
-app.run(["$http", function($http) {
+app.run(["$http", "$rootScope", function($http, $rootScope) {
 	var language = window.navigator.userLanguage || window.navigator.language;
 	if (language) {
 		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
 			window.i18n = messages;
 		});
 	}
+
+	$http({url: '/rest/user/me'}).success(function(user) {
+		$rootScope.user = user;
+	});
 }]);
 
 app.controller('CommsCtrl', function (/* $scope, $location, $http */) {
