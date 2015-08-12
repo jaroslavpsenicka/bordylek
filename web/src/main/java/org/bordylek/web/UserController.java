@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +40,12 @@ public class UserController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	public User findMe() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new UnauthorizedUserException("user not known");
+        }
+
+        return (User) authentication.getPrincipal();
 	}
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -72,6 +79,11 @@ public class UserController {
     @ExceptionHandler(IllegalAccessException.class)
     public void handleIllegalAccessException(IllegalAccessException ex, HttpServletResponse response) {
         response.setStatus(HttpStatus.FORBIDDEN.value());
+    }
+
+    @ExceptionHandler(UnauthorizedUserException.class)
+    public void unauthorizedUserException(UnauthorizedUserException ex, HttpServletResponse response) {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 
     public static class UserUpdateReq {
