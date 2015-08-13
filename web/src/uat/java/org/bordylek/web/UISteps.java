@@ -13,6 +13,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
@@ -22,6 +23,7 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 @WebAppConfiguration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(locations = {"/uat-context.xml"})
 public class UISteps {
 
@@ -143,7 +145,8 @@ public class UISteps {
     @Then("^([\\w-]+) is not shown$")
     public void notShown(final String elementId)  {
         try {
-            assertNull(driver.findElement(By.id(elementId)));
+            WebElement element = driver.findElement(By.id(elementId));
+            if (element != null) assertFalse(element.isDisplayed());
         } catch (NoSuchElementException ignored) {
         }
     }
