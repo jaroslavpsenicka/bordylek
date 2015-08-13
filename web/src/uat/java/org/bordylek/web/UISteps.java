@@ -134,6 +134,7 @@ public class UISteps {
         wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 WebElement element = driver.findElement(By.id(elementId));
+                System.out.println("Clicking " + elementId + ": " + element);
                 return element.isEnabled() ? element : null;
             }
         }).click();
