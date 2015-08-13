@@ -51,12 +51,17 @@
     </beans:bean>
 
     <authentication-manager alias="alternateAuthenticationManager">
-        <authentication-provider>
-            <user-service>
-                <user name="john@doe.com" password="pwd" authorities="ROLE_USER" />
-                <user name="mary@doe.com" password="pwd" authorities="ROLE_USER" />
-            </user-service>
-        </authentication-provider>
+        <authentication-provider ref="authProvider"/>
     </authentication-manager>
+
+    <beans:bean id="authProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="userManager"/>
+    </beans:bean>
+
+    <beans:bean id="userManager" class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
+        <beans:constructor-arg index="0">
+            <beans:props></beans:props>
+        </beans:constructor-arg>
+    </beans:bean>
 
 </beans:beans>

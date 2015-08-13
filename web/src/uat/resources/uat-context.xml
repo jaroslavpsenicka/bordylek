@@ -10,4 +10,12 @@
     <import resource="classpath:/security-context.xml"/>
     <import resource="classpath:/test-context.xml"/>
 
+    <bean id="userManager" class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
+        <constructor-arg index="0">
+            <props>
+                <prop key="john@doe.com">pwd,ROLE_USER</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+
 </beans>

@@ -12,6 +12,7 @@ import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,7 +22,7 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 @WebAppConfiguration
-@ContextConfiguration(locations = {"/dispatcher-servlet.xml"})
+@ContextConfiguration(locations = {"/uat-context.xml"})
 public class UISteps {
 
     @Autowired
@@ -30,7 +31,10 @@ public class UISteps {
     @Autowired
     private UserRepository userRepository;
 
-	private SharedDriver driver;
+    @Autowired
+    private InMemoryUserDetailsManager userDetailsManager;
+
+    private SharedDriver driver;
     private WebDriverWait wait;
     private EmbeddedHttpServer server;
 

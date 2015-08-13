@@ -12,9 +12,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -44,7 +46,10 @@ public class UserTest {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
+    @Autowired
+    private InMemoryUserDetailsManager userDetailsManager;
+
     private MockMvc mockMvc;
     private User user;
 
@@ -60,12 +65,16 @@ public class UserTest {
         user.setCreateDate(new Date());
         user = userRepository.save(user);
         authenticate(user.getEmail(), "ROLE_USER");
+        userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
+            user.getEmail(), "pwd", AuthorityUtils.createAuthorityList("ROLE_USER")));
 	}
 	
 	@After
 	public void after() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
-	}
+        userDetailsManager.deleteUser(user.getEmail());
+
+    }
 
     @Test
     public void findMe() throws Exception {
