@@ -1,18 +1,12 @@
 Feature: Login
 
-  Scenario: Successful login via google.com
+  Scenario: Successful login as john@doe.com
 
-    Given the login page is shown
-    And login-google is shown with value containing Google
+    Given the user "John Doe" with email john@doe.com exists
+    When the index page is shown
+    Then username is shown with value "John Doe"
 
-    When login-google is clicked
-    And Email input field value is thelittlebighand@gmail.com
-    And next is clicked
-    And Passwd input field value is hand1234
-    And signIn is clicked
-    And submit_approve_access is clicked
 
-    Then username is shown with value "Little BigHand"
 
 
 

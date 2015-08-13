@@ -44,8 +44,10 @@ public class UserController {
             throw new UnauthorizedUserException("user not known");
         }
 
-        return (User) authentication.getPrincipal();
-	}
+        org.springframework.security.core.userdetails.User principal =
+            (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        return this.repository.findByEmail(principal.getUsername());
+    }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -60,8 +62,15 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     public User update(@PathVariable("id") String id, @RequestBody @Valid UserUpdateReq req) throws Exception {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!id.equals(principal.getId())) throw new IllegalAccessException();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new UnauthorizedUserException("user not known");
+        }
+        org.springframework.security.core.userdetails.User principal =
+            (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        User updatingUser = this.repository.findByEmail(principal.getUsername());
+        if (updatingUser == null || !updatingUser.getId().equals(id)) throw new IllegalAccessException();
+
         User dbUser = this.repository.findOne(id);
         if (dbUser == null) throw new NotFoundException(id);
         dbUser.setName(req.getName());

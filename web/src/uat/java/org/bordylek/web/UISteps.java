@@ -7,16 +7,32 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.bordylek.service.model.User;
+import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
+@WebAppConfiguration
+@ContextConfiguration(locations = {"/dispatcher-servlet.xml"})
 public class UISteps {
 
-	protected WebDriver driver;
-    protected WebDriverWait wait;
-    protected EmbeddedHttpServer server;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private UserRepository userRepository;
+
+	private SharedDriver driver;
+    private WebDriverWait wait;
+    private EmbeddedHttpServer server;
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
@@ -25,7 +41,7 @@ public class UISteps {
     @Before
 	public void before() throws Exception {
         server = new EmbeddedHttpServer();
-        server.start(PORT);
+        server.start(PORT, webApplicationContext);
 		driver = new SharedDriver();
 		driver.get(URL + "/rest");
 		wait = new WebDriverWait(driver, INITIAL_TIMEOUT);
@@ -35,6 +51,16 @@ public class UISteps {
 	public void afterScenario() throws Exception {
         server.stop();
 	}
+
+    @Given("^the user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
+    public void theUserExists(String name, String email) throws Throwable {
+        User user = new User();
+        user.setEmail(email);
+        user.setRegId("1");
+        user.setName(name);
+        user.setCreateDate(new Date());
+        userRepository.save(user);
+    }
 
     @Given("^the ([\\w-]+) page is shown$")
     public void pageShown(String uri) throws InterruptedException {
@@ -134,7 +160,6 @@ public class UISteps {
         wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 WebElement element = driver.findElement(By.id(elementId));
-                System.out.println("Clicking " + elementId + ": " + element);
                 return element.isEnabled() ? element : null;
             }
         }).click();
@@ -151,4 +176,5 @@ public class UISteps {
         });
         field.sendKeys(value);
     }
+
 }

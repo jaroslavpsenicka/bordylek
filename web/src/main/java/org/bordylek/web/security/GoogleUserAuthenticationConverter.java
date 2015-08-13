@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import static org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 public class GoogleUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
 
@@ -49,15 +47,14 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
 
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USER_ID) && map.containsKey(EMAIL) && map.containsKey(DISPLAY_NAME)) {
-            User user = findOrCreateUser(map);
-            List<GrantedAuthority> auth = commaSeparatedStringToAuthorityList(defaultAuthorities);
-            return new UsernamePasswordAuthenticationToken(user, "", auth);
+            org.springframework.security.core.userdetails.User user = findOrCreateUser(map);
+            return new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
         }
 
         return null;
     }
 
-    private User findOrCreateUser(Map<String, ?> map) {
+    private org.springframework.security.core.userdetails.User findOrCreateUser(Map<String, ?> map) {
         String regId = registrar + "/" + map.get(USER_ID);
         User user = userRepository.findByRegId(regId);
         if (user == null) {
@@ -81,7 +78,8 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
             eventQueue.send(new NewUserEvent(user));
         }
 
-        return user;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), "",
+            createAuthorityList(defaultAuthorities));
     }
 
 }

@@ -7,6 +7,7 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
@@ -20,8 +21,9 @@ import static org.junit.Assert.assertFalse;
 public class EmbeddedHttpServer {
 
     private Server httpServer;
+    private XmlWebApplicationContext ctx;
 
-    public void start(int port) throws Exception {
+    public void start(int port, WebApplicationContext ctx) throws Exception {
 
         HandlerList handlers = new HandlerList();
         ResourceHandler resourceHandler = new ResourceHandler();
@@ -29,9 +31,6 @@ public class EmbeddedHttpServer {
         resourceHandler.setResourceBase("web/src/main/webapp");
         resourceHandler.setWelcomeFiles(new String[]{"index.html"});
         handlers.addHandler(resourceHandler);
-
-        XmlWebApplicationContext ctx = new XmlWebApplicationContext();
-        ctx.setConfigLocation("classpath:/dispatcher-servlet.xml");
 
         ServletHolder dispatcherServlet = new ServletHolder(new DispatcherServlet(ctx));
         dispatcherServlet.setInitOrder(1);

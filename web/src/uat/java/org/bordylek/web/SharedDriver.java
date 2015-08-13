@@ -7,11 +7,15 @@ package org.bordylek.web;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+import java.io.File;
+import java.io.IOException;
 
 public class SharedDriver extends EventFiringWebDriver {
 
-    private static final WebDriver REAL_DRIVER = new FirefoxDriver();
+    private static final WebDriver REAL_DRIVER;
     private static final Thread CLOSE_THREAD = new Thread() {
         @Override
         public void run() {
@@ -21,6 +25,21 @@ public class SharedDriver extends EventFiringWebDriver {
 
     static {
         Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
+        FirefoxProfile profile = new FirefoxProfile();
+        File modifyHeaders = new File("web/src/uat/resources/modify_headers-0.7.1.1-fx.xpi");
+        try {
+            profile.addExtension(modifyHeaders);
+            profile.setPreference("modifyheaders.config.active", true);
+            profile.setPreference("modifyheaders.config.alwaysOn", true);
+            profile.setPreference("modifyheaders.headers.count", 1);
+            profile.setPreference("modifyheaders.headers.action0", "Add");
+            profile.setPreference("modifyheaders.headers.name0", "Authorization");
+            profile.setPreference("modifyheaders.headers.value0", "Basic am9obkBkb2UuY29tOnB3ZA==");
+            profile.setPreference("modifyheaders.headers.enabled0", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        REAL_DRIVER = new FirefoxDriver(profile);
     }
 
     public SharedDriver() {

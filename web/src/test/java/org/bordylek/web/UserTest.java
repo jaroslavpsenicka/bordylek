@@ -46,7 +46,7 @@ public class UserTest {
 	private MongoTemplate mongoTemplate;
 	
     private MockMvc mockMvc;
-	private User user;
+    private User user;
 
 	@Before
 	public void before() throws Exception {
@@ -59,7 +59,7 @@ public class UserTest {
 		user.setEmail("john@doe.com");
         user.setCreateDate(new Date());
         user = userRepository.save(user);
-        authenticate(user, "ROLE_USER");
+        authenticate(user.getEmail(), "ROLE_USER");
 	}
 	
 	@After
@@ -111,9 +111,15 @@ public class UserTest {
 
     @Test
     public void cannotUpdateAnotherUser() throws Exception {
-        authenticate(new User(), "ROLE_USER");
+        User user2 = new User();
+        user2.setRegId("GOOGLE/2");
+        user2.setName("Mary Doe");
+        user2.setEmail("mary@doe.com");
+        user2.setCreateDate(new Date());
+        user2 = userRepository.save(user2);
+
         String content = "{\"name\": \"Mary Doe\", \"location\": \"1\"}";
-        mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/user/" + user2.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
 
@@ -159,11 +165,14 @@ public class UserTest {
                 .andExpect(status().isBadRequest());
     }
 
-    private void authenticate(User user, final String role) {
+    private void authenticate(String email, final String role) {
         SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, "pwd", new ArrayList() {{
+        ArrayList authorities = new ArrayList() {{
             add(new SimpleGrantedAuthority(role));
-        }}));
+        }};
+        org.springframework.security.core.userdetails.User user =
+            new org.springframework.security.core.userdetails.User(email, "", authorities);
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, "pwd", authorities));
     }
 
 }
