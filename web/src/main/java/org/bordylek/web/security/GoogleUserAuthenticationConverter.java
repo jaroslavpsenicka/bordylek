@@ -3,6 +3,7 @@ package org.bordylek.web.security;
 import org.bordylek.service.event.EventQueue;
 import org.bordylek.service.event.NewUserEvent;
 import org.bordylek.service.model.User;
+import org.bordylek.service.model.UserStatus;
 import org.bordylek.service.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class GoogleUserAuthenticationConverter extends DefaultUserAuthentication
             user = new User();
             user.setRegId(regId);
             user.setCreateDate(new Date());
+            user.setStatus(UserStatus.NEW);
         }
 
         user.setName((String) map.get(DISPLAY_NAME));

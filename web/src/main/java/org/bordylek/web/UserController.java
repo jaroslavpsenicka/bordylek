@@ -75,7 +75,7 @@ public class UserController {
         if (dbUser == null) throw new NotFoundException(id);
         dbUser.setName(req.getName());
         dbUser.setLocation(req.getLocation());
-        dbUser.setStatus(UserStatus.VALID);
+        dbUser.setStatus(UserStatus.VERIFIED);
         return this.repository.save(dbUser);
     }
 

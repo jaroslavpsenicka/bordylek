@@ -8,6 +8,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.bordylek.service.model.User;
+import org.bordylek.service.model.UserStatus;
 import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -58,13 +59,14 @@ public class UISteps {
         server.stop();
 	}
 
-    @Given("^the user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
-    public void theUserExists(String name, String email) throws Throwable {
+    @Given("^(new|verified) user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
+    public void theUserExists(String type, String name, String email) throws Throwable {
         User user = new User();
         user.setEmail(email);
         user.setRegId("1");
         user.setName(name);
         user.setCreateDate(new Date());
+        user.setStatus(UserStatus.valueOf(type.toUpperCase()));
         userRepository.save(user);
     }
 
