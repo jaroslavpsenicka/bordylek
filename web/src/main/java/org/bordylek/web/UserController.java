@@ -67,9 +67,10 @@ public class UserController {
         if (authentication == null) {
             throw new UnauthorizedUserException("user not known");
         }
-        org.springframework.security.core.userdetails.User principal =
-            (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        User updatingUser = this.repository.findByEmail(principal.getUsername());
+        String principal = (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User)
+            ? ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername()
+            : authentication.getPrincipal().toString();
+        User updatingUser = this.repository.findByRegId(principal);
         if (updatingUser == null || !updatingUser.getId().equals(id)) throw new IllegalAccessException();
 
         User dbUser = this.repository.findOne(id);
