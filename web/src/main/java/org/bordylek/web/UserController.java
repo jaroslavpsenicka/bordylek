@@ -44,9 +44,10 @@ public class UserController {
             throw new UnauthorizedUserException("user not known");
         }
 
-        org.springframework.security.core.userdetails.User principal =
-            (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-        return this.repository.findByEmail(principal.getUsername());
+        String principal = (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User)
+            ? ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername()
+            : authentication.getPrincipal().toString();
+        return this.repository.findByRegId(principal);
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = "application/json")

@@ -6,6 +6,7 @@ Feature: Login
     When the index page is shown
     Then welcome-header is shown with value "Welcome, John Doe It's Nice to Meet You!"
     And username is not shown
+    And field name is shown with value "John Doe"
 
 
   Scenario: Successful login as john@doe.com, verified user

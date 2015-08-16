@@ -4,7 +4,7 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
@@ -14,41 +14,22 @@
 
     <global-method-security pre-post-annotations="enabled"/>
 
-	<http auto-config="true" use-expressions="true" entry-point-ref="clientAuthenticationEntryPoint">
-	    <http-basic />
-        <logout/>
+    <http use-expressions="true">
+        <http-basic />
+        <form-login />
+        <logout logout-url="/signout" />
         <anonymous enabled="false"/>
         <csrf disabled="true"/>
-        <custom-filter ref="oauth2ClientContextFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
-        <custom-filter ref="oAuth2AuthenticationProcessingFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+        <custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
     </http>
 
-    <beans:bean id="clientAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-        <beans:constructor-arg name="loginFormUrl" value="/callback"/>
+    <beans:bean id="socialAuthenticationFilter" class="org.springframework.social.security.SocialAuthenticationFilter">
+        <beans:constructor-arg index="0" ref="alternateAuthenticationManager"/>
+        <beans:constructor-arg index="1" ref="userIdSource"/>
+        <beans:constructor-arg index="2" ref="usersConnectionRepository"/>
+        <beans:constructor-arg index="3" ref="connectionFactoryLocator"/>
     </beans:bean>
-
-    <beans:bean id="oAuth2AuthenticationProcessingFilter" class="org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter">
-        <beans:constructor-arg name="defaultFilterProcessesUrl" value="/callback"/>
-        <beans:property name="restTemplate" ref="googleRestTemplate"/>
-        <beans:property name="tokenServices" ref="tokenServices"/>
-    </beans:bean>
-
-    <beans:bean id="tokenServices" class="org.bordylek.web.security.GoogleTokenServices">
-        <beans:property name="checkTokenEndpointUrl" value="https://www.googleapis.com/oauth2/v1/tokeninfo"/>
-        <beans:property name="userInfoEndpointUrl" value="https://www.googleapis.com/plus/v1/people/me"/>
-        <beans:property name="clientId" value="${google.client.id}"/>
-        <beans:property name="clientSecret" value="${google.client.secret}"/>
-        <beans:property name="accessTokenConverter">
-            <beans:bean class="org.bordylek.web.security.GoogleAccessTokenConverter">
-                <beans:property name="userTokenConverter">
-                    <beans:bean class="org.bordylek.web.security.GoogleUserAuthenticationConverter">
-                        <beans:property name="defaultAuthorities" value="ROLE_USER"/>
-                        <beans:property name="registrar" value="GOOGLE"/>
-                    </beans:bean>
-                </beans:property>
-            </beans:bean>
-        </beans:property>
-    </beans:bean>
+          <!--p:rememberMeServices-ref="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices#0" />-->
 
     <authentication-manager alias="alternateAuthenticationManager">
         <authentication-provider ref="authProvider"/>

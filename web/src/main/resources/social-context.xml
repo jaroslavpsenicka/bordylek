@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/social"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:google="http://www.springframework.org/schema/social/google"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
+        http://www.springframework.org/schema/social/google http://www.springframework.org/schema/social/spring-social-google.xsd">
+
+	<context:property-placeholder location="classpath:/config.properties"/>
+
+    <beans:bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry">
+        <beans:property name="authenticationServices">
+            <beans:list>
+                <beans:bean class="org.springframework.social.google.security.GoogleAuthenticationService">
+                    <beans:constructor-arg value="${google.client.id}" />
+                    <beans:constructor-arg value="${google.client.secret}" />
+                    <beans:property name="defaultScope" value="profile" />
+                </beans:bean>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+
+	<in-memory-connection-repository connection-signup-ref="connectionSignUp"/>
+
+	<beans:bean id="userIdSource" class="org.springframework.social.security.AuthenticationNameUserIdSource" />
+    <beans:bean id="connectionSignUp" class="org.bordylek.web.security.AutoConnectionSignUp"/>
+	<beans:bean class="org.springframework.social.connect.web.ConnectController" autowire="constructor"/>
+	<beans:bean class="org.springframework.social.connect.web.ProviderSignInController" autowire="constructor" />
+	<beans:bean class="org.bordylek.web.security.SimpleSignInAdapter" autowire="constructor" />
+
+</beans:beans>

@@ -20,6 +20,11 @@
             </a>
         </div>
 
+        <form action="/rest/signin/google" method="POST">
+            <input type="hidden" name="scope" value="email profile">
+            <button type="submit">Signin via Spring Social</button>
+        </form>
+
         <div class="col-md-2">
             <a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/callback&response_type=code&client_id=731387529912-v6a64s25b8vf4dbnhpfnha9atmnmkkhl.apps.googleusercontent.com&scope=profile+email&approval_prompt=force">
                 <div id="login-facebook" class="login-facebook">

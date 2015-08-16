@@ -102,6 +102,30 @@ public class UISteps {
         assertEquals(value, element.getText());
     }
 
+    @Then("^field ([\\w-]+) is shown with value (\\w+)$")
+    public void fieldShownValue(final String id, String value)  {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(id));
+                return element.isDisplayed() && element.getAttribute("value").length() > 0 ? element : null;
+            }
+        });
+
+        assertEquals(value, element.getAttribute("value"));
+    }
+
+    @Then("^field ([\\w-]+) is shown with value \"([^\"]*)\"$")
+    public void fieldShownValueQuotes(final String id, String value)  {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(id));
+                return element.isDisplayed() && element.getAttribute("value").length() > 0 ? element : null;
+            }
+        });
+
+        assertEquals(value, element.getAttribute("value"));
+    }
+
     @Then("^([\\w-]+) is shown with value \"([^\"]*)\"$")
     public void shownValueQuotes(final String entityId, String value)  {
         final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
