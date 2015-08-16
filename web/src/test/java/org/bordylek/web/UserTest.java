@@ -31,11 +31,12 @@ import java.util.Date;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/social-context.xml", "/test-context.xml"})
 public class UserTest {
 
     @Autowired
@@ -64,15 +65,15 @@ public class UserTest {
 		user.setEmail("john@doe.com");
         user.setCreateDate(new Date());
         user = userRepository.save(user);
-        authenticate(user.getEmail(), "ROLE_USER");
+        authenticate(user.getRegId(), "ROLE_USER");
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
-            user.getEmail(), "pwd", AuthorityUtils.createAuthorityList("ROLE_USER")));
+            user.getRegId(), "pwd", AuthorityUtils.createAuthorityList("ROLE_USER")));
 	}
 	
 	@After
 	public void after() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
-        userDetailsManager.deleteUser(user.getEmail());
+        userDetailsManager.deleteUser(user.getRegId());
 
     }
 
