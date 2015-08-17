@@ -201,7 +201,14 @@ public class UISteps {
 
     @When("^([\\w-]+) is (disabled|enabled)")
     public void disabled(final String elementId, String state) throws InterruptedException {
-        assertEquals("disabled".equals(state) ? "true" : null, driver.findElement(By.id(elementId)).getAttribute("disabled"));
+        WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.id(elementId));
+                return element.isDisplayed() ? element : null;
+            }
+        });
+
+        assertEquals("disabled".equals(state) ? "true" : null, element);
     }
 
     @And("^(\\w+) key is pressed$")
