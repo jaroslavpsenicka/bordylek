@@ -26,6 +26,7 @@ Feature: Login
     When location input field value is Prague, Czech Republic
     Then welcomeform-submit is enabled
 
+
   Scenario: Successful login as john@doe.com, verified user
 
     Given verified user "John Doe" with email john@doe.com exists
