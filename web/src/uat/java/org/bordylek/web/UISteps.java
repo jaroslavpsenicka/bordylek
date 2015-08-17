@@ -208,7 +208,7 @@ public class UISteps {
             }
         });
 
-        assertEquals("disabled".equals(state) ? "true" : null, element);
+        assertEquals("disabled".equals(state) ? "true" : null, element.getAttribute("disabled"));
     }
 
     @And("^(\\w+) key is pressed$")
