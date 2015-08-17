@@ -1,7 +1,8 @@
 
 var app = angular.module('tutorialWebApp', [
-  'ngRoute',
-  'localize'
+  'ngRoute', 'ngAnimate',
+  'localize',
+  'ui.bootstrap'
 ]);
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -41,10 +42,8 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
                 address: val,
                 sensor: false
             }
-        }).then(function(response){
-            return response.data.results.map(function(item){
-                return item.formatted_address;
-            });
+        }).then(function(response) {
+			return response.data.results;
         });
     };
 });

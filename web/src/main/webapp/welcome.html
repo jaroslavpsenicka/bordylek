@@ -20,8 +20,8 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Location:</label>
                     <div class="col-sm-8">
-                        <input type="text" ng-model="location" placeholder="Type to search"
-                           typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations"
+                        <input id="location" type="text" ng-model="user.location" placeholder="Type to search"
+                           typeahead="address.formatted_address for address in getLocation($viewValue)" typeahead-loading="loadingLocations"
                            typeahead-no-results="noResults" class="form-control">
                         <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                         <div ng-show="noResults">

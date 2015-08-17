@@ -138,6 +138,28 @@ public class UISteps {
         assertEquals(value, element.getText());
     }
 
+    @Then("^xpath (.+) is shown$")
+    public void xpathIsShown(final String xpath) throws Throwable {
+        wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.xpath(xpath));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+    }
+
+    @Then("^xpath (.+) is shown with value \"([^\"]*)\"$")
+    public void xpathIsShownWithValue(final String xpath, final String value) throws Throwable {
+        final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.xpath(xpath));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        });
+
+        assertEquals(value, element.getText());
+    }
+
     @Then("^([\\w-]+) is shown with value containing (\\w+)$")
     public void shownValueContaining(final String entityId, String value)  {
         final WebElement element = wait.until(new Function<WebDriver, WebElement>() {
