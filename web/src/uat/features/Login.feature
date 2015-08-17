@@ -1,6 +1,6 @@
 Feature: Login
 
-  Scenario: Successful login as john@doe.com, new user
+  Scenario: New user
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
@@ -9,7 +9,7 @@ Feature: Login
     And field name is shown with value "John Doe"
 
 
-  Scenario: Successful login as john@doe.com, location popup
+  Scenario: Location popup
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
@@ -17,6 +17,14 @@ Feature: Login
 
     Then xpath //li/a[contains(text(), 'Czech')] is shown with value "Prague, Czech Republic"
 
+
+  Scenario: Confirm button
+
+    Given new user "John Doe" with email john@doe.com exists
+    When the index page is shown
+    Then welcomeform-submit is disabled
+    When location input field value is Prague, Czech Republic
+    Then welcomeform-submit is enabled
 
   Scenario: Successful login as john@doe.com, verified user
 
