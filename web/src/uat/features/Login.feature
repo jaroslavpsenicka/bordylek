@@ -43,6 +43,7 @@ Feature: Login
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
     When location input field value is Černošice
+    Then xpath //li/a[contains(text(), 'Czech')] is shown with value "Černošice, Czech Republic"
     And ENTER key is pressed
     And welcomeform-submit is clicked
     Then username is shown with value "John Doe"
