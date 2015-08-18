@@ -43,7 +43,7 @@ public class UISteps {
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
-    public static final int INITIAL_TIMEOUT = 60;
+    public static final int INITIAL_TIMEOUT = 120;
 
     @Before
 	public void before() throws Exception {

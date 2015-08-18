@@ -18,13 +18,23 @@ Feature: Login
     Then xpath //li/a[contains(text(), 'Czech')] is shown with value "Prague, Czech Republic"
 
 
-  Scenario: Confirm button
+  Scenario: Confirm button enabling
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
     Then welcomeform-submit is disabled
     When location input field value is Prague, Czech Republic
     Then welcomeform-submit is enabled
+
+
+  Scenario: User confirmation
+
+    Given new user "John Doe" with email john@doe.com exists
+    When the index page is shown
+    When location input field value is Prague
+    And ENTER key is pressed
+    And welcomeform-submit is clicked
+    Then username is shown with value "John Doe"
 
 
   Scenario: Successful login as john@doe.com, verified user

@@ -37,7 +37,7 @@ public class User implements Unique {
 	@JsonIgnore
 	private Date createDate;
 	private String imageUrl;
-	private String location;
+	private Location location;
 
 	public String getId() {
 		return this.id;
@@ -95,11 +95,11 @@ public class User implements Unique {
 		this.regId = regId;
 	}
 
-	public String getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 	
-	public void setLocation(String location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 	

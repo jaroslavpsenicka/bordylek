@@ -2,6 +2,7 @@ package org.bordylek.web;
 
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventQueue;
+import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.model.UserStatus;
 import org.bordylek.service.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Controller
 public class UserController {
@@ -102,8 +104,8 @@ public class UserController {
         @Length(min = 3, max = 255, message = "name should be 3-255 characters long")
         private String name;
 
-        @NotEmpty(message = "location may not be null")
-        private String location;
+        @NotNull(message = "location may not be null")
+        private Location location;
 
         public String getName() {
             return name;
@@ -113,12 +115,13 @@ public class UserController {
             this.name = name;
         }
 
-        public String getLocation() {
+        public Location getLocation() {
             return location;
         }
 
-        public void setLocation(String location) {
+        public void setLocation(Location location) {
             this.location = location;
         }
     }
+
 }

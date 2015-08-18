@@ -46,6 +46,23 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
 			return response.data.results;
         });
     };
+
+    $scope.submit = function() {
+    	var user = $rootScope.user;
+		$http.post('/rest/user/' + user.id, {
+			name: user.name,
+			location: {
+				id: user.location.place_id,
+				name: user.location.formatted_address,
+				lat: user.location.geometry.location.lat,
+				lng: user.location.geometry.location.lng
+			}
+		}).then(function(response) {
+			$rootScope.user = response.data;
+		}, function(error) {
+			alert(error);
+		});
+	};
 });
 
 /**
