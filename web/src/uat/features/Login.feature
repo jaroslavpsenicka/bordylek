@@ -25,7 +25,7 @@ Feature: Login
     Then welcomeform-submit is disabled
     When location input field value is Prague
     And ENTER key is pressed
-    Then welcomeform-submit is enabled
+    And welcomeform-submit is enabled
 
 
   Scenario: User confirmation
@@ -35,25 +35,25 @@ Feature: Login
     When location input field value is Prague
     And ENTER key is pressed
     And welcomeform-submit is clicked
-    Then username is shown with value "John Doe"
+    And username is shown with value "John Doe"
 
 
   Scenario: User confirmation, native name
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
-    When location input field value is Černošice
+    And location input field value is Černošice
     Then xpath //li/a[contains(text(), 'Czech')] is shown with value "Černošice, Czech Republic"
     And ENTER key is pressed
     And welcomeform-submit is clicked
-    Then username is shown with value "John Doe"
+    And username is shown with value "John Doe"
 
 
   Scenario: User confirmation, illegal name
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
-    When location input field value is QWERTYUIOP
+    And location input field value is QWERTYUIOP
     And ENTER key is pressed
     Then welcomeform-submit is disabled
 
