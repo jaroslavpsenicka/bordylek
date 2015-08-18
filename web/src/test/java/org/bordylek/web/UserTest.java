@@ -31,7 +31,6 @@ import java.util.Date;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
@@ -110,7 +109,7 @@ public class UserTest {
 
     @Test
     public void updateName() throws Exception {
-        String content = "{\"name\": \"J.F. Doe\", \"location\": \"1\"}";
+        String content = "{\"name\": \"J.F. Doe\", \"location\": {\"id\": \"123\", \"name\": \"name\", \"lat\": 0.0, \"lng\": 0.0}}";
         mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -128,7 +127,7 @@ public class UserTest {
         user2.setCreateDate(new Date());
         user2 = userRepository.save(user2);
 
-        String content = "{\"name\": \"Mary Doe\", \"location\": \"1\"}";
+        String content = "{\"name\": \"Mary Doe\",  \"location\": {\"id\": \"123\", \"name\": \"name\", \"lat\": 0.0, \"lng\": 0.0}}";
         mockMvc.perform(post("/user/" + user2.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
