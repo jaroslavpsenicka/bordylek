@@ -22,12 +22,8 @@
                         <label class="control-label col-sm-2" localize>Location</label>
                         <div class="col-sm-8">
                             <input id="location" type="text" ng-model="user.location" placeholder="Type to search" autocomplete="off"
-                               typeahead="address as address.formatted_address for address in getLocation($viewValue)" typeahead-loading="loadingLocations"
-                               typeahead-no-results="noResults" class="form-control" ng-minlength="2" required ng-maxlength="255">
-                            <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
-                            <div ng-show="noResults">
-                                <i class="glyphicon glyphicon-remove"></i> No Results Found
-                            </div>
+                               typeahead="address as address.formatted_address for address in getLocation($viewValue)"
+                               typeahead-editable="false" class="form-control" required>
                         </div>
                     </div>
                 </div>

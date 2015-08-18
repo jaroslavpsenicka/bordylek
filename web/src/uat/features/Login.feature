@@ -37,6 +37,25 @@ Feature: Login
     Then username is shown with value "John Doe"
 
 
+  Scenario: User confirmation, native name
+
+    Given new user "John Doe" with email john@doe.com exists
+    When the index page is shown
+    When location input field value is Černošice
+    And ENTER key is pressed
+    And welcomeform-submit is clicked
+    Then username is shown with value "John Doe"
+
+
+  Scenario: User confirmation, illegal name
+
+    Given new user "John Doe" with email john@doe.com exists
+    When the index page is shown
+    When location input field value is QWERTYUIOP
+    And ENTER key is pressed
+    Then welcomeform-submit is disabled
+
+
   Scenario: Successful login as john@doe.com, verified user
 
     Given verified user "John Doe" with email john@doe.com exists
