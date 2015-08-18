@@ -23,7 +23,8 @@ Feature: Login
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
     Then welcomeform-submit is disabled
-    When location input field value is Prague, Czech Republic
+    When location input field value is Prague
+    And ENTER key is pressed
     Then welcomeform-submit is enabled
 
 
