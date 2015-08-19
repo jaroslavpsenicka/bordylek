@@ -23,7 +23,7 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/test-context.xml"})
 public class EventTest {
 
     @Autowired
