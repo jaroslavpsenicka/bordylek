@@ -5,11 +5,20 @@ import org.bordylek.service.model.User;
 @SuppressWarnings("serial")
 public class NewUserEvent extends AbstractEvent {
 
+    private User user;
+
 	public static final String NAME = "newUser";
 
 	public NewUserEvent(User user) {
-		super(EventDomain.USER, NAME);
-		addParameter("user", user);
+		super(DOMAIN.USER, NAME);
+		this.user = user;
 	}
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
