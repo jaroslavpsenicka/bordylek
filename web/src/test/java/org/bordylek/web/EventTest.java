@@ -59,7 +59,7 @@ public class EventTest {
         assertEquals("newUser", event.get("name"));
         assertEquals("John Doe", ((DBObject)event.get("user")).get("name"));
 
-        Thread.sleep(500);
+        Thread.sleep(2000);
 
         List<MimeMessage> messages = mailSender.getMessages();
         assertEquals(1, messages.size());

@@ -170,7 +170,7 @@ public class UserTest {
 
     @Test
     public void cannotUpdateWithEmptyLocation() throws Exception {
-        String content = "{\"name\": \"Mary Doe\", \"location\": \"\"}";
+        String content = "{\"name\": \"Mary Doe\", \"location\": {}}";
         mockMvc.perform(post("/user/" + user.getId()).content(content).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

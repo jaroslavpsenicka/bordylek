@@ -1,11 +1,26 @@
 package org.bordylek.service.model;
 
+import javax.validation.constraints.NotNull;
+
 public class Location {
 
     private String id;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private float lat;
+
+    @NotNull
     private float lng;
+
+    public Location() {
+    }
+
+    public Location(String name) {
+        this.name = name;
+    }
 
     public String getId() {
         return id;

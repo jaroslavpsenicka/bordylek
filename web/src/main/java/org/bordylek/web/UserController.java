@@ -104,7 +104,7 @@ public class UserController {
         @Length(min = 3, max = 255, message = "name should be 3-255 characters long")
         private String name;
 
-        @NotNull(message = "location may not be null")
+        @Valid @NotNull(message = "location may not be null")
         private Location location;
 
         public String getName() {

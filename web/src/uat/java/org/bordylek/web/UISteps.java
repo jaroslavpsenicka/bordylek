@@ -7,6 +7,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.model.UserStatus;
 import org.bordylek.service.repository.UserRepository;
@@ -40,6 +41,7 @@ public class UISteps {
     private SharedDriver driver;
     private WebDriverWait wait;
     private EmbeddedHttpServer server;
+    private User user;
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
@@ -61,12 +63,19 @@ public class UISteps {
 
     @Given("^(new|verified) user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
     public void theUserExists(String type, String name, String email) throws Throwable {
-        User user = new User();
+        user = new User();
         user.setEmail(email);
         user.setRegId("1");
         user.setName(name);
         user.setCreateDate(new Date());
         user.setStatus(UserStatus.valueOf(type.toUpperCase()));
+        userRepository.save(user);
+    }
+
+    @Given("^living in \"([^\"]*)\"$")
+    public void livingIn(String locationName) throws Throwable {
+        if (user == null) throw new IllegalStateException("No use defined");
+        user.setLocation(new Location(locationName));
         userRepository.save(user);
     }
 
