@@ -1,6 +1,5 @@
 package org.bordylek.web;
 
-import com.mongodb.DBObject;
 import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewUserEvent;
 import org.bordylek.service.model.User;
@@ -54,13 +53,7 @@ public class EventTest {
     @Test
     public void userCreated() throws Exception {
         eventGateway.send(new NewUserEvent(user));
-        DBObject event = (DBObject) mongoTemplate.getCollection("events").find().toArray().get(1).get("payload");
-        assertEquals("USER", event.get("domain"));
-        assertEquals("newUser", event.get("name"));
-        assertEquals("John Doe", ((DBObject)event.get("user")).get("name"));
-
         Thread.sleep(2000);
-
         List<MimeMessage> messages = mailSender.getMessages();
         assertEquals(1, messages.size());
         assertTrue(messages.get(0).getContent().toString().indexOf("Welcome to Bordylek, John Doe") > -1);
