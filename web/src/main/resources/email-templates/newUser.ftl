@@ -2,7 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>Welcome to Bordylek, ${name}</title>
+		<title>Welcome to Bordylek, ${user.name}</title>
 	</head>
 	<body>
 		<p></p>

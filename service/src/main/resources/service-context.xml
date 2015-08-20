@@ -4,13 +4,11 @@
 	xmlns:context="http://www.springframework.org/schema/context"
     xmlns:mongo="http://www.springframework.org/schema/data/mongo"
     xmlns:task="http://www.springframework.org/schema/task"
-    xmlns:int="http://www.springframework.org/schema/integration"
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
-        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
     ">
     
 	<!-- @Component, @Service, @Controller, @Repository, @Configuration -->
@@ -32,8 +30,12 @@
         <constructor-arg name="mongo" ref="mongo" />
         <constructor-arg name="databaseName" value="bordylek" />
     </bean>
+    <bean id="mongoMessageStore" class="org.springframework.integration.mongodb.store.MongoDbMessageStore">
+        <constructor-arg ref="mongoFactory"/>
+        <constructor-arg name="collectionName" value="events"/>
+    </bean>
 
-	<!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
+    <!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
 	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 	<bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator" />
 	
@@ -47,26 +49,9 @@
 	<task:annotation-driven executor="slowExecutor" />
     <task:executor id="slowExecutor" pool-size="2"/>
 
-    <!-- Integration -->
-    <int:gateway id="eventGateway" service-interface="org.bordylek.service.event.EventGateway"
-         default-request-channel="events"/>
-
-    <bean id="mongoMessageStore" class="org.springframework.integration.mongodb.store.MongoDbMessageStore">
-        <constructor-arg ref="mongoFactory"/>
-        <constructor-arg name="collectionName" value="events"/>
-    </bean>
-
-    <int:channel id="events">
-        <int:queue message-store="mongoMessageStore"/>
-    </int:channel>
-
 	<!-- Services -->
     <bean id="notificationService" class="org.bordylek.service.NotificationService">
-        <property name="mailSender">
-            <bean class="org.springframework.mail.javamail.JavaMailSenderImpl">
-                <property name="port" value="25" />
-            </bean>
-        </property>
+        <property name="mailSender" ref="mailSender"/>
         <property name="configuration">
             <bean class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
                 <property name="templateLoaderPath">
@@ -75,5 +60,12 @@
             </bean>
         </property>
     </bean>
-	
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="port" value="25" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="username" value="${mail.smtpUser:}" />
+        <property name="password" value="${mail.smtpPassword:}" />
+    </bean>
+
 </beans>

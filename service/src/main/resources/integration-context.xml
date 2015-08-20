@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/integration"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+    <gateway id="eventGateway" service-interface="org.bordylek.service.event.EventGateway" default-request-channel="events"/>
+
+    <channel id="events">
+        <queue message-store="mongoMessageStore"/>
+    </channel>
+
+    <payload-type-router input-channel="events">
+        <poller task-executor="slowExecutor" fixed-rate="5" time-unit="SECONDS"/>
+        <mapping type="org.bordylek.service.event.NewUserEvent" channel="notifications"/>
+    </payload-type-router>
+
+    <channel id="notifications"/>
+
+    <service-activator input-channel="notifications" ref="userNotifier" method="notify"/>
+    
+</beans:beans>

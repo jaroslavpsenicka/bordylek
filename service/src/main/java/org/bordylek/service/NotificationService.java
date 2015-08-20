@@ -1,11 +1,17 @@
 package org.bordylek.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -19,39 +25,27 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Document;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 @Component
 public class NotificationService {
 
-	@Value("${mail.smtpServer:localhost}")
-	private String smtpServer;
-	@Value("${mail.smtpUser:}")
-	private String smtpUser;
-	@Value("${mail.smtpPassword:}")
-	private String smtpPassword;
 	@Value("${mail.defaultSenderEmail:info@bordylek.org}")
 	private String defaultSenderEmail;
 	@Value("${mail.defaultSenderName:Bordylek}")
 	private String defaultSenderName;
 
-	private DocumentBuilder db;
+    @Autowired
+    private JavaMailSender mailSender;
+
+    private DocumentBuilder db;
 	private Transformer serializer;
 	private XPathExpression xpe;
-	private JavaMailSenderImpl mailSender;
 	private Configuration configuration;
 
 	private static final Logger LOG = LoggerFactory.getLogger(NotificationService.class);
@@ -67,7 +61,7 @@ public class NotificationService {
 	}
 	
 	@Required
-	public void setMailSender(JavaMailSenderImpl mailSender) {
+	public void setMailSender(JavaMailSender mailSender) {
 		this.mailSender = mailSender;
 	}
 	
@@ -82,8 +76,8 @@ public class NotificationService {
 
 	public void sendMessage(String to, String templateName, Locale locale, Map<String, Object> context) {
 		try {
-			sendMessage(new InternetAddress(defaultSenderEmail, defaultSenderName), 
-				to, templateName, locale, context);
+            InternetAddress from = new InternetAddress(defaultSenderEmail, defaultSenderName);
+            sendMessage(from, to, templateName, locale, context);
 		} catch (Exception ex) {
 			LOG.error("error sending message", ex);
 		}
@@ -94,8 +88,7 @@ public class NotificationService {
 		try {
 			String body = buildTemplate(templateName, locale, context);
 			Document doc = db.parse(new ByteArrayInputStream(body.getBytes("UTF-8")));
-			String subject = xpe.evaluate(doc);
-			sendMessage(from, to, subject, body);
+			sendMessage(from, to, xpe.evaluate(doc), body);
 		} catch (Exception ex) {
 			LOG.error("error sending message", ex);
 		}
@@ -112,12 +105,6 @@ public class NotificationService {
 			helper.setText(body, true);
 			helper.setReplyTo(from);
 			msg.setSentDate(new Date(System.currentTimeMillis()));
-			mailSender.setDefaultEncoding("UTF-8");
-			mailSender.setHost(smtpServer);
-			if ( ! StringUtils.isEmpty(smtpUser) && ! StringUtils.isEmpty(smtpPassword)) {
-				mailSender.setUsername(smtpUser);
-				mailSender.setPassword(smtpPassword);
-			}
 			mailSender.send(msg);
 		} catch (Exception ex) {
 			LOG.error("error sending message", ex);

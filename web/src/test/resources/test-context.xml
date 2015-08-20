@@ -17,4 +17,6 @@
         <constructor-arg value="InMemoryMongo" />
     </bean>
 
+    <bean id="mailSender" class="org.bordylek.web.TestMailSender"/>
+
 </beans>

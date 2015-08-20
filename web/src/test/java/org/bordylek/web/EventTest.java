@@ -3,27 +3,26 @@ package org.bordylek.web;
 import com.mongodb.DBObject;
 import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewUserEvent;
-import org.bordylek.service.model.Event;
 import org.bordylek.service.model.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.mail.internet.MimeMessage;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/integration-context.xml", "/test-context.xml"})
 public class EventTest {
 
     @Autowired
@@ -33,8 +32,7 @@ public class EventTest {
 	private MongoTemplate mongoTemplate;
 
     @Autowired
-    @Qualifier("events")
-    private PollableChannel eventsChannel;
+    private TestMailSender mailSender;
 
     private User user;
 
@@ -50,6 +48,7 @@ public class EventTest {
 	
 	@After
 	public void after() throws Exception {
+        mailSender.clear();
     }
 
     @Test
@@ -60,11 +59,11 @@ public class EventTest {
         assertEquals("newUser", event.get("name"));
         assertEquals("John Doe", ((DBObject)event.get("user")).get("name"));
 
-        Message<Event> message = (Message<Event>) eventsChannel.receive();
-        assertEquals(Event.DOMAIN.USER, message.getPayload().getDomain());
-        assertEquals(NewUserEvent.NAME, message.getPayload().getName());
+        Thread.sleep(500);
 
-        assertEquals(1, mongoTemplate.getCollection("events").count());
+        List<MimeMessage> messages = mailSender.getMessages();
+        assertEquals(1, messages.size());
+        assertTrue(messages.get(0).getContent().toString().indexOf("Welcome to Bordylek, John Doe") > -1);
     }
 
 }
