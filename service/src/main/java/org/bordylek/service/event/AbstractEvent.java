@@ -2,50 +2,31 @@ package org.bordylek.service.event;
 
 import org.bordylek.service.model.Event;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @SuppressWarnings("serial")
 public abstract class AbstractEvent implements Event {
 
-	private String domainName;
-	private String eventName;
-	private Map<String, Object> parameters = new HashMap<String, Object>();
+	private DOMAIN domain;
+	private String name;
 
-	public AbstractEvent(String domainName, String eventName) {
-		this.domainName = domainName;
-		this.eventName = eventName;
-	}
-
-	public String getDomainName() {
-		return domainName;
-	}
-	
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
-	}
-	
-	public String getEventName() {
-		return eventName;
-	}
-	
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
+	public AbstractEvent(Event.DOMAIN domain, String eventName) {
+		this.domain = domain;
+		this.name = eventName;
 	}
 
-	public Object getParameter(String name) {
-		return parameters.get(name);
+	public DOMAIN getDomain() {
+		return domain;
 	}
 	
-	public Map<String, Object> getParameters() {
-		return parameters;
+	public void setDomain(DOMAIN domain) {
+		this.domain = domain;
 	}
 	
-	protected void addParameter(String key, Object value) {
-		this.parameters.put(key, value);
+	public String getName() {
+		return name;
 	}
 	
-	public void setParameters(Map<String, Object> parameters) {
-		this.parameters = parameters;
+	public void setName(String eventName) {
+		this.name = eventName;
 	}
+
 }

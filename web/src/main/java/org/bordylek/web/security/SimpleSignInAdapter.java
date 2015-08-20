@@ -1,6 +1,6 @@
 package org.bordylek.web.security;
 
-import org.bordylek.service.event.EventQueue;
+import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewUserEvent;
 import org.bordylek.service.model.User;
 import org.bordylek.service.model.UserStatus;
@@ -30,7 +30,7 @@ public class SimpleSignInAdapter implements SignInAdapter {
     private UserRepository userRepository;
 
     @Autowired
-    private EventQueue eventQueue;
+    private EventGateway eventGateway;
 
     private final RequestCache requestCache;
 
@@ -59,7 +59,7 @@ public class SimpleSignInAdapter implements SignInAdapter {
         userRepository.save(user);
         if (newUser) {
             LOG.info("New user created: " + user.getName());
-            eventQueue.send(new NewUserEvent(user));
+            eventGateway.send(new NewUserEvent(user));
         }
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userId, "", null);

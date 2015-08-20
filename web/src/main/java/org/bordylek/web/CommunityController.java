@@ -1,7 +1,7 @@
 package org.bordylek.web;
 
 import org.bordylek.service.NotFoundException;
-import org.bordylek.service.event.EventQueue;
+import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
@@ -36,7 +36,7 @@ public class CommunityController {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private EventQueue eventQueue;
+	private EventGateway eventGateway;
 
 	@Value("${comm.pageSize:25}")
 	private int pageSize;
@@ -46,8 +46,8 @@ public class CommunityController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CommunityController.class);
 
-	public void setEventQueue(EventQueue eventQueue) {
-		this.eventQueue = eventQueue;
+	public void setEventQueue(EventGateway eventGateway) {
+		this.eventGateway = eventGateway;
 	}
 	
 	@RequestMapping(value = "/comm", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
@@ -58,7 +58,7 @@ public class CommunityController {
 		comm.setCreateDate(new Date());
 		Community community = this.communityRepository.save(comm);
 		LOG.info("New community created: "+community.getTitle());
-		eventQueue.send(new NewCommunityEvent(community));
+        eventGateway.send(new NewCommunityEvent(community));
 		return community;
 	}
 

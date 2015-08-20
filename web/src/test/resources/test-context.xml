@@ -17,6 +17,4 @@
         <constructor-arg value="InMemoryMongo" />
     </bean>
 
-    <bean id="testEventQueue" class="org.bordylek.web.TestEventQueue"/>
-    
 </beans>

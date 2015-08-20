@@ -1,10 +1,6 @@
 package org.bordylek.service.event.handler;
 
 import org.bordylek.service.NotificationService;
-import org.bordylek.service.event.NewUserEvent;
-import org.bordylek.service.event.EventDomain;
-import org.bordylek.service.event.EventHandler;
-import org.bordylek.service.annotation.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Component
-@Subscribe(domain= EventDomain.USER, name= NewUserEvent.NAME)
-public class NewUserHandler implements EventHandler {
+public class NewUserHandler {
 
 	@Autowired
 	private NotificationService service;

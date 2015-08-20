@@ -43,7 +43,7 @@ public class UISteps {
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
-    public static final int INITIAL_TIMEOUT = 120;
+    public static final int INITIAL_TIMEOUT = 20;
 
     @Before
 	public void before() throws Exception {
@@ -200,15 +200,14 @@ public class UISteps {
     }
 
     @When("^([\\w-]+) is (disabled|enabled)")
-    public void disabled(final String elementId, String state) throws InterruptedException {
-        WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+    public void disabled(final String elementId, final String state) throws InterruptedException {
+        wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 WebElement element = driver.findElement(By.id(elementId));
-                return element.isDisplayed() ? element : null;
+                boolean stateCond = "disabled".equals(state) ? "true".equals(element.getAttribute("disabled")) : true;
+                return element.isDisplayed() && stateCond ? element : null;
             }
         });
-
-        assertEquals("disabled".equals(state) ? "true" : null, element.getAttribute("disabled"));
     }
 
     @And("^(\\w+) key is pressed$")

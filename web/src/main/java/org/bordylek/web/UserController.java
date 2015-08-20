@@ -1,7 +1,7 @@
 package org.bordylek.web;
 
 import org.bordylek.service.NotFoundException;
-import org.bordylek.service.event.EventQueue;
+import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.model.UserStatus;
@@ -31,7 +31,7 @@ public class UserController {
 	private UserRepository repository;
 
 	@Autowired
-	private EventQueue eventQueue;
+	private EventGateway eventGateway;
 
 	@Value("${user.pageSize:25}")
 	private int pageSize;
