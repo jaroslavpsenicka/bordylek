@@ -16,7 +16,7 @@
     </channel>
 
     <payload-type-router input-channel="events">
-        <poller task-executor="slowExecutor" fixed-rate="5" time-unit="SECONDS"/>
+        <poller task-executor="slowExecutor" fixed-rate="1" time-unit="SECONDS"/>
         <mapping type="org.bordylek.service.event.NewUserEvent" channel="notifications"/>
     </payload-type-router>
 
