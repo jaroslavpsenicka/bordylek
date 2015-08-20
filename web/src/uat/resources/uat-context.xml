@@ -6,6 +6,7 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <import resource="classpath:/service-context.xml"/>
+    <import resource="classpath:/integration-context.xml"/>
     <import resource="classpath:/web-context.xml"/>
     <import resource="classpath:/security-context.xml"/>
     <import resource="classpath:/social-context.xml"/>
