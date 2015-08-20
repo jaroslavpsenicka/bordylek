@@ -9,6 +9,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
 		.when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
 		.when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
+		.when("/ptofile", {templateUrl: "profile/profile.html", controller: "ProfileCtrl"})
 
 		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
 		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
@@ -63,6 +64,12 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
 			alert(error);
 		});
 	};
+});
+
+app.controller('ProfileCtrl', function (/* $scope, $location, $http */) {
+
+
+
 });
 
 /**
