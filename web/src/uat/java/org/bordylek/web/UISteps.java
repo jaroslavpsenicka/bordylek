@@ -7,9 +7,8 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.bordylek.service.model.Location;
-import org.bordylek.service.model.User;
-import org.bordylek.service.model.UserStatus;
+import org.bordylek.service.model.*;
+import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -36,12 +35,16 @@ public class UISteps {
     private UserRepository userRepository;
 
     @Autowired
+    private CommunityRepository communityRepository;
+
+    @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
 
     private SharedDriver driver;
     private WebDriverWait wait;
     private EmbeddedHttpServer server;
     private User user;
+    private Community community;
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
@@ -61,6 +64,12 @@ public class UISteps {
         server.stop();
 	}
 
+    @Given("^community \"([^\"]*)\" exists$")
+    public void theCommunityExists(String communityName) throws Throwable {
+        community = new Community(communityName);
+        communityRepository.save(community);
+    }
+
     @Given("^(new|verified) user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
     public void theUserExists(String type, String name, String email) throws Throwable {
         user = new User();
@@ -74,8 +83,16 @@ public class UISteps {
 
     @Given("^living in \"([^\"]*)\"$")
     public void livingIn(String locationName) throws Throwable {
-        if (user == null) throw new IllegalStateException("No use defined");
+        if (user == null) throw new IllegalStateException("no user defined");
         user.setLocation(new Location(locationName));
+        userRepository.save(user);
+    }
+
+    @Given("^member of community \"([^\"]*)\"$")
+    public void memberOfCommunity(String communityName) throws Throwable {
+        if (user == null) throw new IllegalStateException("No user defined");
+        Community comm  = communityRepository.findByTitle(communityName);
+        user.getCommunities().add(new CommunityRef(comm.getId(), comm.getTitle()));
         userRepository.save(user);
     }
 

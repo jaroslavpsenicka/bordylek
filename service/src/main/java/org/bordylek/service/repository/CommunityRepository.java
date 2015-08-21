@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public abstract interface CommunityRepository extends MongoRepository<Community, String> {
 	Page<Community> findByLocationNear(Point p, Distance d, Pageable page);
+	Community findByTitle(String title);
 }

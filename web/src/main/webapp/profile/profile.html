@@ -10,6 +10,11 @@
                 <h2 id="profilename" class="profile-header">{{user.name}}</h2>
                 <div id="location">{{user.location.name}}</p>
             </div>
+
+            <h2 localize>My Communities</h2>
+            <ul>
+                <li class="profile-community" ng-repeat="comm in user.communities">{{comm.title}}</li>
+            </ul>
         </div>
 
     </div>

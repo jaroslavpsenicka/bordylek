@@ -1,6 +1,6 @@
 Feature: Profile
 
-  Scenario: Profile of known user, no photo
+  Scenario: Profile of known user
 
     Given verified user "John Doe" with email john@doe.com exists
     And living in "Prague, Czech Republic"
@@ -10,7 +10,14 @@ Feature: Profile
     And location is shown with value "Prague, Czech Republic"
 
 
+  Scenario: Profile of known user, member of one community
 
+    Given community "Prague" exists
+    And verified user "John Doe" with email john@doe.com exists
+    And living in "Prague, Czech Republic"
+    And member of community "Prague"
 
+    When the profile page is shown
+    Then xpath //li[contains(@class, 'profile-community')] is shown with value "Prague"
 
 

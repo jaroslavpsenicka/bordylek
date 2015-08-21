@@ -8,8 +8,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "user")
 public class User implements Unique {
@@ -38,6 +41,9 @@ public class User implements Unique {
 	private Date createDate;
 	private String imageUrl;
 	private Location location;
+
+	@Valid
+	private List<CommunityRef> communities = new ArrayList<>();
 
 	public String getId() {
 		return this.id;
@@ -109,6 +115,14 @@ public class User implements Unique {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public List<CommunityRef> getCommunities() {
+		return communities;
+	}
+
+	public void setCommunities(List<CommunityRef> communities) {
+		this.communities = communities;
 	}
 
 }
