@@ -53,12 +53,22 @@ public class CommunityController {
 	@RequestMapping(value = "/comm", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER')")
 	public Community create(@Valid @RequestBody Community comm) {
 		comm.setCreateDate(new Date());
 		Community community = this.communityRepository.save(comm);
 		LOG.info("New community created: "+community.getTitle());
         eventGateway.send(new NewCommunityEvent(community));
+		return community;
+	}
+
+	@RequestMapping(value = "/comm/{id}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PreAuthorize("hasRole('USER')")
+	public Community find(@PathVariable("id") String id) {
+		Community community = this.communityRepository.findOne(id);
+		if (community == null) throw new NotFoundException(id);
 		return community;
 	}
 
@@ -69,13 +79,6 @@ public class CommunityController {
 	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
 		comm.setId(id);
 		return (Community) this.communityRepository.save(comm);
-	}
-
-	@RequestMapping(value = "/comm/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
-	@PreAuthorize("hasRole('ADMIN')")
-	public void delete(@PathVariable("id") String id) {
-		this.communityRepository.delete((Community) this.communityRepository.findOne(id));
 	}
 
 	@RequestMapping(value = "/comm", method = RequestMethod.GET, produces = "application/json")

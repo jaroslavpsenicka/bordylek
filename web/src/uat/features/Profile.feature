@@ -30,6 +30,6 @@ Feature: Profile
 
     When the profile page is shown
     And xpath //li[contains(@class, 'profile-community')]/a is clicked
-    # Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
+    Then xpath //h2[contains(@class, 'comm-header')] is shown with value "Prague"
 
 
