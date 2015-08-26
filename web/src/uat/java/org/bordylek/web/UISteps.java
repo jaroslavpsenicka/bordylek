@@ -242,7 +242,7 @@ public class UISteps {
         Thread.sleep(500);
     }
 
-    @When("^(.+) is clicked$")
+    @When("^id (.+) is clicked$")
     public void clickId(final String elementId) throws InterruptedException {
         wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
@@ -251,6 +251,16 @@ public class UISteps {
             }
         }).click();
         Thread.sleep(500);
+    }
+
+    @Then("^xpath (.+) is clicked$")
+    public void xpathIsClicked(final String xpath) throws Throwable {
+        wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+                WebElement element = driver.findElement(By.xpath(xpath));
+                return element.isDisplayed() && element.getText().length() > 0 ? element : null;
+            }
+        }).click();
     }
 
     @When("^(.+) input field value is (.+)$")

@@ -4,7 +4,7 @@
         <div class="col-lg-12">
             <div class="col-sm-2">
                 <img src="{{user.imageUrl}}" ng-if="user.imageUrl"/>
-                <div class="defaultProfileImg" ng-if="!user.imageUrl"/>
+                <div class="defaultImg" ng-if="!user.imageUrl"/>
             </div>
             <div class="col-sm-10">
                 <h2 id="profilename" class="profile-header">{{user.name}}</h2>
@@ -13,7 +13,9 @@
 
             <h2 localize>My Communities</h2>
             <ul>
-                <li class="profile-community" ng-repeat="comm in user.communities">{{comm.title}}</li>
+                <li class="profile-community" ng-repeat="comm in user.communities">
+                    <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
+                </li>
             </ul>
         </div>
 

@@ -18,6 +18,18 @@ Feature: Profile
     And member of community "Prague"
 
     When the profile page is shown
-    Then xpath //li[contains(@class, 'profile-community')] is shown with value "Prague"
+    Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
+
+
+  Scenario: Profile of known user, navigate to community
+
+    Given community "Prague" exists
+    And verified user "John Doe" with email john@doe.com exists
+    And living in "Prague, Czech Republic"
+    And member of community "Prague"
+
+    When the profile page is shown
+    And xpath //li[contains(@class, 'profile-community')]/a is clicked
+    # Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
 
 

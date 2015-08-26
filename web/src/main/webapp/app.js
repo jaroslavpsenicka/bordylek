@@ -10,11 +10,11 @@ app.config(['$routeProvider', function ($routeProvider) {
 		.when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
 		.when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
 		.when("/profile", {templateUrl: "profile/profile.html", controller: "ProfileCtrl"})
+		.when("/comms/:commId", {templateUrl: "comms/comm.html", controller: "CommsCtrl"})
 
 		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
 		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
 		.when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
-		.when("/comms", {templateUrl: "comms/comms.html", controller: "CommsCtrl"})
 		.when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
 		.when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
 		.when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
@@ -67,10 +67,13 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
 });
 
 app.controller('ProfileCtrl', function (/* $scope, $location, $http */) {
-
-
-
 });
+
+app.controller('CommsCtrl', ['$scope', '$routeParams', function ($scope, $routeParams) {
+	$scope.comm = {
+		name: $routeParams.commId
+	}
+}]);
 
 /**
  * Controls the Blog

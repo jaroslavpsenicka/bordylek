@@ -34,7 +34,7 @@ Feature: Login
     When the index page is shown
     When location input field value is Prague
     And ENTER key is pressed
-    And welcomeform-submit is clicked
+    And id welcomeform-submit is clicked
     And username is shown with value "John Doe"
 
 
@@ -45,7 +45,7 @@ Feature: Login
     And location input field value is Černošice
     Then xpath //li/a[contains(text(), 'Czech')] is shown with value "Černošice, Czech Republic"
     And ENTER key is pressed
-    And welcomeform-submit is clicked
+    And id welcomeform-submit is clicked
     And username is shown with value "John Doe"
 
 
