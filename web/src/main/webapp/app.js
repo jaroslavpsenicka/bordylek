@@ -5,12 +5,39 @@ var app = angular.module('tutorialWebApp', [
   'ui.bootstrap'
 ]);
 
-app.config(['$routeProvider', function ($routeProvider) {
-	$routeProvider
-		.when("/", {templateUrl: "partials/home.html", controller: "PageCtrl"})
-		.when("/login", {templateUrl: "login/login.html", controller: "PageCtrl"})
-		.when("/profile", {templateUrl: "profile/profile.html", controller: "ProfileCtrl"})
-		.when("/comms/:commId", {templateUrl: "comms/comm.html", controller: "CommsCtrl"})
+app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $controllerProvider) {
+	app.registerCtrl = $controllerProvider.register;
+	app.resolveDeps = function(dependencies){
+	  	return function($q, $rootScope) {
+			var deferred = $q.defer();
+			$script(dependencies, function() {
+		  		$rootScope.$apply(function() {
+					deferred.resolve();
+		  		});
+			});
+			return deferred.promise;
+	  	}
+	};
+
+	$routeProvider.when("/", {
+			templateUrl: "partials/home.html",
+			controller: "PageCtrl"
+		}).when("/login", {
+			templateUrl: "login/login.html",
+			controller: "PageCtrl"
+		}).when("/profile", {
+			templateUrl: "profile/profile.html",
+			controller: "ProfileCtrl",
+		  	resolve: {
+		  		deps: app.resolveDeps(['profile/profile.js'])
+			}
+		}).when("/comms/:commId", {
+			templateUrl: "comms/comm.html",
+			controller: "CommsCtrl",
+		  	resolve: {
+		  		deps: app.resolveDeps(['comms/comms.js'])
+			}
+		})
 
 		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
 		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
@@ -65,15 +92,6 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
 		});
 	};
 });
-
-app.controller('ProfileCtrl', function (/* $scope, $location, $http */) {
-});
-
-app.controller('CommsCtrl', ['$scope', '$routeParams', function ($scope, $routeParams) {
-	$scope.comm = {
-		name: $routeParams.commId
-	}
-}]);
 
 /**
  * Controls the Blog
