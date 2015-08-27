@@ -33,3 +33,11 @@ Feature: Profile
     Then xpath //h2[contains(@class, 'comm-header')] is shown with value "Prague"
 
 
+  Scenario: Profile of known user, no community
+
+    Given community "Prague" exists
+    And verified user "John Doe" with email john@doe.com exists
+    And living in "Prague, Czech Republic"
+
+    When the profile page is shown
+    # Then available-community is shown with value "Prague"

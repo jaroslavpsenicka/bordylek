@@ -1,6 +1,6 @@
 package org.bordylek.web;
 
-import org.apache.commons.lang.StringUtils;
+import net.sf.ehcache.Ehcache;
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.CommunityRepository;
@@ -10,12 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -29,13 +30,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
-import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
@@ -58,6 +58,9 @@ public class CommunityTest {
 
     @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     private MockMvc mockMvc;
     private User user;
@@ -88,6 +91,8 @@ public class CommunityTest {
 	public void after() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
         userDetailsManager.deleteUser(user.getRegId());
+        Ehcache cache = (Ehcache) cacheManager.getCache("comms").getNativeCache();
+        cache.removeAll();
     }
 
     @Test
@@ -97,6 +102,13 @@ public class CommunityTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("id", is(community.getId())))
             .andExpect(jsonPath("title", is(community.getTitle())));
+    }
+
+    @Test
+    public void findCommunityCache() throws Exception {
+        mockMvc.perform(get("/comm/" + community.getId())).andExpect(status().isOk());
+        Ehcache cache = (Ehcache) cacheManager.getCache("comms").getNativeCache();
+        assertNotNull(cache.get(community.getId()));
     }
 
     @Test
@@ -117,7 +129,7 @@ public class CommunityTest {
 
     private void authenticate(String email, final String role) {
         SecurityContext context = SecurityContextHolder.getContext();
-        ArrayList authorities = new ArrayList() {{
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>() {{
             add(new SimpleGrantedAuthority(role));
         }};
         org.springframework.security.core.userdetails.User user =

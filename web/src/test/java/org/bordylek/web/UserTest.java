@@ -1,5 +1,6 @@
 package org.bordylek.web;
 
+import net.sf.ehcache.Ehcache;
 import org.apache.commons.lang.StringUtils;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.UserRepository;
@@ -8,10 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -51,6 +54,9 @@ public class UserTest {
     @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     private MockMvc mockMvc;
     private User user;
 
@@ -74,7 +80,8 @@ public class UserTest {
 	public void after() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
         userDetailsManager.deleteUser(user.getRegId());
-
+        Ehcache cache = (Ehcache) cacheManager.getCache("users").getNativeCache();
+        cache.removeAll();
     }
 
     @Test
@@ -177,7 +184,7 @@ public class UserTest {
 
     private void authenticate(String email, final String role) {
         SecurityContext context = SecurityContextHolder.getContext();
-        ArrayList authorities = new ArrayList() {{
+        ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>() {{
             add(new SimpleGrantedAuthority(role));
         }};
         org.springframework.security.core.userdetails.User user =

@@ -4,11 +4,13 @@
 	xmlns:context="http://www.springframework.org/schema/context"
     xmlns:mongo="http://www.springframework.org/schema/data/mongo"
     xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:cache="http://www.springframework.org/schema/cache"
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
     ">
     
 	<!-- @Component, @Service, @Controller, @Repository, @Configuration -->
@@ -66,6 +68,15 @@
         <property name="defaultEncoding" value="UTF-8" />
         <property name="username" value="${mail.smtpUser:}" />
         <property name="password" value="${mail.smtpPassword:}" />
+    </bean>
+
+    <cache:annotation-driven />
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"/>
+    </bean>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache.xml"/>
     </bean>
 
 </beans>

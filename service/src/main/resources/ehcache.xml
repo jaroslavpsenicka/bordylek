@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
+
+    <cache name="users" maxElementsInMemory="100" eternal="false" transactionalMode="off"
+        timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false" />
+    <cache name="comms" maxElementsInMemory="100" eternal="false" transactionalMode="off"
+        timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false" />
+
+</ehcache>

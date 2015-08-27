@@ -19,4 +19,10 @@
 
     <bean id="mailSender" class="org.bordylek.web.TestMailSender"/>
 
+    <!-- Shared cache for junit -->
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
+
 </beans>
