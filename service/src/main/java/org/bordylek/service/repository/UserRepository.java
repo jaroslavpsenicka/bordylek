@@ -1,5 +1,6 @@
 package org.bordylek.service.repository;
 
+import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,4 +14,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 	@Cacheable("users")
 	User findByEmail(String email);
+
+	@Cacheable(value = "users")
+	User findOne(String id);
+
 }
