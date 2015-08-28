@@ -13,6 +13,8 @@ import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.*;
+import org.springframework.data.geo.Point;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -64,9 +66,10 @@ public class UISteps {
         server.stop();
 	}
 
-    @Given("^community \"([^\"]*)\" exists$")
+    @Given("^community \"(Prague)\" exists$")
     public void theCommunityExists(String communityName) throws Throwable {
         community = new Community(communityName);
+        community.setLocation(new Point(14.0, 50.0));
         communityRepository.save(community);
     }
 
@@ -217,9 +220,18 @@ public class UISteps {
     }
 
     @Then("^([\\w-]+) is not shown$")
-    public void notShown(final String elementId)  {
+    public void idNotShown(final String elementId)  {
         try {
             WebElement element = driver.findElement(By.id(elementId));
+            if (element != null) assertFalse(element.isDisplayed());
+        } catch (NoSuchElementException ignored) {
+        }
+    }
+
+    @Then("^xpath (.+) is not shown$")
+    public void xpathNotShown(final String xpath)  {
+        try {
+            WebElement element = driver.findElement(By.xpath(xpath));
             if (element != null) assertFalse(element.isDisplayed());
         } catch (NoSuchElementException ignored) {
         }

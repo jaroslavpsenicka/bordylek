@@ -8,22 +8,21 @@
             </div>
             <div class="col-sm-10">
                 <h2 id="profilename" class="profile-header">{{user.name}}</h2>
-                <div id="location">{{user.location.name}}</p>
-            </div>
-
-            <h3 localize>My Communities</h3>
-            <ul>
-                <li class="profile-community" ng-repeat="comm in user.communities">
-                    <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
-                </li>
-            </ul>
-            <p localize ng-show="user.available-comms">There are following communities around:
+                <div id="location">{{user.location.name}}</div>
+                <h4 localize>My Communities</h4>
                 <ul>
-                    <li class="available-community" ng-repeat="comm in user.nearby">
+                    <li class="profile-community" ng-repeat="comm in user.communities">
                         <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
                     </li>
                 </ul>
-            </p>
+                <p localize ng-show="user.nearby">There are following communities around:
+                    <ul>
+                        <li class="available-community" ng-repeat="comm in user.nearby">
+                            <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
+                        </li>
+                    </ul>
+                </p>
+            </div>
         </div>
 
     </div>

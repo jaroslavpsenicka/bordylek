@@ -19,6 +19,7 @@ Feature: Profile
 
     When the profile page is shown
     Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
+    And xpath //li[contains(@class, 'available-community')]/a is not shown
 
 
   Scenario: Profile of known user, navigate to community
@@ -33,11 +34,11 @@ Feature: Profile
     Then xpath //h2[contains(@class, 'comm-header')] is shown with value "Prague"
 
 
-  Scenario: Profile of known user, no community
+  Scenario: Profile of known user, no community, one nearby
 
     Given community "Prague" exists
     And verified user "John Doe" with email john@doe.com exists
     And living in "Prague, Czech Republic"
 
     When the profile page is shown
-    # Then available-community is shown with value "Prague"
+    Then xpath //li[contains(@class, 'available-community')]/a is shown with value "Prague"

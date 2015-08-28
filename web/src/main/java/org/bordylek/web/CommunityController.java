@@ -4,6 +4,7 @@ import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
+import org.bordylek.service.model.CommunityRef;
 import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.CommunityRepository;
@@ -24,8 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class CommunityController {
@@ -56,12 +56,15 @@ public class CommunityController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	public List<Community> find(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
-	  	@RequestParam(value = "dist", required = false) Integer distance) {
-		Location loc = getUser().getLocation();
+	  	@RequestParam(value = "dist", required = false) Integer distance,
+		@RequestParam(value = "include-all", defaultValue = "false") boolean includeAll) {
+		User user = getUser();
 		Pageable request = new PageRequest(pageNumber, pageSize);
-		if (loc != null) {
+		if (user.getLocation() != null) {
 			int distValue = (distance != null) ? distance : this.defaultDistance;
-			return communityRepository.findByLocationNear(loc.getLat(), loc.getLng(), distValue, request).getContent();
+			List<Community> communities = communityRepository.findByLocationNear(user.getLocation().getLat(),
+				user.getLocation().getLng(), distValue, request).getContent();
+			return includeAll ? communities : exclude(communities, user.getCommunities());
 		}
 
 		return communityRepository.findAll(request).getContent();
@@ -115,4 +118,24 @@ public class CommunityController {
 			: auth.getPrincipal().toString();
 		return this.userRepository.findByRegId(principal);
 	}
+
+	private List<Community> exclude(List<Community> communities, List<CommunityRef> subscribedCommunities) {
+		if (subscribedCommunities != null && subscribedCommunities.size() > 0) {
+			List<Community> filtered = new ArrayList<Community>();
+			Set<String> subscribedIds = new HashSet<>();
+			for (CommunityRef subscribedCommunity : subscribedCommunities) {
+				subscribedIds.add(subscribedCommunity.getId());
+			}
+			for (Community community : communities) {
+				if (!subscribedIds.contains(community.getId())) {
+					filtered.add(community);
+				}
+			}
+
+			return filtered;
+		}
+
+		return communities;
+	}
+
 }
