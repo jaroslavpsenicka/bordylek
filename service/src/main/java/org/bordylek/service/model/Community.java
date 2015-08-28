@@ -1,6 +1,7 @@
 package org.bordylek.service.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -26,7 +27,7 @@ public class Community implements Unique {
 	private String iconId;
 	private String url;
 	
-	private double[] location;
+	private Point location;
 
 	public Community() {
 		this.createDate = new Date();
@@ -37,7 +38,7 @@ public class Community implements Unique {
 		this.title = title;
 	}
 
-	public Community(String title, double[] location) {
+	public Community(String title, Point location) {
 		this.createDate = new Date();
 		this.title = title;
 		this.location = location;
@@ -107,11 +108,11 @@ public class Community implements Unique {
 		this.summary = summary;
 	}
 
-	public double[] getLocation() {
+	public Point getLocation() {
 		return location;
 	}
 	
-	public void setLocation(double[] location) {
+	public void setLocation(Point location) {
 		this.location = location;
 	}
 	

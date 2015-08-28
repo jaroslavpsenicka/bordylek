@@ -2,15 +2,20 @@ package org.bordylek.web;
 
 import net.sf.ehcache.Ehcache;
 import org.bordylek.service.model.Community;
+import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
@@ -33,6 +38,7 @@ import org.springframework.web.util.NestedServletException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -64,7 +70,10 @@ public class CommunityTest {
 
     private MockMvc mockMvc;
     private User user;
-    private Community community;
+    private Community communityPrague;
+
+    public static final double PRAGUE_LAT = 50.0;
+    public static final double PRAGUE_LNG = 14.0;
 
     @Before
 	public void before() throws Exception {
@@ -77,14 +86,16 @@ public class CommunityTest {
 		user.setName("John Doe");
 		user.setEmail("john@doe.com");
         user.setCreateDate(new Date());
+        user.setLocation(new Location("Praha", PRAGUE_LAT, PRAGUE_LNG));
         user = userRepository.save(user);
         authenticate(user.getRegId(), "ROLE_USER");
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                 user.getRegId(), "pwd", AuthorityUtils.createAuthorityList("ROLE_USER")));
 
-        community = new Community();
-        community.setTitle("C1");
-        communityRepository.save(community);
+        communityPrague = new Community();
+        communityPrague.setTitle("C1");
+        communityPrague.setLocation(new Point(PRAGUE_LNG, PRAGUE_LAT));
+        communityRepository.save(communityPrague);
 	}
 	
 	@After
@@ -96,19 +107,65 @@ public class CommunityTest {
     }
 
     @Test
-    public void findComunity() throws Exception {
-        mockMvc.perform(get("/comm/" + community.getId()))
+    public void findOne() throws Exception {
+        mockMvc.perform(get("/comm/" + communityPrague.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("id", is(community.getId())))
-            .andExpect(jsonPath("title", is(community.getTitle())));
+            .andExpect(jsonPath("id", is(communityPrague.getId())))
+            .andExpect(jsonPath("title", is(communityPrague.getTitle())));
     }
 
     @Test
-    public void findCommunityCache() throws Exception {
-        mockMvc.perform(get("/comm/" + community.getId())).andExpect(status().isOk());
+    public void findOneCache() throws Exception {
+        mockMvc.perform(get("/comm/" + communityPrague.getId())).andExpect(status().isOk());
         Ehcache cache = (Ehcache) cacheManager.getCache("comms").getNativeCache();
-        assertNotNull(cache.get(community.getId()));
+        assertNotNull(cache.get(communityPrague.getId()));
+    }
+
+    @Test
+    @Ignore
+    public void findNearby() throws Exception {
+        mockMvc.perform(get("/comm"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    public void distantCommunity() throws Exception {
+        double dist = new Distance(21, Metrics.KILOMETERS).getNormalizedValue();
+        User user2 = new User();
+        user2.setRegId("GOOGLE/2");
+        user2.setName("John Distant");
+        user2.setEmail("distant@doe.com");
+        user2.setCreateDate(new Date());
+        user2.setLocation(new Location("Faraway", PRAGUE_LAT - dist, PRAGUE_LNG - dist));
+        user2 = userRepository.save(user2);
+        userRepository.save(user2);
+        authenticate(user2.getRegId(), "ROLE_USER");
+        mockMvc.perform(get("/comm"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @Ignore
+    public void sosoCommunity() throws Exception {
+        double dist = new Distance(19, Metrics.KILOMETERS).getNormalizedValue();
+        User user2 = new User();
+        user2.setRegId("GOOGLE/3");
+        user2.setName("John Soso");
+        user2.setEmail("john@doe.com");
+        user2.setCreateDate(new Date());
+        user2.setLocation(new Location("Soso", PRAGUE_LAT - dist, PRAGUE_LNG - dist));
+        user2 = userRepository.save(user2);
+        userRepository.save(user2);
+        authenticate(user2.getRegId(), "ROLE_USER");
+        mockMvc.perform(get("/comm"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
@@ -121,7 +178,7 @@ public class CommunityTest {
     public void illegalUserRole() throws Throwable {
         authenticate(user.getRegId(), "ROLE_XXX");
         try {
-            mockMvc.perform(get("/comm/" + community.getId()));
+            mockMvc.perform(get("/comm/" + communityPrague.getId()));
         } catch (NestedServletException ex) {
             throw ex.getCause();
         }

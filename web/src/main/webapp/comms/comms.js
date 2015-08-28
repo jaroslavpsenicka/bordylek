@@ -5,5 +5,4 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 	}, function(error) {
 		alert(error);
 	});
-
 }]);

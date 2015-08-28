@@ -10,16 +10,22 @@ public class Location {
     private String name;
 
     @NotNull
-    private float lat;
+    private double lat;
 
     @NotNull
-    private float lng;
+    private double lng;
 
     public Location() {
     }
 
     public Location(String name) {
         this.name = name;
+    }
+
+    public Location(String name, double lat, double lng) {
+        this.name = name;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public String getId() {
@@ -38,19 +44,19 @@ public class Location {
         this.name = name;
     }
 
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(float lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public float getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(float lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 }

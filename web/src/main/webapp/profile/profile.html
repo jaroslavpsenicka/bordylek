@@ -17,6 +17,13 @@
                     <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
                 </li>
             </ul>
+            <p localize ng-show="user.available-comms">There are following communities around:
+                <ul>
+                    <li class="available-community" ng-repeat="comm in user.nearby">
+                        <a href="/#/comms/{{comm.id}}">{{comm.title}}</a>
+                    </li>
+                </ul>
+            </p>
         </div>
 
     </div>

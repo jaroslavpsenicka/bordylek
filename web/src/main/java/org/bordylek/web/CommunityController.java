@@ -4,6 +4,7 @@ import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
+import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
@@ -49,17 +50,21 @@ public class CommunityController {
 	public void setEventQueue(EventGateway eventGateway) {
 		this.eventGateway = eventGateway;
 	}
-	
-	@RequestMapping(value = "/comm", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseStatus(HttpStatus.CREATED)
+
+	@RequestMapping(value = "/comm", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
-	public Community create(@Valid @RequestBody Community comm) {
-		comm.setCreateDate(new Date());
-		Community community = this.communityRepository.save(comm);
-		LOG.info("New community created: "+community.getTitle());
-        eventGateway.send(new NewCommunityEvent(community));
-		return community;
+	public List<Community> find(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
+	  	@RequestParam(value = "dist", required = false) Integer distance) {
+		Location loc = getUser().getLocation();
+		Pageable request = new PageRequest(pageNumber, pageSize);
+		if (loc != null) {
+			int distValue = (distance != null) ? distance : this.defaultDistance;
+			return communityRepository.findByLocationNear(loc.getLat(), loc.getLng(), distValue, request).getContent();
+		}
+
+		return communityRepository.findAll(request).getContent();
 	}
 
 	@RequestMapping(value = "/comm/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -72,35 +77,27 @@ public class CommunityController {
 		return community;
 	}
 
-	@RequestMapping(value = "/comm/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "/comm", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	@PreAuthorize("hasRole('ADMIN')")
-	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
-		comm.setId(id);
-		return (Community) this.communityRepository.save(comm);
+	@PreAuthorize("hasRole('USER')")
+	public Community create(@Valid @RequestBody Community comm) {
+		comm.setCreateDate(new Date());
+		Community community = this.communityRepository.save(comm);
+		LOG.info("New community created: "+community.getTitle());
+        eventGateway.send(new NewCommunityEvent(community));
+		return community;
 	}
 
-	@RequestMapping(value = "/comm", method = RequestMethod.GET, produces = "application/json")
-	@ResponseStatus(HttpStatus.OK)
-	@ResponseBody
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public List<Community> findAll(@RequestParam(value = "page", defaultValue = "0") int pageNumber, 
-		@RequestParam(value = "defaultDistance", required = false) Integer distance) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User) auth.getPrincipal();
-		Pageable request = new PageRequest(pageNumber, pageSize);
-//		double[] loc = user.getLocation();
-//		if (loc != null) {
-//	        Point pos = new Point(loc[0], loc[1]);
-//			int distValue = (distance != null) ? distance.intValue() : this.defaultDistance;
-//	        Distance dist = new Distance(distValue, Metrics.KILOMETERS);
-//			return communityRepository.findByLocationNear(pos, dist, request).getContent();
-//		}
-		
-		return communityRepository.findAll(request).getContent();
-	}
-	
+//	@RequestMapping(value = "/comm/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+//	@ResponseStatus(HttpStatus.OK)
+//	@ResponseBody
+//	@PreAuthorize("hasRole('ADMIN')")
+//	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
+//		comm.setId(id);
+//		return (Community) this.communityRepository.save(comm);
+//	}
+
 	@ExceptionHandler(ValidationException.class)
 	public void handleConstraintViolationException(ValidationException ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -111,4 +108,11 @@ public class CommunityController {
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 	}
 
+	private User getUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String principal = (auth.getPrincipal() instanceof org.springframework.security.core.userdetails.User)
+			? ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername()
+			: auth.getPrincipal().toString();
+		return this.userRepository.findByRegId(principal);
+	}
 }
