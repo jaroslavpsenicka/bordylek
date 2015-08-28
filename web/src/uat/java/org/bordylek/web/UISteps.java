@@ -81,10 +81,10 @@ public class UISteps {
         userRepository.save(user);
     }
 
-    @Given("^living in \"([^\"]*)\"$")
+    @Given("^living in \"(Prague, Czech Republic)\"$")
     public void livingIn(String locationName) throws Throwable {
         if (user == null) throw new IllegalStateException("no user defined");
-        user.setLocation(new Location(locationName));
+        user.setLocation(new Location(locationName, 50.0, 14.0));
         userRepository.save(user);
     }
 

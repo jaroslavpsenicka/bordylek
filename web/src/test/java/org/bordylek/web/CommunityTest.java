@@ -123,7 +123,6 @@ public class CommunityTest {
     }
 
     @Test
-    @Ignore
     public void findNearby() throws Exception {
         mockMvc.perform(get("/comm"))
             .andExpect(status().isOk())
@@ -147,25 +146,6 @@ public class CommunityTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(0)));
-    }
-
-    @Test
-    @Ignore
-    public void sosoCommunity() throws Exception {
-        double dist = new Distance(19, Metrics.KILOMETERS).getNormalizedValue();
-        User user2 = new User();
-        user2.setRegId("GOOGLE/3");
-        user2.setName("John Soso");
-        user2.setEmail("john@doe.com");
-        user2.setCreateDate(new Date());
-        user2.setLocation(new Location("Soso", PRAGUE_LAT - dist, PRAGUE_LNG - dist));
-        user2 = userRepository.save(user2);
-        userRepository.save(user2);
-        authenticate(user2.getRegId(), "ROLE_USER");
-        mockMvc.perform(get("/comm"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test

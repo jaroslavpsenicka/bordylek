@@ -13,11 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommunityRepository extends MongoRepository<Community, String> {
 
-	@Query("{'location': {'nearSphere': {'$geometry': {'type': 'Point', 'y': ?0, 'x': ?1}, '$maxDistance': ?2}}}")
-	//@Query(value = "{'location': {'$nearSphere': {'$geometry': {'type': 'Point', 'coordinates': [?1, ?0]}, '$maxDistance': ?2}}")
+	@Query("{'location': {'$nearSphere': {'$geometry': {'x': ?1, 'y': ?0}, '$maxDistance': ?2}}}")
 	Page<Community> findByLocationNear(double lat, double lng, double dist, Pageable page);
-
-	Page<Community> findByLocationNear(Point p, Distance dist, Pageable page);
 
 	Community findByTitle(String title);
 
