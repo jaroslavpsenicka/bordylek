@@ -3,7 +3,7 @@ Feature: Profile
   Scenario: Profile of known user
 
     Given verified user "John Doe" with email john@doe.com exists
-    And living in "Prague, Czech Republic"
+    And lives in "Prague, Czech Republic"
     When the profile page is shown
     Then username is shown with value "John Doe"
     And profilename is shown with value "John Doe"
@@ -14,8 +14,8 @@ Feature: Profile
 
     Given community "Prague" exists
     And verified user "John Doe" with email john@doe.com exists
-    And living in "Prague, Czech Republic"
-    And member of community "Prague"
+    And lives in "Prague, Czech Republic"
+    And is member of community "Prague"
 
     When the profile page is shown
     Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
@@ -26,8 +26,8 @@ Feature: Profile
 
     Given community "Prague" exists
     And verified user "John Doe" with email john@doe.com exists
-    And living in "Prague, Czech Republic"
-    And member of community "Prague"
+    And lives in "Prague, Czech Republic"
+    And is member of community "Prague"
 
     When the profile page is shown
     And xpath //li[contains(@class, 'profile-community')]/a is clicked
@@ -38,7 +38,17 @@ Feature: Profile
 
     Given community "Prague" exists
     And verified user "John Doe" with email john@doe.com exists
-    And living in "Prague, Czech Republic"
+    And lives in "Prague, Czech Republic"
 
     When the profile page is shown
     Then xpath //li[contains(@class, 'available-community')]/a is shown with value "Prague"
+
+
+  Scenario: Profile of known user, no community, nothing nearby
+
+    Given verified user "John Doe" with email john@doe.com exists
+    And lives in "Prague, Czech Republic"
+
+    When the profile page is shown
+    Then xpath //a[contains(@class, 'new-community')] is shown
+

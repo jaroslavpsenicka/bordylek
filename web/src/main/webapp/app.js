@@ -60,6 +60,11 @@ app.run(["$http", "$rootScope", function($http, $rootScope) {
 app.controller('HeaderCtrl', function ($rootScope, $http) {
   	$http({url: '/rest/user/me'}).success(function(user) {
   		$rootScope.user = user;
+		console.log($rootScope.user);
+		$http.get('/rest/comm').then(function(response) {
+			$rootScope.user.nearby = response.data;
+			console.log($rootScope.user);
+		});
   	});
 });
 

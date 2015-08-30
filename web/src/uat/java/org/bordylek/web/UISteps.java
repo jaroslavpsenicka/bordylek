@@ -50,7 +50,7 @@ public class UISteps {
 
     public static final int PORT = 8080;
     public static final String URL = "http://localhost:" + PORT;
-    public static final int INITIAL_TIMEOUT = 20;
+    public static final int INITIAL_TIMEOUT = 300;
 
     @Before
 	public void before() throws Exception {
@@ -84,14 +84,14 @@ public class UISteps {
         userRepository.save(user);
     }
 
-    @Given("^living in \"(Prague, Czech Republic)\"$")
+    @Given("^lives in \"(Prague, Czech Republic)\"$")
     public void livingIn(String locationName) throws Throwable {
         if (user == null) throw new IllegalStateException("no user defined");
         user.setLocation(new Location(locationName, 50.0, 14.0));
         userRepository.save(user);
     }
 
-    @Given("^member of community \"([^\"]*)\"$")
+    @Given("^is member of community \"([^\"]*)\"$")
     public void memberOfCommunity(String communityName) throws Throwable {
         if (user == null) throw new IllegalStateException("No user defined");
         Community comm  = communityRepository.findByTitle(communityName);
