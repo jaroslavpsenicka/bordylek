@@ -13,7 +13,6 @@ import org.bordylek.service.repository.UserRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.*;
 import org.springframework.data.geo.Point;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.annotation.DirtiesContext;
@@ -99,7 +98,7 @@ public class UISteps {
         userRepository.save(user);
     }
 
-    @Given("^the ([\\w-]+) page is shown$")
+    @Given("^the ([/\\w-]+) page is shown$")
     public void pageShown(String uri) throws InterruptedException {
         driver.get(URL + "/" + ("index".equals(uri) ? "" : "#/" + uri));
         wait.until(new Function<WebDriver, WebElement>() {

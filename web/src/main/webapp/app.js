@@ -31,6 +31,12 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 		  	resolve: {
 		  		deps: app.resolveDeps(['profile/profile.js'])
 			}
+		}).when("/comms/create", {
+			templateUrl: "comms/comm-create.html",
+			controller: "NewCommCtrl",
+		  	resolve: {
+		  		deps: app.resolveDeps(['comms/comms.js'])
+			}
 		}).when("/comms/:commId", {
 			templateUrl: "comms/comm.html",
 			controller: "CommsCtrl",
