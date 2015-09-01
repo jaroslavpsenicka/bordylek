@@ -8,7 +8,6 @@ import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
@@ -95,6 +95,7 @@ public class CommunityTest {
         communityPrague = new Community();
         communityPrague.setTitle("C1");
         communityPrague.setLocation(new Point(PRAGUE_LNG, PRAGUE_LAT));
+        communityPrague.setCreatedBy(user);
         communityRepository.save(communityPrague);
 	}
 	
@@ -146,6 +147,15 @@ public class CommunityTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void createCommunity() throws Exception {
+        String content = "{\"title\": \"C1\"}";
+        mockMvc.perform(post("/comm").content(content).header("Content-Type", "application/json"))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("title", is("C1")));
     }
 
     @Test

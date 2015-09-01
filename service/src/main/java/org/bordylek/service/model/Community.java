@@ -3,6 +3,7 @@ package org.bordylek.service.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +21,11 @@ public class Community implements Unique {
 
 	@NotNull
 	private Date createDate;
-	
+
+	@NotNull
+	@DBRef
+	private User createdBy;
+
 	private String summary;
 	private String text;
 	private boolean deleted;
@@ -115,7 +120,15 @@ public class Community implements Unique {
 	public void setLocation(Point location) {
 		this.location = location;
 	}
-	
+
+	public User getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(User createdBy) {
+		this.createdBy = createdBy;
+	}
+
 	@Override
 	public String toString() {
 		return "Community "+title+" (id="+id+")";

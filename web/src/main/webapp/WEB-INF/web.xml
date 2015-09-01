@@ -10,6 +10,7 @@
             classpath:/web-context.xml
             classpath:/security-context.xml
             classpath:/social-context.xml
+            classpath:/metrics-context.xml
         </param-value>
     </context-param>
 

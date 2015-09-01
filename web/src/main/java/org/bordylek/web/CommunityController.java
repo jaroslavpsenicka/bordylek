@@ -1,11 +1,11 @@
 package org.bordylek.web;
 
+import com.codahale.metrics.annotation.Timed;
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventGateway;
 import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.CommunityRef;
-import org.bordylek.service.model.Location;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
@@ -25,7 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.util.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class CommunityController {
@@ -55,6 +59,7 @@ public class CommunityController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
+	@Timed
 	public List<Community> find(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
 	  	@RequestParam(value = "dist", required = false) Integer distance,
 		@RequestParam(value = "include-all", defaultValue = "false") boolean includeAll) {
@@ -74,6 +79,7 @@ public class CommunityController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
+	@Timed
 	public Community find(@PathVariable("id") String id) {
 		Community community = this.communityRepository.findOne(id);
 		if (community == null) throw new NotFoundException(id);
@@ -84,8 +90,11 @@ public class CommunityController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
-	public Community create(@Valid @RequestBody Community comm) {
-		comm.setCreateDate(new Date());
+	@Timed
+	public Community create(@Valid @RequestBody CommunityCreateReq request) {
+		Community comm = new Community();
+		comm.setTitle(request.getTitle());
+		comm.setCreatedBy(getUser());
 		Community community = this.communityRepository.save(comm);
 		LOG.info("New community created: "+community.getTitle());
         eventGateway.send(new NewCommunityEvent(community));
@@ -136,6 +145,21 @@ public class CommunityController {
 		}
 
 		return communities;
+	}
+
+	private static class CommunityCreateReq {
+
+		@NotNull
+		private String title;
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	}
 
 }
