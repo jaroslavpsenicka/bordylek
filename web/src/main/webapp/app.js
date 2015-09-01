@@ -1,8 +1,7 @@
 
-var app = angular.module('tutorialWebApp', [
-  'ngRoute', 'ngAnimate',
-  'localize',
-  'ui.bootstrap'
+var app = angular.module('bordylekApp', [
+  'services', 'localize',
+  'ui.bootstrap', 'ngRoute', 'ngAnimate'
 ]);
 
 app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $controllerProvider) {
@@ -54,27 +53,25 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 		.otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
 }]);
 
-app.run(["$http", "$rootScope", function($http, $rootScope) {
+app.run(["$http", "$rootScope", "$q", "userService", function($http, $rootScope, $q, userService) {
 	var language = window.navigator.userLanguage || window.navigator.language;
 	if (language) {
 		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
 			window.i18n = messages;
 		});
 	}
+
+	userService.me(function(it) {
+		$rootScope.user = it.user;
+	});
+
 }]);
 
-app.controller('HeaderCtrl', function ($rootScope, $http) {
-  	$http({url: '/rest/user/me'}).success(function(user) {
-  		$rootScope.user = user;
-		console.log($rootScope.user);
-		$http.get('/rest/comm').then(function(response) {
-			$rootScope.user.nearby = response.data;
-			console.log($rootScope.user);
-		});
-  	});
+app.controller('HeaderCtrl', function ($scope, userService) {
+	$scope.userData = userService.me();
 });
 
-app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
+app.controller('WelcomeCtrl', ['$scope', '$q', '$http', 'userService', function ($scope, $q, $http, userService) {
     $scope.getLocation = function(val) {
         return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
             params: {
@@ -86,23 +83,28 @@ app.controller('WelcomeCtrl', function ($rootScope, $http, $scope) {
         });
     };
 
+	userService.me(function(it) {
+		$scope.newUser = {
+			id: it.user.id,
+			name: it.user.name
+		}
+	});
+
     $scope.submit = function() {
-    	var user = $rootScope.user;
-		$http.post('/rest/user/' + user.id, {
-			name: user.name,
+		var newUser = {
+			name: $scope.newUser.name,
 			location: {
-				id: user.location.place_id,
-				name: user.location.formatted_address,
-				lat: user.location.geometry.location.lat,
-				lng: user.location.geometry.location.lng
+				id: $scope.newUser.location.place_id,
+				name: $scope.newUser.location.formatted_address,
+				lat: $scope.newUser.location.geometry.location.lat,
+				lng: $scope.newUser.location.geometry.location.lng
 			}
-		}).then(function(response) {
-			$rootScope.user = response.data;
-		}, function(error) {
-			alert(error);
-		});
+		};
+		userService.update({id: $scope.newUser.id}, newUser, function() {
+			window.location.reload();
+		})
 	};
-});
+}]);
 
 /**
  * Controls the Blog

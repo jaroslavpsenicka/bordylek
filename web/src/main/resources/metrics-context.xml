@@ -1,6 +1,5 @@
 <beans:beans xmlns="http://www.ryantenney.com/schema/metrics"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:metrics="http://www.ryantenney.com/schema/metrics"
        xmlns:beans="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans

@@ -61,15 +61,13 @@ public class CommunityController {
 	@PreAuthorize("hasRole('USER')")
 	@Timed
 	public List<Community> find(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
-	  	@RequestParam(value = "dist", required = false) Integer distance,
-		@RequestParam(value = "include-all", defaultValue = "false") boolean includeAll) {
+	  	@RequestParam(value = "dist", required = false) Integer distance) {
 		User user = getUser();
 		Pageable request = new PageRequest(pageNumber, pageSize);
 		if (user.getLocation() != null) {
 			int distValue = (distance != null) ? distance : this.defaultDistance;
-			List<Community> communities = communityRepository.findByLocationNear(user.getLocation().getLat(),
+			return communityRepository.findByLocationNear(user.getLocation().getLat(),
 				user.getLocation().getLng(), distValue, request).getContent();
-			return includeAll ? communities : exclude(communities, user.getCommunities());
 		}
 
 		return communityRepository.findAll(request).getContent();

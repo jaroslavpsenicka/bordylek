@@ -1,2 +1,5 @@
-app.registerCtrl('ProfileCtrl', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+app.registerCtrl('ProfileCtrl', ['$scope', 'userService', function ($scope, userService) {
+
+	$scope.userData = userService.me();
+
 }]);

@@ -19,6 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import java.util.Date;
 
@@ -67,8 +68,10 @@ public class UISteps {
 
     @Given("^community \"(Prague)\" exists$")
     public void theCommunityExists(String communityName) throws Throwable {
+        if (user == null) throw new IllegalStateException("no user defined");
         community = new Community(communityName);
         community.setLocation(new Point(14.0, 50.0));
+        community.setCreatedBy(user);
         communityRepository.save(community);
     }
 

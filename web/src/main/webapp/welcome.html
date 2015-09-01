@@ -3,7 +3,7 @@
     <div class="row">
 
         <div class="col-lg-12">
-            <h2 id="welcome-header" class="page-header">Welcome, {{user.name}}
+            <h2 id="welcome-header" class="page-header">Welcome, {{newUser.name}}
                 <small>It's Nice to Meet You!</small>
             </h2>
 
@@ -15,13 +15,13 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="name" localize>Name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="name" ng-model="user.name" required ng-minlength="2" ng-maxlength="255">
+                            <input type="text" class="form-control" id="name" ng-model="newUser.name" required ng-minlength="2" ng-maxlength="255">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" localize>Location</label>
                         <div class="col-sm-8">
-                            <input id="location" type="text" ng-model="user.location" placeholder="Type to search" autocomplete="off"
+                            <input id="location" type="text" ng-model="newUser.location" placeholder="Type to search" autocomplete="off"
                                typeahead="address as address.formatted_address for address in getLocation($viewValue)"
                                typeahead-editable="false" class="form-control" required>
                         </div>

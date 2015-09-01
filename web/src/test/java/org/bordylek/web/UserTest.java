@@ -89,9 +89,9 @@ public class UserTest {
         mockMvc.perform(get("/user/me"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("id", is(user.getId())))
-            .andExpect(jsonPath("name", is(user.getName())))
-            .andExpect(jsonPath("email", is(user.getEmail())));
+            .andExpect(jsonPath("user.id", is(user.getId())))
+            .andExpect(jsonPath("user.name", is(user.getName())))
+            .andExpect(jsonPath("user.email", is(user.getEmail())));
     }
 
     @Test

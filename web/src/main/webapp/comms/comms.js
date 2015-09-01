@@ -8,13 +8,15 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 	});
 }]);
 
-app.registerCtrl('NewCommCtrl', ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'userService', function ($scope, $q, userService) {
 
-	$scope.newComm.name = $rootScope.user.location;
-	$scope.newComm.location = $rootScope.user.location;
+	userService.me(function(it) {
+		$scope.newComm.name = it.user.name;
+		$scope.newComm.location = it.user.location;
+	});
 
     $scope.submit = function() {
-		console.log(newComm);
+		console.log($scope.newComm);
 	};
 
 }]);
