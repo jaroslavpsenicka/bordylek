@@ -1,2 +1,86 @@
-bordylek
-========
+= Bordylek
+:icons: asciidoctor
+
+Bordylek.cz je myšlenka na komunitní uspořádání věcí, na počátku se ale může zdát, že jde o aplikaci pro organizaci úklidu nepořádku (to také jde).
+
+== Scénář 1
+Na zanedbaném pozemku u lesa se hromadí odpadky. Náhodný kolemjdoucí vyfotí situaci a odešle podnět do komunity. 
+
+Komunitou je myšlena libovolná skupina lidí, kteří jsou si geograficky nablízku, například sousedé ve městě. Komunita může samozřejmě přijmout i člověka, který žije daleko od ostatních členů, ale nebude to asi častým jevem, protože tento má omezené možnosti jak komunitě prospět. 
+
+Členové komunity obdrží informaci o novém podnětu, rozběhne se diskuse na téma co s nepořádkem provést. Dohodne se termín a několik členů komunity nepořádek uklidí, strávený čas ve prospěch komunity je jim započítán a potvrzen autorem podnětu. Případný benzín a amotrizace auta pro odvoz odpadu se nepočítá.
+
+Každý člen komunity disponuje kontem času. Pomocí ostatním se mu konto navyšuje. 
+
+Může se rovněž ukázat, že majitelem odpadků je člen komunity. Protože tento nemá možnost vše uklidit samostatně, požádá komunitu o pomoc. Stejně jako v prvním případě je čas členům komunity započítán, s vyjímkou majtele odpadků, tomu je odpovídající čas odečten - jde o pomoc jeho osobě, o kterou komunitu požádal. 
+
+NOTE: Mohu požádat jen o takovou pomoc, “na kterou mám”, tedy abych mohl požádat o pomoc, musím nejprve získat odpovídající množství času na své konto prací pro komunitu. 
+
+== Scénář 2
+Studentka se věnuje doučování spolužačky, členky komunity. Strávený čas se jí započítává, vyučovaná potvrzuje dobu trvání výuky. Později požádá komunitu o odvoz z mejdanu pozdě v noci. Jiný člen komunity ji doveze, za tuto službu se jí čas z konta odečte, řidiči přičte.
+
+NOTE: Řidičem nemusí být otec doučované spolužačky. Principem systému není protislužba mezi dvěma osobami (nebo rodinami), ale v celé komunitě. Každý člen tedy pracuje ve prospěch ostatních členů komunity s tím, že strávený čas si může “vybrat” u kohokoliv z komunity.
+
+== Scénář 3
+Stará paní prospívá komunitě tím, že vyzvedne děti ze školy, stráví s nimi nějaký čas a pak je odvede na kroužek. Později požádá komunitu o opravu střechy.
+
+NOTE: Smysl má pouze strávený čas. Nepoměřuje se potřebné úsilí, je zřejmé, že oprava střechy je mnohem náročnější než vyzvedutí dětí ze školy. Potřebný materiál by měla stará paní mít. 
+
+== Scénář 4
+Nezaměstnaný dělník natírá členům komunity ploty. Později si vyžádá pomoc během soudního sporu s jeho bývalým zaměstnavatelem.
+
+NOTE: Ani zjevný nepoměr v intelektuální náročnosti zastupování v soudním sporu a natírání plotu není brán v potaz, pouze čas je směrodatný. V obou případech samozřejmě včetně přípravy (barvy i podkladů pro soud).
+
+== Scénář 5
+Nový člen komunity má na kontě dvě hodiny úklidu odpadků z kraje lesa. Pokouší se vytvořit požadavek na posekání trávy na jeho obřím pozemku.
+
+NOTE: Součástí poptávky služeb je odhad potřebného času, vše se řeší prostřednictvím webu bordylek.cz, který zabraňuje zneužívání.
+
+== Scénář 6
+Nový člen komunity během sekání trávy poničil květinovou výzdobu. 
+
+NOTE: Objednavatel služeb mu udělí negativní hodnocení. V případě zvláště závažného prohřešku odmítne potvrdit čas strávený sekáním trávy a předloží důkazy (fotky) komunitě, ta rozhodne formou hlasování.
+
+Pokud bude tento člen pokračovat ve špatné práci, postupně získá větší množství negativních hodnocení, na základě kterých jej ostatní členové komunity nebudou najímat. Současně pak pravděpodobně vyčerpá svoje konto času a komunita tím pro něj částečně ztratí smysl, může však zůstat jejím členem a spoluúčastnit se hlasování (s minimálním hlasovacím právem, viz dále).
+
+== Scénář 7
+Komunita se rozhoduje o pořízení obecně prospěšné věci (např. lavička na zastávku autobusu). Je předložen návrh a hlasuje se, po odhlasování se náklady rozpočítají rovným dílem mezi všechny výdělečně činné členy komunity. Komunita hlasuje o ne/přijetí nových členů, kdokoliv ale může vyvolat hlasování o čemkoliv. 
+
+NOTE: Členové komunity disponují tolika hlasy, kolik odpovídá jejich kontu času.
+
+== Scénář 8
+Někdo vymyslí a navrhne nějakou blbost. Nikdo se nepřihlásí. 
+
+NOTE: Základním principem je dobrovolnost, každý si může vybrat takovou formu pomoci, jakou komunita potřebuje. Nikdo nemůže nikoho k ničemu nutit.
+
+== Sociální aspekt
+Pozorný čtenář si povšiml sociální struktury obsazení jednotlivých scénářů: od dětí (studentů) až po důchodce, pracující i nezaměstnané. Uplatnit se mohou všechny vrstvy obyvatelstva schopné a ochotné vykonat něco dobrého pro ostatní členy komunity.  Členové komunity nabízejí své služby a pracují podle svých schopností ve prospěch komunity. Komunita jim oplácí pomoc podle jejich zásluh (tedy času stráveného ve prospěch komunity). 
+
+== Finanční aspekt
+Peníze dále existují, čas nelze za peníze koupit. Žádný z členů není za svou činnost v komunitě placen, o administrativu a komunikaci se stará server bordylek.cz.
+
+== A ještě jeden sociální aspekt
+Propojením skutečně fyzicky vzájemně dosažitelných lidí je možné vzbudit aktivitu lidí, kteří mají zájem o pomoc lidem ve svém okolí, ale neznají způsob jak to provést. Současně jim nemusí vyhovovat pracovat ve prospěch někoho, kdo jejich pomoci zneužívá a nesnaží se revanšovat.
+
+Lze tedy předpokládat, že časem odpadnou lidé, kteří se budou snažit systém pouze zneužít. Mohla by se vytvořit skupina lidí, kteří mají zájem na systému vzájemné pomoci a účinné spolupráce. Kromě spolupráce se tito lidé mnohem více sblíží a budou schopni komunikovat i v jiných oblastech.
+
+Pocit silné, fungující komunity v zádech, fakt, že někam patřím, jsem součástí smečky musí být velmi příjemný. Komunita bude chránit své slabé členy - stará paní nemusí rozeznat nevýhodnou nabídku, ale těm členům komunity, s nimiž se často potkává, bude důvěřovat a ti ji mohou pomoci. 
+
+== A ještě jeden finanční aspekt
+Nejde o náhradu peněz, ale vytvoření jejich alternativy. Lidé bez prostředků (matky samoživitelky, důchodci, nezaměstnaní, imigranti) mohou mít vysoké konto času a díky němu si dopřát služeb, které by si jinak nemohli dovolit. Moudří lidé si na stáří zajistí konto v dostatečné výši.
+
+NOTE: Čas věnovaný komunitě nepodléhá zdanění. Čas nelze ukrást ani vytunelovat. 
+
+== Komunikace
+Server bordylek.cz by měl posílat informační email 1x denně se souhrnem událostí, zejména typu
+* žádosti o členství,
+* nové akce,
+* realizované akce,
+* upozornění na podezřelou aktivitu (viz dále).
+
+== Rizika
+Zneužití především, chování jednotlivývh členů komunity by mělo být průběžně vyhodnocováno. Například spolupráce dvou či více členů, kteří si vzájemně “přihrávají” čas (tedy organizují akce, kterých se neúčastní nikdo jiný) by měl být odhalitelná. Všechna podezření budou komunikována ostatním členům komunity v denním mailu.
+
+Velikost komunity - příliš malá komunita si nevystačí, v příliš velké lze snadno ztratit přehled. Optimální velikost se jeví v rozmezí 1000-3000 členů, na úrovni menšího města, několika sousedících vesnic nebo městské čtvrti.
+
+
