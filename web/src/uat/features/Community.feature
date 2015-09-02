@@ -17,7 +17,7 @@ Feature: Community
 
     When the comms/create page is shown
     And name input field value is ""
-    And newcommform-submit is enabled
+    And newcommform-submit is disabled
 
 
   Scenario: New community dialog, name max length validation
@@ -27,7 +27,7 @@ Feature: Community
 
     When the comms/create page is shown
     And name input field value is "abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdef"
-    And newcommform-submit is enabled
+    And newcommform-submit is disabled
 
 
   Scenario: Create new community

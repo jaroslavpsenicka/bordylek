@@ -8,15 +8,15 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 	});
 }]);
 
-app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', function ($scope, $q, commService) {
+app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', 'userService', function ($scope, $q, commService, userService) {
 
 	$scope.newComm = {};
 
 	userService.me(function(it) {
-    	var commaIdx = it.user.location.indexOf(',');
+    	var commaIdx = it.user.location.name.indexOf(",");
 		$scope.newComm.title = (commaIdx > -1) ?
-			it.user.location.substring(0, commaIdx - 1) : it.user.location;
-		$scope.newComm.location = it.user.location;
+			it.user.location.name.substring(0, commaIdx) : it.user.location.name;
+		$scope.newComm.location = it.user.location.name;
 	});
 
     $scope.submit = function() {

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -96,8 +97,12 @@ public class CommunityController {
 	public Community create(@Valid @RequestBody CommunityCreateReq request) {
 		Community comm = new Community();
 		comm.setTitle(request.getTitle());
-		comm.setCreatedBy(getUser());
+		User user = getUser();
+		comm.setCreatedBy(user);
+		comm.setLocation(new Point(user.getLocation().getLng(), user.getLocation().getLat()));
 		Community community = this.communityRepository.save(comm);
+		user.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+		userRepository.save(user);
 		LOG.info("New community created: "+community.getTitle());
         eventGateway.send(new NewCommunityEvent(community));
 		return community;

@@ -276,7 +276,7 @@ public class UISteps {
         }).click();
     }
 
-    @When("^(.+) input field value is (.+)$")
+    @When("^(.+) input field value is \"([^\"]*)\"$")
     public void fieldValueIs(final String elementId, String value) throws Throwable {
         final WebElement field = wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
@@ -284,6 +284,8 @@ public class UISteps {
                 return element.isDisplayed() ? element : null;
             }
         });
+        field.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        field.sendKeys(Keys.DELETE);
         field.sendKeys(value);
     }
 

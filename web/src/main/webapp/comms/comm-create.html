@@ -6,7 +6,7 @@
         <p localize>Please specify basic description, further details may be added later.</p>
         <p>&nbsp;</p>
 
-        <form name="commcreateform" class="form-horizontal" role="form" ng-submit="submit()">
+        <form name="newcommform" class="form-horizontal" role="form" ng-submit="submit()">
             <div class="form-group">
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="name" localize>Name</label>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-sm-10">
-                <button id="newcommform-submit" type="submit" class="btn btn-primary pull-right" ng-disabled="welcomeform.$invalid" localize>Create</button>
+                <button id="newcommform-submit" type="submit" class="btn btn-primary pull-right" ng-disabled="newcommform.$invalid" localize>Create</button>
             </div>
         </form>
     </div>
