@@ -6,7 +6,7 @@ Feature: Community
     And lives in "Prague, Czech Republic"
 
     When the comms/create page is shown
-    # Then name is shown with value "Prague"
-    # And location is shown with value "Prague, Czech Republic"
+    Then field name is shown with value "John Doe"
+    And field location is shown with value "Prague, Czech Republic"
 
 

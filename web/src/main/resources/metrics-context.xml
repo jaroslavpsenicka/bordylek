@@ -11,7 +11,6 @@
 
     <annotation-driven metric-registry="metrics" />
 
-    <!--<reporter type="console" metric-registry="metrics" period="1m" />-->
-    <reporter type="slf4j" metric-registry="metrics" period="1m" logger="org.bordylek.web" marker="meter" rate-unit="MINUTES" duration-unit="MICROSECONDS" />
+    <reporter type="slf4j" metric-registry="metrics" period="5m" logger="org.bordylek.metrics" />
 
 </beans:beans>

@@ -1,5 +1,6 @@
 package org.bordylek.web;
 
+import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventGateway;
@@ -50,6 +51,7 @@ public class UserController {
 	@RequestMapping(value = "/user/me", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
     @Timed
+    @ExceptionMetered
 	public MeResponse findMe(@RequestParam(value = "dist", required = false) Integer distance,
         @RequestParam(value = "include-all", defaultValue = "false") boolean includeAll) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -77,6 +79,7 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @Timed
+    @ExceptionMetered
     public User findOne(@PathVariable("id") String id) {
         User user = this.repository.findOne(id);
         if (user == null) throw new NotFoundException(id);
@@ -87,6 +90,7 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("hasRole('USER')")
     @Timed
+    @ExceptionMetered
     public User update(@PathVariable("id") String id, @RequestBody @Valid UserUpdateReq req) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {

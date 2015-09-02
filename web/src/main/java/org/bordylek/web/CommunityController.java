@@ -1,5 +1,6 @@
 package org.bordylek.web;
 
+import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Timed;
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.event.EventGateway;
@@ -60,6 +61,7 @@ public class CommunityController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	@Timed
+	@ExceptionMetered
 	public List<Community> find(@RequestParam(value = "page", defaultValue = "0") int pageNumber,
 	  	@RequestParam(value = "dist", required = false) Integer distance) {
 		User user = getUser();
@@ -78,6 +80,7 @@ public class CommunityController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	@Timed
+	@ExceptionMetered
 	public Community find(@PathVariable("id") String id) {
 		Community community = this.communityRepository.findOne(id);
 		if (community == null) throw new NotFoundException(id);
@@ -89,6 +92,7 @@ public class CommunityController {
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	@Timed
+	@ExceptionMetered
 	public Community create(@Valid @RequestBody CommunityCreateReq request) {
 		Community comm = new Community();
 		comm.setTitle(request.getTitle());
