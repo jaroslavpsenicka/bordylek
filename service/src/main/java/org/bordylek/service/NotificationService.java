@@ -44,7 +44,6 @@ public class NotificationService {
     private JavaMailSender mailSender;
 
     private DocumentBuilder db;
-	private Transformer serializer;
 	private XPathExpression xpe;
 	private Configuration configuration;
 
@@ -56,7 +55,7 @@ public class NotificationService {
 		db = dbf.newDocumentBuilder();
 		XPathFactory factory = XPathFactory.newInstance();
 		xpe = factory.newXPath().compile(SUBJ_XPATH);
-		serializer = TransformerFactory.newInstance().newTransformer();
+		Transformer serializer = TransformerFactory.newInstance().newTransformer();
 	    serializer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 	}
 	

@@ -74,7 +74,7 @@ public class UISteps {
         communityRepository.save(community);
     }
 
-    @Given("^(new|verified) user \"([^\"]*)\" with email ([\\w\\@\\.]+) exists$")
+    @Given("^(new|verified) user \"([^\"]*)\" with email ([\\w@\\.]+) exists$")
     public void theUserExists(String type, String name, String email) throws Throwable {
         user = new User();
         user.setEmail(email);
@@ -243,7 +243,7 @@ public class UISteps {
         wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 WebElement element = driver.findElement(By.id(elementId));
-                boolean stateCond = "disabled".equals(state) ? "true".equals(element.getAttribute("disabled")) : true;
+                boolean stateCond = !"disabled".equals(state) || "true".equals(element.getAttribute("disabled"));
                 return element.isDisplayed() && stateCond ? element : null;
             }
         });

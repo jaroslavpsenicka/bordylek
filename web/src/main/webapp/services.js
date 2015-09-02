@@ -13,4 +13,12 @@ services.factory('userService', function($resource) {
     });
 });
 
+services.factory('commService', function($resource) {
+    return $resource('', {}, {
+        create: {
+            url: 'rest/comm',
+            method: 'POST'
+        }
+    });
+});
 

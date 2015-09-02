@@ -102,7 +102,7 @@ app.controller('WelcomeCtrl', ['$scope', '$q', '$http', 'userService', function 
 		};
 		userService.update({id: $scope.newUser.id}, newUser, function() {
 			window.location.reload();
-		})
+		});
 	};
 }]);
 

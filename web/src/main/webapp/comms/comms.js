@@ -8,17 +8,21 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 	});
 }]);
 
-app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'userService', function ($scope, $q, userService) {
+app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', function ($scope, $q, commService) {
 
 	$scope.newComm = {};
 
 	userService.me(function(it) {
-		$scope.newComm.name = it.user.name;
-		$scope.newComm.location = it.user.location.name;
+    	var commaIdx = it.user.location.indexOf(',');
+		$scope.newComm.title = (commaIdx > -1) ?
+			it.user.location.substring(0, commaIdx - 1) : it.user.location;
+		$scope.newComm.location = it.user.location;
 	});
 
     $scope.submit = function() {
-		console.log($scope.newComm);
+		commService.create({}, $scope.newComm, function() {
+			window.location.href = '/#/profile';
+		});
 	};
 
 }]);
