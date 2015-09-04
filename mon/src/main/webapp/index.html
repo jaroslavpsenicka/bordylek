@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+	<script src="/comp/metrics-watcher/metrics-watcher.js"></script>
+	<link href="/comp/metrics-watcher/metrics-watcher-style.css" rel="stylesheet">
+
+	<script src="metrics.js"></script>
+
+	<script>
+		// See example-metrics.js for sample of the Metrics-servlet format
+		function addGraphs() {
+			metricsWatcher.addMeter("meterExample", "com.codahale.metrics.servlet.AbstractInstrumentedFilter",
+					"responseCodes.ok", 10, "Meter");
+
+			metricsWatcher.addCounter("counterExample", 
+					"com.codahale.metrics.servlet.AbstractInstrumentedFilter", "activeRequests",
+					 2, "Counter");
+
+			metricsWatcher.addLinkedCounter("linkedCounterExample",
+					"com.codahale.metrics.servlet.AbstractInstrumentedFilter", "activeRequests",
+					"com.codahale.metrics.servlet.AbstractInstrumentedFilter", "totalRequests",
+					"Linked Counter");
+			
+			metricsWatcher.addLinkedCounter("linkedTimerCounterExample",
+					"net.sf.ehcache.Cache.cacheName", "gets",
+					"com.codahale.metrics.servlet.AbstractInstrumentedFilter", "requests",
+					"Linked Counter");
+
+			
+
+			metricsWatcher.addGauge("gaugeExample", "jvm.memory.non-heap",
+					"max", "Gauge");
+
+			metricsWatcher.addTimer("timerExample", "com.codahale.metrics.servlet.AbstractInstrumentedFilter", "requests", 1, "Timer", "requests", 1);
+
+			metricsWatcher.addJvm("jvmExample", "jvm", "JVM Statistics");
+
+			metricsWatcher.addCache("queryCache", "net.sf.ehcache.Cache.cacheName", "Ehcache");
+//			metricsWatcher.addLog4j("log4jExample", "org.apache.log4j.Appender", "Log4j");
+			metricsWatcher.addWeb("webExample", "com.codahale.metrics.servlet.AbstractInstrumentedFilter", "Web Server");
+		}
+
+		$(document).ready(function() {
+			addGraphs();
+			metricsWatcher.initGraphs();
+			keepUpdatingGraphs();
+		});
+
+		function keepUpdatingGraphs() {
+			downloadMetricData();
+			setTimeout(keepUpdatingGraphs, 60000); // 1 minute
+		}
+
+		function downloadMetricData() {
+			metricsWatcher.updateGraphs(exampleMetricsData);
+			// Normally metric data will be loaded from a servlet with an Ajax call like the following.
+			// For this example, it is hardcoded.
+			//
+			// 		url = "metrics/metrics";
+			// 		$.ajax({
+			// 			contentType : "application/json",
+			// 			url : url,
+			// 			success : function(data) {
+			// 				metricsWatcher.updateGraphs(data);
+			// 			},
+			// 			error : function(xhr, ajaxOptions, thrownError) {
+			// 				//alert("Error - " + xhr.status + "Message: " + thrownError);
+			// 				metricsWatcher.initGraphs();
+			// 			},
+			// 			async : false
+			// 		});
+		}
+	</script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+				<a class="btn navbar-btn" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="glyphicon-bar"></span>
+					<span class="glyphicon-bar"></span>
+					<span class="glyphicon-bar"></span>
+				</a>
+				<a class="navbar-brand" href="#">Metrics Watcher Examples</a>
+				<div class="navbar-collapse">
+					<ul class="nav"></ul>
+				</div>
+	</nav>
+
+	<div class="container mainContent">
+		<p>Metrics Watcher currently supports these basic gauge types:</p>
+		<br />
+		<div class="row">
+			<div id="meterExample" class="col-md-3"></div>
+			<div id="counterExample" class="col-md-3"></div>
+			<div id="linkedCounterExample" class="col-md-3"></div>
+			<div id="linkedTimerCounterExample" class="col-md-3"></div>
+			<div id="gaugeExample" class="col-md-3"></div>
+		</div>
+		<br />
+		<p>Metrics Watcher also comes with graphs composed of multiple gauges to support the types of instrumentation the Metrics library implements:</p>
+		<br />
+		<div class="row">
+			<div id="webExample"></div>
+		</div>
+		<br/>
+		<div class="row">
+			<div id="log4jExample"></div>
+		</div>
+		<br />
+		<div class="row">
+			<div id="jvmExample"></div>
+		</div>
+		<br />
+		<div class="row">
+			<div id="timerExample"></div>
+		</div>
+		<br />
+		<div class="row">
+			<div id="queryCache"></div>
+		</div>
+		<br />
+	</div>
+</body>
+</html>

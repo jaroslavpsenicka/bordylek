@@ -12,13 +12,13 @@
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
     ">
-    
-	<!-- @Component, @Service, @Controller, @Repository, @Configuration -->
-    <context:component-scan base-package="org.bordylek.service" />
 
     <!-- Properties -->
-    <context:property-placeholder location="classpath:/config.properties"/>
-    
+    <context:property-placeholder location="classpath:/web.properties"/>
+
+    <!-- @Component, @Service, @Controller, @Repository, @Configuration -->
+    <context:component-scan base-package="org.bordylek.service" />
+
 	<!-- Mongo -->
     <mongo:repositories base-package="org.bordylek.service.repository" />
 	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
@@ -66,8 +66,8 @@
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="port" value="25" />
         <property name="defaultEncoding" value="UTF-8" />
-        <property name="username" value="${mail.smtpUser:}" />
-        <property name="password" value="${mail.smtpPassword:}" />
+        <property name="username" value="" />
+        <property name="password" value="" />
     </bean>
 
     <cache:annotation-driven />

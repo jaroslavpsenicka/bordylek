@@ -10,13 +10,14 @@
         http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2-1.0.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <context:property-placeholder location="classpath:/config.properties"/>
+    <context:property-placeholder location="classpath:/web.properties"/>
 
     <global-method-security pre-post-annotations="enabled"/>
 
     <http use-expressions="true">
         <http-basic />
         <form-login />
+        <intercept-url pattern="/admin*" access="ROLE_ADMIN"/>
         <logout logout-url="/signout" />
         <anonymous enabled="false"/>
         <csrf disabled="true"/>

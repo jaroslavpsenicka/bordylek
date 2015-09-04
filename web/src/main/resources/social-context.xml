@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/social http://www.springframework.org/schema/social/spring-social.xsd
         http://www.springframework.org/schema/social/google http://www.springframework.org/schema/social/spring-social-google.xsd">
 
-	<context:property-placeholder location="classpath:/config.properties"/>
+	<context:property-placeholder location="classpath:/web.properties"/>
 
     <beans:bean id="connectionFactoryLocator" class="org.springframework.social.security.SocialAuthenticationServiceRegistry">
         <beans:property name="authenticationServices">

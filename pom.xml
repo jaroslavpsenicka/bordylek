@@ -13,6 +13,7 @@
     <modules>
         <module>service</module>
         <module>web</module>
+        <module>mon</module>
     </modules>
 
     <repositories>
@@ -164,6 +165,11 @@
             <dependency>
                 <groupId>com.ryantenney.metrics</groupId>
                 <artifactId>metrics-spring</artifactId>
+                <version>3.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-servlets</artifactId>
                 <version>3.1.2</version>
             </dependency>
 

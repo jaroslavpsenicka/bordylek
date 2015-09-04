@@ -22,6 +22,13 @@
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>org.bordylek.web.metrics.MetricsServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.bordylek.web.metrics.HealthCheckServletContextListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -65,6 +72,16 @@
     <servlet-mapping>
         <servlet-name>mvc-dispatcher</servlet-name>
         <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>metrics</servlet-name>
+        <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>metrics</servlet-name>
+        <url-pattern>/metrics/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
