@@ -217,7 +217,7 @@
 				new MetricInfo(divId + " td.responseCodesServerErrorGraph", className, "responseCodes.serverError", 10, "Server Error Responses", "meters")
 			],
 			activeRequestsInfo : new MetricInfo(divId + " td.activeRequestsGraph", className, "activeRequests", 10, "Active Requests", "counters"),
-			requestsInfo : addTimerInternal(divId + " td.requestsGraph", className, "requests", 100, "Requests", "requests", 100, true)
+			requestsInfo : addTimerInternal(divId + " td.requestsGraph", className, "requests", 100, "", "requests", 100, true)
 		};
 
 		graphs.push(metricInfo);
@@ -400,7 +400,7 @@
 		var html = "<div class='metricsWatcher timer timerGraph" + nested + " col-md-12'>"
 				+ "<fieldset><legend>" + ((timerInfo.isNested) ? "<div class='heading1'>":"<div class='heading1 btn-link' data-toggle='collapse' data-target='#" + timerInfo.divId + "Collapse'>") 
 				+ timerInfo.title + "</div></legend>"
-				+ "<div class='timerContainer col-md-12" + ((timerInfo.isNested) ? "": "collapse") +"' id='" + timerInfo.divId +"Collapse'>"
+				+ "<div class='timerContainer col-md-12 " + ((timerInfo.isNested) ? "": "collapse") +"' id='" + timerInfo.divId +"Collapse'>"
 				+ "<table><tr>"
 				+ "<td class='meterGraph col-md-4'></td>"
 				+ "<td class='timerStatsGraph col-md-4'></td>"
@@ -414,7 +414,7 @@
 	};
 
 	function drawDurationStats(timerInfo) {
-		var html = "<div class='heading3'>Duration</div><div class='timeUnit'></div><div class='metricGraph'><table class='progressTable'>"
+		var html = "<div class='heading3'>Duration</div><p class='timeUnit'></p><div class='metricGraph'><table class='progressTable'>"
 			+ addMeterRow("Min", "min")
 			+ addMeterRow("Mean", "mean")
 			+ addMeterRow("Max", "max")
@@ -425,7 +425,7 @@
 	}
 
 	function drawDurationHistogram(timerInfo) {
-		var html = "<div class='heading3'> " +(timerInfo.isNested?  "Histogram" :timerInfo.title) + "</div><p>Percentiles</p><div class='metricGraph'><table class='progressTable'>"
+		var html = "<div class='heading3'>Histogram</div><p>Percentiles</p><div class='metricGraph'><table class='progressTable'>"
 			+ addMeterRow("99.9%", "p999")
 			+ addMeterRow("99%", "p99")
 			+ addMeterRow("98%", "p98")
@@ -447,7 +447,7 @@
 		var metricNode = timerInfo.getMetricNode(timerInfo.className, timerInfo.metricName, json);
 		if (!metricNode) return;
 
-		var timeUnitDiv = $(timerInfo.getTimerStatsDivId() + " div.timeUnit");
+		var timeUnitDiv = $(timerInfo.getTimerStatsDivId() + " p.timeUnit");
 		timeUnitDiv.html(capitalizeFirstLetter(metricNode["duration_units"]));
 
 		updateDuration(timerInfo.getTimerStatsDivId(), metricNode, "min", timerInfo.durationMax);
@@ -521,7 +521,7 @@
 		var parentDiv = $("#" + meterInfo.divId);
 
 		var html = "<div class='metricsWatcher metric metricGraph'><div class='heading3'>" + meterInfo.title
-			+ "</div><div class='counterVal'></div><table class='progressTable'>"
+			+ "</div><p class='counterVal'></p><table class='progressTable'>"
 			+ addMeterRow("1&nbsp;min", "onemin")
 			+ addMeterRow("5&nbsp;min", "fivemin")
 			+ addMeterRow("15&nbsp;min", "fifteenmin")
@@ -545,7 +545,7 @@
 
 	function updateMeterData(meterInfo, meterData) {
 		// set the big counter
-		var gaugeDiv = $("#" + meterInfo.divId + " div.counterVal");
+		var gaugeDiv = $("#" + meterInfo.divId + " p.counterVal");
 
 		gaugeDiv.html((meterData.rate_units || meterData.units) + " (" + meterData.count + " total)");
 
@@ -619,8 +619,8 @@
 		var parentDiv = $("#" + cacheInfo.divId);
 
 		var html = "<div class='metricsWatcher cache cacheGraph col-md-12'>"
-				+ "<fieldset><legend><div class='heading1'>" + cacheInfo.title + "</div></legend>"
-				+ "<div class='cacheContainer col-md-12'>"
+				+ "<fieldset><legend><div class='heading1 btn-link' data-toggle='collapse' data-target='#" + cacheInfo.divId + "Collapse'>" + cacheInfo.title + "</div></legend>"
+				+ "<div class='cacheContainer col-md-12 collapse' id='" + cacheInfo.divId + "Collapse'>"
 				+ "	<div class='row'>"
 				+ "		<div class='col-md-3'><div id='" + cacheInfo.divId + "Statistics'></div></div>"
 				+ "		<div class='col-md-9'>"
@@ -734,7 +734,7 @@
 		var parentDiv = $("#" + webInfo.divId);
 		var html = "<div class='metricsWatcher web metricGraph col-md-12'>"
 				+ "<fieldset><legend><div class='heading1 btn-link' data-toggle='collapse' data-target='#"+webInfo.divId+"Collapse'>" + webInfo.title + "</div></legend>"
-				+ "<div class='webContainer col-md-12' id='"+webInfo.divId+"Collapse'>"
+				+ "<div class='webContainer collapse col-md-12' id='"+webInfo.divId+"Collapse'>"
 				+ "	<div id='" + webInfo.divId + "Web'></div>"
 				+ "<table><tr>"
 				+ "<td colspan='4' class='requestsGraph col-md-12'></td>"

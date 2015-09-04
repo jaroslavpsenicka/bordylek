@@ -83,10 +83,6 @@
 .metricsWatcher.cache .cacheContainer,
 .metricsWatcher.timer .timerContainer,
 .metricsWatcher.cache .gaugeTableContainer {
-	border-style: solid;
-	border-width: 1px;
-	padding: 10px 0;
-	margin-left: 0;
 	padding: 10px;
 }
 
