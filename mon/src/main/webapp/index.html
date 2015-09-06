@@ -8,8 +8,7 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
-	<script src="/js/lib/metrics-watcher.js"></script>
-	<script src="/js/metrics.js"></script>
+	<script src="/js/metrics-watcher.js"></script>
 	<script>
 		// See example-metrics.js for sample of the Metrics-servlet format
 		function addGraphs() {
@@ -32,23 +31,19 @@
 		}
 
 		function downloadMetricData() {
-			metricsWatcher.updateGraphs(exampleMetricsData);
-			// Normally metric data will be loaded from a servlet with an Ajax call like the following.
-			// For this example, it is hardcoded.
-			//
-			// 		url = "metrics/metrics";
-			// 		$.ajax({
-			// 			contentType : "application/json",
-			// 			url : url,
-			// 			success : function(data) {
-			// 				metricsWatcher.updateGraphs(data);
-			// 			},
-			// 			error : function(xhr, ajaxOptions, thrownError) {
-			// 				//alert("Error - " + xhr.status + "Message: " + thrownError);
-			// 				metricsWatcher.initGraphs();
-			// 			},
-			// 			async : false
-			// 		});
+			url = "/rest/metrics";
+			$.ajax({
+				contentType : "application/json",
+				url : url,
+				async : false,
+				success : function(data) {
+					metricsWatcher.updateGraphs(data);
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError);
+					metricsWatcher.initGraphs();
+				}
+			});
 		}
 	</script>
 </head>
@@ -66,16 +61,6 @@
 	</nav>
 
 	<div class="container mainContent">
-		<div class="row">
-			<div id="gaugeExample" class="col-md-3"></div>
-		</div>
-		<br />
-		<p>Metrics Watcher also comes with graphs composed of multiple gauges to support the types of instrumentation the Metrics library implements:</p>
-		<br />
-		<div class="row">
-			<div id="gaugeExample"></div>
-		</div>
-		<br />
 		<div class="row">
 			<div id="jvmExample"></div>
 		</div>
