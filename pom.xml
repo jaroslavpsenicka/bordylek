@@ -36,7 +36,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -165,6 +164,11 @@
             <dependency>
                 <groupId>com.ryantenney.metrics</groupId>
                 <artifactId>metrics-spring</artifactId>
+                <version>3.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
                 <version>3.1.2</version>
             </dependency>
             <dependency>

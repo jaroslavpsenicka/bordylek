@@ -11,6 +11,15 @@
 
     <annotation-driven metric-registry="metrics" />
 
-    <reporter type="slf4j" metric-registry="metrics" period="5m" logger="org.bordylek.metrics" />
+    <!--<reporter type="slf4j" metric-registry="metrics" period="5m" logger="org.bordylek.metrics" />-->
+
+    <beans:bean id="mongoReporter" class="org.bordylek.web.metrics.MongoDBReporter">
+        <beans:constructor-arg index="0" ref="metrics"/>
+        <beans:constructor-arg index="1" value="MINUTES"/>
+        <beans:constructor-arg index="2" value="MINUTES"/>
+        <beans:constructor-arg index="3" value="ALL"/>
+        <beans:property name="period" value="5"/>
+        <beans:property name="timeUnit" value="MINUTES"/>
+    </beans:bean>
 
 </beans:beans>

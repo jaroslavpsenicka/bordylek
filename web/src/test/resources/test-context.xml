@@ -25,4 +25,13 @@
         <property name="shared" value="true"/>
     </bean>
 
+    <bean id="mongoReporter" class="org.bordylek.web.metrics.MongoDBReporter">
+        <constructor-arg index="0" ref="metrics"/>
+        <constructor-arg index="1" value="MINUTES"/>
+        <constructor-arg index="2" value="MINUTES"/>
+        <constructor-arg index="3" value="ALL"/>
+        <property name="period" value="1"/>
+        <property name="timeUnit" value="SECONDS"/>
+    </bean>
+
 </beans>
