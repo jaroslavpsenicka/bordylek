@@ -2,7 +2,6 @@ package org.bordylek.web;
 
 import net.sf.ehcache.Ehcache;
 import org.bordylek.service.model.AbstractMetric;
-import org.bordylek.service.model.Timer;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.MetricsRepository;
 import org.bordylek.service.repository.UserRepository;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,7 +92,6 @@ public class MetricsTest {
         Thread.sleep(1500);
         List<AbstractMetric> findMeMetrics = metricsRepository.findByName(UserController.class.getName() + ".findMe");
         assertTrue(findMeMetrics.size() > 0);
-        assertEquals("1", String.valueOf(((Timer) findMeMetrics.get(0)).getCount()));
     }
 
     private void authenticate(String email, final String role) {

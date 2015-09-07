@@ -57,7 +57,7 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
     public void report(SortedMap<String, com.codahale.metrics.Gauge> gauges, SortedMap<String, com.codahale.metrics.Counter> counters, SortedMap<String, com.codahale.metrics.Histogram> histograms,
         SortedMap<String, com.codahale.metrics.Meter> meters, SortedMap<String, com.codahale.metrics.Timer> timers) {
 
-        LOG.info("Saving metrics");
+        LOG.debug("Saving metrics");
 
         for (Map.Entry<String, com.codahale.metrics.Gauge> entry : gauges.entrySet()) try {
             metricsRepository.save(new Gauge(entry.getKey(), entry.getValue()));
