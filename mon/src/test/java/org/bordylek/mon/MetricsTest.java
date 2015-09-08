@@ -1,7 +1,7 @@
 package org.bordylek.mon;
 
-import org.bordylek.service.model.AbstractMetric;
 import org.bordylek.service.model.Counter;
+import org.bordylek.service.model.Metrics;
 import org.bordylek.service.repository.MetricsRepository;
 import org.junit.After;
 import org.junit.Assert;
@@ -64,7 +64,7 @@ public class MetricsTest {
         counter3.setName("new");
         metricsRepository.save(counter3);
 
-        AbstractMetric metric = metricsRepository.findTopByOrderByTimestampDesc();
+        Metrics metric = metricsRepository.findTopByOrderByTimestampDesc();
         Assert.assertEquals("new", metric.getName());
     }
 

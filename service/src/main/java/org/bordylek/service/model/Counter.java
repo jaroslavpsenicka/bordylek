@@ -1,6 +1,6 @@
 package org.bordylek.service.model;
 
-public class Counter extends AbstractMetric {
+public class Counter extends Metrics {
 
     private Object count;
 

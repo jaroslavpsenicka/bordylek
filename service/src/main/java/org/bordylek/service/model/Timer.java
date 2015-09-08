@@ -1,6 +1,6 @@
 package org.bordylek.service.model;
 
-public class Timer extends AbstractMetric {
+public class Timer extends Metrics {
 
     private Long count;
     private Double m1Rate;

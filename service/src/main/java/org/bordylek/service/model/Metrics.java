@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
-public abstract class AbstractMetric {
+public abstract class Metrics {
 
     @Id
     private String id;
@@ -12,10 +12,10 @@ public abstract class AbstractMetric {
     private String name;
     private Date timestamp;
 
-    public AbstractMetric() {
+    public Metrics() {
     }
 
-    public AbstractMetric(String name) {
+    public Metrics(String name) {
         this.name = name;
         this.timestamp = new Date();
     }

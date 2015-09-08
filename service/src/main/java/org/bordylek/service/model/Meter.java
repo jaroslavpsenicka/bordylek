@@ -1,6 +1,6 @@
 package org.bordylek.service.model;
 
-public class Meter extends AbstractMetric {
+public class Meter extends Metrics {
 
     private Long count;
     private Double m1Rate;

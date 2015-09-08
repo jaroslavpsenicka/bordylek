@@ -1,7 +1,7 @@
 package org.bordylek.web;
 
 import net.sf.ehcache.Ehcache;
-import org.bordylek.service.model.AbstractMetric;
+import org.bordylek.service.model.Metrics;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.MetricsRepository;
 import org.bordylek.service.repository.UserRepository;
@@ -89,7 +89,7 @@ public class MetricsTest {
     public void findMeMetric() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/user/me")).andExpect(MockMvcResultMatchers.status().isOk());
         Thread.sleep(1500);
-        List<AbstractMetric> findMeMetrics = metricsRepository.findByName(UserController.class.getName() + ".findMe");
+        List<Metrics> findMeMetrics = metricsRepository.findByName(UserController.class.getName() + ".findMe");
         Assert.assertTrue(findMeMetrics.size() > 0);
     }
 

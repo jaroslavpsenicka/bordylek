@@ -6,17 +6,12 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://drools.org/schema/drools-spring http://drools.org/schema/drools-spring.xsd">
 
-    <drools:kbase id="rulesKB">
+    <drools:kbase id="rules">
         <drools:resources>
-            <drools:resource type="DRL" source="classpath:rules.drl"/>
+            <drools:resource type="DRL" source="classpath:mon.drl"/>
         </drools:resources>
     </drools:kbase>
 
-    <drools:ksession id="rulesSession" name="rulesSession" type="stateless" kbase="rulesKB"/>
-
-    <!--
-        <alias name="productsKSession" alias="electronicKSession"/>
-        <alias name="productsKSession" alias="medicalKSession"/>
-    -->
+    <drools:ksession id="rulesSession" name="rulesSession" type="stateless" kbase="rules"/>
 
 </beans>

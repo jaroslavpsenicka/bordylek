@@ -1,0 +1,25 @@
+package org.bordylek.mon.rules
+
+import org.bordylek.mon.RulesTest
+import org.bordylek.service.model.*
+
+global org.bordylek.mon.Alerter alerter
+
+rule "Name"
+ 	dialect "mvel"
+when
+    oldCounter : Counter(name == "old")
+then
+    modify (oldCounter) {
+     	name = "processed"
+	}
+end
+
+
+rule "Age"
+ 	dialect "mvel"
+when
+    oldCounter : Counter(name == "very-old")
+then
+	alerter.info("too old")
+end

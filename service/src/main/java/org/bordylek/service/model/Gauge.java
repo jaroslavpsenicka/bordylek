@@ -1,7 +1,7 @@
 
 package org.bordylek.service.model;
 
-public class Gauge extends AbstractMetric {
+public class Gauge extends Metrics {
 
     private Object value;
 

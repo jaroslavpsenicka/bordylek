@@ -35,11 +35,11 @@ public class MetricsController {
 	@RequestMapping(value = "/metrics", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Map<String, List<AbstractMetric>> latestMetrics() {
-		AbstractMetric latestMetric = metricsRepository.findTopByOrderByTimestampDesc();
+	public Map<String, List<Metrics>> latestMetrics() {
+		Metrics latestMetric = metricsRepository.findTopByOrderByTimestampDesc();
 		if (latestMetric != null && latestMetric.getTimestamp() != null) {
-			Map<String, List<AbstractMetric>> latestMetrics = createLatestMetricsMap();
-			for (AbstractMetric metric : metricsRepository.findByTimestamp(latestMetric.getTimestamp())) {
+			Map<String, List<Metrics>> latestMetrics = createLatestMetricsMap();
+			for (Metrics metric : metricsRepository.findByTimestamp(latestMetric.getTimestamp())) {
 				latestMetrics.get(METRIC_TYPES.get(metric.getClass())).add(metric);
 			}
 
@@ -49,9 +49,9 @@ public class MetricsController {
 		throw new NotFoundException("no data found");
 	}
 
-	private Map<String, List<AbstractMetric>> createLatestMetricsMap() {
-		Map<String, List<AbstractMetric>> latestMetrics = new HashMap<>();
-		for (String type : METRIC_TYPES.values()) latestMetrics.put(type, new ArrayList<AbstractMetric>());
+	private Map<String, List<Metrics>> createLatestMetricsMap() {
+		Map<String, List<Metrics>> latestMetrics = new HashMap<>();
+		for (String type : METRIC_TYPES.values()) latestMetrics.put(type, new ArrayList<Metrics>());
 		return latestMetrics;
 	}
 

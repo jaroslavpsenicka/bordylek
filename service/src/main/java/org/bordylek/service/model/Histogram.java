@@ -2,7 +2,7 @@ package org.bordylek.service.model;
 
 import com.codahale.metrics.Snapshot;
 
-public class Histogram extends AbstractMetric {
+public class Histogram extends Metrics {
 
     private Long count;
     private Long max;
