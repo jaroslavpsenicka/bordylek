@@ -12,8 +12,8 @@
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan base-package="org.bordylek.mon" />
     <context:property-placeholder location="classpath:/mon.properties"/>
+    <context:component-scan base-package="org.bordylek.mon" />
 
     <mvc:annotation-driven />
 

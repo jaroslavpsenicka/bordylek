@@ -1,13 +1,11 @@
 
 package org.bordylek.web.metrics;
 
-import com.codahale.metrics.*;
-import org.bordylek.service.model.Counter;
-import org.bordylek.service.model.Gauge;
-import org.bordylek.service.model.Histogram;
-import org.bordylek.service.model.Meter;
-import org.bordylek.service.model.Timer;
-import org.bordylek.service.repository.*;
+import com.codahale.metrics.MetricFilter;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.ScheduledReporter;
+import org.bordylek.service.model.*;
+import org.bordylek.service.repository.MetricsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

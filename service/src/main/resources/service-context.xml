@@ -13,14 +13,11 @@
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
     ">
 
-    <!-- Properties -->
-    <context:property-placeholder location="classpath:/web.properties"/>
-
     <!-- @Component, @Service, @Controller, @Repository, @Configuration -->
-    <context:component-scan base-package="org.bordylek.service" />
+    <context:component-scan base-package="org.bordylek.service, org.bordylek.web" />
 
 	<!-- Mongo -->
-    <mongo:repositories base-package="org.bordylek.service.repository" />
+    <mongo:repositories base-package="org.bordylek.service.repository, org.bordylek.web.repository" />
 	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
 		<property name="host" value="localhost" />
 	</bean>

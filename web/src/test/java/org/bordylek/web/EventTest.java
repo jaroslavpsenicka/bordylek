@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/integration-context.xml", "/metrics-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/integration-context.xml", "/metrics-context.xml", "/web-context.xml", "/test-context.xml"})
 public class EventTest {
 
     @Autowired

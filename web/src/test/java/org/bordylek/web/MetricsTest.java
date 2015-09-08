@@ -6,6 +6,7 @@ import org.bordylek.service.model.User;
 import org.bordylek.service.repository.MetricsRepository;
 import org.bordylek.service.repository.UserRepository;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,16 +25,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -88,10 +87,10 @@ public class MetricsTest {
 
     @Test
     public void findMeMetric() throws Exception {
-        mockMvc.perform(get("/user/me")).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/me")).andExpect(MockMvcResultMatchers.status().isOk());
         Thread.sleep(1500);
         List<AbstractMetric> findMeMetrics = metricsRepository.findByName(UserController.class.getName() + ".findMe");
-        assertTrue(findMeMetrics.size() > 0);
+        Assert.assertTrue(findMeMetrics.size() > 0);
     }
 
     private void authenticate(String email, final String role) {
