@@ -52,7 +52,7 @@ public class AlerterTest {
 
     @Test
     public void metadata() {
-        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("org.bordylek.mon.rules");
+        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("rules");
         Rule rule = knowledgePackage.getRules().iterator().next();
         assertEquals("Name", rule.getName());
     }
