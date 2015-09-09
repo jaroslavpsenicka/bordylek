@@ -35,7 +35,7 @@ body {
 /* Page Sections */
 .section,
 .section-colored {
-    padding: 50px 0;
+    padding: 20px 0;
 }
 
 .section-colored {
@@ -146,6 +146,23 @@ body {
 
 .spacer {
     margin-top: 20px;
+}
+
+.ruleset label {
+    display: block;
+    padding-left: 15px;
+    font-weight: normal;
+}
+
+.ruleset input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0 10px 0 0;
+    vertical-align: bottom;
+    position: relative;
+    top: -3px;
+    *overflow: hidden;
 }
 
 /* Footer Styles */

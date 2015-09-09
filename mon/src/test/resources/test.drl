@@ -1,4 +1,4 @@
-package org.bordylek.mon.rules
+package rules
 
 import org.bordylek.mon.AlerterTest
 import org.bordylek.service.model.*

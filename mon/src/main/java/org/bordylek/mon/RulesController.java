@@ -26,19 +26,21 @@ public class RulesController {
 	@RequestMapping(value = "/rules", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public Map<String, List<RuleDef>> getRules() {
-		Set<String> disabledRules = config.getDisabledRules();
-		Map<String, List<RuleDef>> rules = new HashMap<>();
+	public Map<String, Map<String, List<RuleDef>>> getRules() {
+		final Set<String> disabledRules = config.getDisabledRules();
+		final Map<String, List<RuleDef>> rules = new HashMap<>();
 		for (KnowledgePackage knowledgePackage : knowledgeBase.getKnowledgePackages()) {
 			List<RuleDef> defs = new ArrayList<>();
 			rules.put(knowledgePackage.getName(), defs);
 			for (Rule rule : knowledgePackage.getRules()) {
 				String fqRuleName = knowledgePackage.getName() + "." + rule.getName();
-				defs.add(new RuleDef(fqRuleName, !disabledRules.contains(fqRuleName)));
+				defs.add(new RuleDef(knowledgePackage.getName(), rule.getName(), !disabledRules.contains(fqRuleName)));
 			}
 		}
 
-		return rules;
+		return new HashMap<String, Map<String, List<RuleDef>>>() {{
+			put("data", rules);
+		}};
 	}
 
 	@RequestMapping(value = "/rules/toggle", method = RequestMethod.POST,
@@ -61,19 +63,35 @@ public class RulesController {
 
 	public static class RuleDef {
 
+		private String packageName;
 		private String name;
 		private boolean enabled;
 
 		public RuleDef() {
 		}
 
-		public RuleDef(String fqRuleName) {
-			this.name = fqRuleName;
+		public RuleDef(String fqName) {
+			int lastIdx = fqName.lastIndexOf('.');
+			this.packageName = fqName.substring(0, lastIdx);
+			this.name = fqName.substring(0, lastIdx + 1);
 		}
 
-		public RuleDef(String name, boolean enabled) {
-			this(name);
+		public RuleDef(String packageName, String name) {
+			this.packageName = packageName;
+			this.name = name;
+		}
+
+		public RuleDef(String packageName, String name, boolean enabled) {
+			this(packageName, name);
 			this.enabled = enabled;
+		}
+
+		public String getPackageName() {
+			return packageName;
+		}
+
+		public void setPackageName(String packageName) {
+			this.packageName = packageName;
 		}
 
 		public String getName() {

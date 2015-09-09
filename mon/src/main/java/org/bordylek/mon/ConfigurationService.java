@@ -2,7 +2,6 @@ package org.bordylek.mon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -17,6 +16,7 @@ public class ConfigurationService {
     private Config config;
 
     private static final String DOCUMENT_ID = "1";
+    public static final String COLLECTION_NAME = "metrics";
 
     public Set<String> getDisabledRules() {
         return config().getDisabledRules();
@@ -24,21 +24,22 @@ public class ConfigurationService {
 
     public void enableRule(String fqRuleName) {
         config().getDisabledRules().remove(fqRuleName);
+        mongoTemplate.save(config, COLLECTION_NAME);
     }
 
     public void disableRule(String fqRuleName) {
         config().getDisabledRules().add(fqRuleName);
+        mongoTemplate.save(config, COLLECTION_NAME);
     }
 
     private Config config() {
         if (config == null) {
-            BasicQuery query = new BasicQuery("{ id: '" + DOCUMENT_ID + "' }");
-            config = mongoTemplate.findOne(query, Config.class, "metrics");
+            config = mongoTemplate.findById(DOCUMENT_ID, Config.class, COLLECTION_NAME);
             if (config == null) {
                 config = new Config();
                 config.setId(DOCUMENT_ID);
                 config.setDisabledRules(new HashSet<String>());
-                mongoTemplate.save(config);
+                mongoTemplate.save(config, COLLECTION_NAME);
             }
         }
 

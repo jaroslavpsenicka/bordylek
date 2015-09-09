@@ -1,0 +1,20 @@
+package Basic
+
+import org.bordylek.service.model.*
+
+global org.bordylek.mon.Alerter alerter
+
+rule "Name"
+ 	dialect "mvel"
+when
+    oldCounter : Counter(name == "old")
+then
+end
+
+
+rule "Age"
+ 	dialect "mvel"
+when
+    oldCounter : Counter(name == "very-old")
+then
+end

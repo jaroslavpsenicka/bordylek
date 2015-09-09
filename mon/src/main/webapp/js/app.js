@@ -30,11 +30,11 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 		resolve: {
 			deps: app.resolveDeps(['js/data.js'])
 		}
-	}).when("/monitor", {
-		templateUrl: "/monitor.html",
-		controller: "MonitorCtrl",
+	}).when("/rules", {
+		templateUrl: "/rules.html",
+		controller: "RulesCtrl",
 		resolve: {
-			deps: app.resolveDeps(['js/monitor.js'])
+			deps: app.resolveDeps(['js/rules.js'])
 		}
 	}).otherwise("/404", {
 		templateUrl: "/404.html",

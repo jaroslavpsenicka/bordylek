@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml",
-    "/drools-context.xml", "/test-context.xml"})
+        "/rules-context.xml", "/test-context.xml"})
 public class AlerterTest {
 
     @Autowired

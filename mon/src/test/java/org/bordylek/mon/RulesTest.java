@@ -49,46 +49,46 @@ public class RulesTest {
     public void listRules() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(true)))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][1].name", is("org.bordylek.mon.rules.Age")))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][1].enabled", is(true)));
+            .andExpect(jsonPath("data.rules", hasSize(2)))
+            .andExpect(jsonPath("data.rules[0].name", is("Name")))
+            .andExpect(jsonPath("data.rules[0].enabled", is(true)))
+            .andExpect(jsonPath("data.rules[1].name", is("Age")))
+            .andExpect(jsonPath("data.rules[1].enabled", is(true)));
     }
 
     @Test
     public void disableRule() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
-            .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
+            .header("Content-Type", "application/json").content("rules.Name"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(false)));
+            .andExpect(jsonPath("data.rules", hasSize(2)))
+            .andExpect(jsonPath("data.rules[0].name", is("Name")))
+            .andExpect(jsonPath("data.rules[0].enabled", is(false)));
     }
 
     @Test
     public void enableRule() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
-            .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
+            .header("Content-Type", "application/json").content("rules.Name"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(false)));
+                .andExpect(jsonPath("data.rules", hasSize(2)))
+                .andExpect(jsonPath("data.rules[0].name", is("Name")))
+            .andExpect(jsonPath("data.rules[0].enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
-            .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
+            .header("Content-Type", "application/json").content("rules.Name"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("enabled", is(true)));
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
-            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(true)));
+            .andExpect(jsonPath("data.rules", hasSize(2)))
+            .andExpect(jsonPath("data.rules[0].name", is("Name")))
+            .andExpect(jsonPath("data.rules[0].enabled", is(true)));
     }
 
 }
