@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RulesTest {
 
     @Autowired
@@ -58,12 +60,35 @@ public class RulesTest {
     public void disableRule() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
             .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
             .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
             .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(false)));
+    }
+
+    @Test
+    public void enableRule() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
+            .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("enabled", is(false)));
+        mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(false)));
+        mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
+            .header("Content-Type", "application/json").content("org.bordylek.mon.rules.Name"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("enabled", is(true)));
+        mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules']", hasSize(2)))
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].name", is("org.bordylek.mon.rules.Name")))
+            .andExpect(jsonPath("$.['org.bordylek.mon.rules'][0].enabled", is(true)));
     }
 
 }

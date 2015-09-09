@@ -41,15 +41,22 @@ public class RulesController {
 		return rules;
 	}
 
-	@RequestMapping(value = "/rules/toggle", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/rules/toggle", method = RequestMethod.POST,
+		consumes = "application/json", produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
-	public void toggleRule(@RequestBody String fqRuleName) {
+	@ResponseBody
+	public RuleDef toggleRule(@RequestBody String fqRuleName) {
+		RuleDef ruleDef = new RuleDef(fqRuleName);
 		Set<String> disabledRules = config.getDisabledRules();
 		if (disabledRules.contains(fqRuleName)) {
 			config.enableRule(fqRuleName);
+			ruleDef.setEnabled(true);
 		} else {
 			config.disableRule(fqRuleName);
+			ruleDef.setEnabled(false);
 		}
+
+		return ruleDef;
 	}
 
 	public static class RuleDef {
@@ -60,8 +67,12 @@ public class RulesController {
 		public RuleDef() {
 		}
 
+		public RuleDef(String fqRuleName) {
+			this.name = fqRuleName;
+		}
+
 		public RuleDef(String name, boolean enabled) {
-			this.name = name;
+			this(name);
 			this.enabled = enabled;
 		}
 
