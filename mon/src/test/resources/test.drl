@@ -1,6 +1,6 @@
 package org.bordylek.mon.rules
 
-import org.bordylek.mon.RulesTest
+import org.bordylek.mon.AlerterTest
 import org.bordylek.service.model.*
 
 global org.bordylek.mon.Alerter alerter
