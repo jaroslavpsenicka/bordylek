@@ -24,8 +24,8 @@ public class Alert {
         this.timestamp = new Date();
     }
 
-    public Alert(String packageName, String name, Severity severity, String message) {
-        this.fqName = packageName + "." + name;
+    public Alert(String fqName, Date timestamp, Severity severity, String message) {
+        this.fqName = fqName;
         this.timestamp = new Date();
         this.severity = severity;
         this.message = message;

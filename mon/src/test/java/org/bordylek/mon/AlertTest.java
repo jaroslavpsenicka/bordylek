@@ -1,5 +1,7 @@
 package org.bordylek.mon;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bordylek.mon.model.Alert;
 import org.bordylek.mon.model.Severity;
 import org.bordylek.mon.repository.AlertRepository;
@@ -16,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -24,6 +27,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -57,7 +61,7 @@ public class AlertTest {
 
     @Test
     public void activeAlertsOnly() throws Exception {
-        alertRepository.save(new Alert("rules", "Name", Severity.INFO, "Hello"));
+        alertRepository.save(new Alert("rules.Name", new Date(0), Severity.INFO, "Hello"));
         mockMvc.perform(get("/alerts"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -70,10 +74,10 @@ public class AlertTest {
 
     @Test
     public void activeAlerts() throws Exception {
-        Alert alert = new Alert("rules", "Name", Severity.INFO, "Old");
+        Alert alert = new Alert("rules.Name", new Date(0), Severity.INFO, "Old");
         alert.setResolved(true);
         alertRepository.save(alert);
-        alertRepository.save(new Alert("rules", "Name", Severity.INFO, "Hello"));
+        alertRepository.save(new Alert("rules.Name", new Date(1000), Severity.INFO, "Hello"));
         mockMvc.perform(get("/alerts"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -86,11 +90,11 @@ public class AlertTest {
 
     @Test
     public void allAlerts() throws Exception {
-        Alert alert = new Alert("rules", "Name1", Severity.ERROR, "Old");
+        Alert alert = new Alert("rules.Name1", new Date(0), Severity.ERROR, "Old");
         alert.setTimestamp(new Date(0));
         alert.setResolved(true);
         alertRepository.save(alert);
-        alertRepository.save(new Alert("rules", "Name2", Severity.INFO, "Hello"));
+        alertRepository.save(new Alert("rules.Name2", new Date(1000), Severity.INFO, "Hello"));
         mockMvc.perform(get("/alerts").param("all", "true"))
             .andDo(print())
             .andExpect(status().isOk())
@@ -104,6 +108,40 @@ public class AlertTest {
             .andExpect(jsonPath("$[1].severity", is("ERROR")))
             .andExpect(jsonPath("$[1].message", is("Old")))
             .andExpect(jsonPath("$[1].resolved", is(true)));
+    }
+
+    @Test
+    public void resolve() throws Exception {
+        alertRepository.save(new Alert("rules.Name", new Date(0), Severity.INFO, "Hello"));
+        MvcResult result = mockMvc.perform(get("/alerts"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].fqName", is("rules.Name")))
+            .andExpect(jsonPath("$[0].severity", is("INFO")))
+            .andExpect(jsonPath("$[0].message", is("Hello")))
+            .andExpect(jsonPath("$[0].resolved", is(false)))
+            .andReturn();
+        JsonNode jsonNode = new ObjectMapper().readTree(result.getResponse().getContentAsByteArray());
+        String id = jsonNode.get(0).get("id").textValue();
+        mockMvc.perform(post("/alerts/" + id + "/resolve")).andExpect(status().isOk());
+        mockMvc.perform(get("/alerts").param("all", String.valueOf(true)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].fqName", is("rules.Name")))
+            .andExpect(jsonPath("$[0].severity", is("INFO")))
+            .andExpect(jsonPath("$[0].message", is("Hello")))
+            .andExpect(jsonPath("$[0].resolved", is(true)));
+        mockMvc.perform(get("/alerts"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void resolveWrongId() throws Exception {
+        mockMvc.perform(post("/alerts/ILLEGAL/resolve")).andExpect(status().isNotFound());
     }
 
 }
