@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bordylek.mon.model.Alert;
 import org.bordylek.mon.model.Severity;
 import org.bordylek.mon.repository.AlertRepository;
+import org.bordylek.service.model.Counter;
+import org.bordylek.service.repository.MetricsRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,7 @@ import java.util.Date;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,7 +41,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AlertTest {
 
     @Autowired
+    private MetricsRepository metricsRepository;
+
+    @Autowired
     private AlertRepository alertRepository;
+
+    @Autowired
+    private AlertProcessor alertProcessor;
+
+    @Autowired
+    private ConfigurationService config;
 
     @Autowired
 	private WebApplicationContext webApplicationContext;
@@ -142,6 +154,25 @@ public class AlertTest {
     @Test
     public void resolveWrongId() throws Exception {
         mockMvc.perform(post("/alerts/ILLEGAL/resolve")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void doNotAlertDisabledRule() {
+        Counter counter = new Counter();
+        counter.setTimestamp(new Date(0));
+        counter.setName("very-old");
+        metricsRepository.save(counter);
+
+        config.disableRule("rules.Age");
+        alertProcessor.process();
+        assertEquals(0, alertRepository.findAll().size());
+
+        config.enableRule("rules.Age");
+        alertProcessor.process();
+        assertEquals(1, alertRepository.findAll().size());
+        Alert alert = alertRepository.findAll().iterator().next();
+        assertEquals("rules.Age", alert.getFqName());
+        assertEquals("too old", alert.getMessage());
     }
 
 }

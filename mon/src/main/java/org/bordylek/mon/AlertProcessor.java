@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Set;
 
 @Component
 public class AlertProcessor implements Alerter {
@@ -25,6 +26,9 @@ public class AlertProcessor implements Alerter {
 
     @Autowired
     private StatelessKnowledgeSession droolsSession;
+
+    @Autowired
+    private ConfigurationService configurationService;
 
     private static final Logger LOG = LoggerFactory.getLogger(AlertProcessor.class);
 
@@ -53,9 +57,12 @@ public class AlertProcessor implements Alerter {
 
     private void createAlert(Rule rule, Date date, Severity severity, String message) {
         String fqName = rule.getPackageName() + "." + rule.getName();
-        if (alertRepository.findByFqNameAndTimestampAndSeverity(fqName, date, severity).size() == 0) {
-            alertRepository.save(new Alert(fqName, date, severity, message));
-        } else LOG.warn("Duplicite alert " + fqName + " severity " + severity + ": " + message);
+        Set<String> disabledRules = configurationService.getDisabledRules();
+        if (!disabledRules.contains(fqName)) {
+            if (alertRepository.findByFqNameAndTimestampAndSeverity(fqName, date, severity).size() == 0) {
+                alertRepository.save(new Alert(fqName, date, severity, message));
+            } else LOG.warn("Duplicite alert " + fqName + " severity " + severity + ": " + message);
+        } else LOG.warn("Disabled alert " + fqName + " severity " + severity + ": " + message);
     }
 
 }
