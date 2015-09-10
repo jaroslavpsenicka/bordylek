@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml",
+@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml",
         "/rules-context.xml", "/test-context.xml"})
 public class AlerterTest {
 
@@ -88,6 +88,6 @@ public class AlerterTest {
         counter1.setTimestamp(new Date(0));
         counter1.setName("very-old");
         droolsSession.execute(Collections.singletonList(counter1));
-        assertEquals("too old", alerter.getInfo());
+        assertEquals("Age - too old", alerter.getInfo());
     }
 }

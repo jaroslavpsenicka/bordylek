@@ -7,7 +7,7 @@
         <param-value>
             classpath:/service-context.xml
             classpath:/rules-context.xml
-            classpath:/web-context.xml
+            classpath:/mon-context.xml
             classpath:/security-context.xml
         </param-value>
     </context-param>

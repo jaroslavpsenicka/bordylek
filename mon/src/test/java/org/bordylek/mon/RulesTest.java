@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml", "/rules-context.xml", "/test-context.xml"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RulesTest {
 
@@ -77,8 +77,8 @@ public class RulesTest {
             .andExpect(jsonPath("enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
             .andExpect(status().isOk())
-                .andExpect(jsonPath("data.rules", hasSize(2)))
-                .andExpect(jsonPath("data.rules[0].name", is("Name")))
+            .andExpect(jsonPath("data.rules", hasSize(2)))
+            .andExpect(jsonPath("data.rules[0].name", is("Name")))
             .andExpect(jsonPath("data.rules[0].enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
             .header("Content-Type", "application/json").content("rules.Name"))

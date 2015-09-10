@@ -25,7 +25,7 @@ import java.util.Date;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/web-context.xml", "/security-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml", "/rules-context.xml", "/test-context.xml"})
 public class MetricsTest {
 
     @Autowired

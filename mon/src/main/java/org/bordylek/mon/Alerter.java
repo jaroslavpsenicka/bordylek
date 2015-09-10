@@ -1,7 +1,9 @@
 package org.bordylek.mon;
 
+import org.drools.definition.rule.Rule;
+
 public interface Alerter {
-    void info(String message);
-    void warning(String message);
-    void error(String message);
+    void info(Rule rule, String message);
+    void warning(Rule rule, String message);
+    void error(Rule rule, String message);
 }

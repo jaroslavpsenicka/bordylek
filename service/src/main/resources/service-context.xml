@@ -17,7 +17,6 @@
     <context:component-scan base-package="org.bordylek.service, org.bordylek.web" />
 
 	<!-- Mongo -->
-    <mongo:repositories base-package="org.bordylek.service.repository, org.bordylek.web.repository" />
 	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
 		<property name="host" value="localhost" />
 	</bean>

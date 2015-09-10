@@ -15,6 +15,8 @@
     <context:property-placeholder location="classpath:/web.properties"/>
     <context:component-scan base-package="org.bordylek.web" />
 
+    <mongo:repositories base-package="org.bordylek.service.repository, org.bordylek.web.repository" />
+
     <mvc:annotation-driven />
 
 </beans>

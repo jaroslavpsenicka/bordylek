@@ -1,5 +1,7 @@
 package org.bordylek.mon;
 
+import org.drools.definition.rule.Rule;
+
 public class TestAlerter implements Alerter {
 
     private String info;
@@ -7,17 +9,17 @@ public class TestAlerter implements Alerter {
     private String error;
 
     @Override
-    public void info(String message) {
-        this.info = message;
+    public void info(Rule rule, String message) {
+        this.info = rule.getName() + " - " + message;
     }
 
     @Override
-    public void warning(String message) {
+    public void warning(Rule rule, String message) {
         this.warning = message;
     }
 
     @Override
-    public void error(String message) {
+    public void error(Rule rule, String message) {
         this.error = message;
     }
 

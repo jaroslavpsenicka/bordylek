@@ -83,5 +83,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: rhino:js:1.7R2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vividsolutions:jts:1.13" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: de.grundid.opendatalab:geojson-jackson:1.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.10.8" level="project" />
   </component>
 </module>

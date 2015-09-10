@@ -18,7 +18,7 @@
         <beans:constructor-arg index="1" value="MINUTES"/>
         <beans:constructor-arg index="2" value="MINUTES"/>
         <beans:constructor-arg index="3" value="ALL"/>
-        <beans:property name="period" value="5"/>
+        <beans:property name="period" value="10"/>
         <beans:property name="timeUnit" value="MINUTES"/>
     </beans:bean>
 
