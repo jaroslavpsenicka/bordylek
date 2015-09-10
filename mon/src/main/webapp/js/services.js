@@ -25,3 +25,20 @@ services.factory('alertService', function($resource) {
         }
     });
 });
+
+services.factory('metricsService', function($resource) {
+    return $resource('', {}, {
+        meters: {
+            url: 'rest/metrics/meter',
+            method: 'GET'
+        },
+        counters: {
+            url: 'rest/metrics/counter',
+            method: 'GET'
+        },
+        timers: {
+            url: 'rest/metrics/timer',
+            method: 'GET'
+        }
+    });
+});

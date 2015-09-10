@@ -1,7 +1,19 @@
 <div class="section">
     <div class="container">
+
         <div class="row">
-            <div>Data</div>
+            <h3>Counters</h3>
+            <div ng-repeat="value in counters">
+                {{value}}
+            </div>
+            <h3>Meters</h3>
+            <div ng-repeat="value in meters">
+                {{value}}
+            </div>
+            <h3>Timers</h3>
+            <div ng-repeat="value in timers">
+                {{value}}
+            </div>
         </div>
     </div>
 </div>

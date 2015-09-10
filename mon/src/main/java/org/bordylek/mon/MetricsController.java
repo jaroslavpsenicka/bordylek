@@ -2,6 +2,7 @@ package org.bordylek.mon;
 
 import org.bordylek.service.NotFoundException;
 import org.bordylek.service.model.*;
+import org.bordylek.service.model.Timer;
 import org.bordylek.service.repository.MetricsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class MetricsController {
@@ -49,6 +47,29 @@ public class MetricsController {
 		throw new NotFoundException("no data found");
 	}
 
+	@RequestMapping(value = "/metrics/{type}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public Map<String, List<Metrics>> latestMetricsOfType(@PathVariable("type") String type) {
+		Metrics latestMetric = metricsRepository.findTopByOrderByTimestampDesc();
+		if (latestMetric != null && latestMetric.getTimestamp() != null) {
+			for (Map.Entry<Class, String> entry : METRIC_TYPES.entrySet()) {
+				if (entry.getValue().equals(type)) {
+					String name = entry.getKey().getName();
+					Date timestamp = latestMetric.getTimestamp();
+					final List<Metrics> metricsList = metricsRepository.findByTimestamp(name, timestamp);
+					return new HashMap<String, List<Metrics>>() {{
+						put("data", metricsList);
+					}};
+				}
+			}
+
+			throw new IllegalArgumentException(type);
+		}
+
+		throw new NotFoundException("no data found");
+	}
+
 	private Map<String, List<Metrics>> createLatestMetricsMap() {
 		Map<String, List<Metrics>> latestMetrics = new HashMap<>();
 		for (String type : METRIC_TYPES.values()) latestMetrics.put(type, new ArrayList<Metrics>());
@@ -58,6 +79,11 @@ public class MetricsController {
 	@ExceptionHandler(NotFoundException.class)
 	public void handleNotFoundException(NotFoundException ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.NOT_FOUND.value());
+	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public void handleIllegalArgumentException(IllegalArgumentException ex, HttpServletResponse response) {
+		response.setStatus(HttpStatus.BAD_REQUEST.value());
 	}
 
 }

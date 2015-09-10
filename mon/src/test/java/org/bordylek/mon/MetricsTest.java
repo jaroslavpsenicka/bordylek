@@ -1,6 +1,7 @@
 package org.bordylek.mon;
 
 import org.bordylek.service.model.Counter;
+import org.bordylek.service.model.Meter;
 import org.bordylek.service.model.Metrics;
 import org.bordylek.service.repository.MetricsRepository;
 import org.junit.After;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -22,6 +24,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -87,5 +93,34 @@ public class MetricsTest {
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
 
+    @Test
+    public void latestMetricsByType() throws Exception {
+        Counter counter1 = new Counter();
+        counter1.setTimestamp(new Date(0));
+        counter1.setName("counter1");
+        metricsRepository.save(counter1);
+        Counter counter2 = new Counter();
+        counter2.setTimestamp(new Date(0));
+        counter2.setName("counter2");
+        metricsRepository.save(counter2);
+        Meter meter = new Meter();
+        meter.setTimestamp(new Date(0));
+        meter.setName("meter");
+        metricsRepository.save(meter);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(2)))
+            .andExpect(jsonPath("data[0].name", is("counter1")))
+            .andExpect(jsonPath("data[1].name", is("counter2")));
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/meter"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(1)))
+            .andExpect(jsonPath("data[0].name", is("meter")));
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/unknown"))
+            .andExpect(status().isBadRequest());
+    }
 
 }
