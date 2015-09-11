@@ -39,6 +39,14 @@ services.factory('metricsService', function($resource) {
         timers: {
             url: 'rest/metrics/timer',
             method: 'GET'
+        },
+        gauges: {
+            url: 'rest/metrics/gauge',
+            method: 'GET'
+        },
+        histograms: {
+            url: 'rest/metrics/histogram',
+            method: 'GET'
         }
     });
 });

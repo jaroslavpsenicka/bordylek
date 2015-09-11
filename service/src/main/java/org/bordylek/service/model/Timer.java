@@ -1,5 +1,7 @@
 package org.bordylek.service.model;
 
+import java.util.Date;
+
 public class Timer extends Metrics {
 
     private Long count;
@@ -11,8 +13,8 @@ public class Timer extends Metrics {
     public Timer() {
     }
 
-    public Timer(String name, com.codahale.metrics.Timer timer) {
-        super(name);
+    public Timer(String name, com.codahale.metrics.Timer timer, Date saveDate) {
+        super(name, saveDate);
         count = timer.getCount();
         m1Rate = timer.getOneMinuteRate();
         m5Rate = timer.getFiveMinuteRate();

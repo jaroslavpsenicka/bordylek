@@ -1,5 +1,7 @@
 package org.bordylek.service.model;
 
+import java.util.Date;
+
 public class Meter extends Metrics {
 
     private Long count;
@@ -11,8 +13,8 @@ public class Meter extends Metrics {
     public Meter() {
     }
 
-    public Meter(String name, com.codahale.metrics.Meter meter) {
-        super(name);
+    public Meter(String name, com.codahale.metrics.Meter meter, Date saveDate) {
+        super(name, saveDate);
         count = meter.getCount();
         m1Rate = meter.getOneMinuteRate();
         m5Rate = meter.getFiveMinuteRate();

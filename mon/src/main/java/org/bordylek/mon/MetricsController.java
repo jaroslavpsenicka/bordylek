@@ -57,7 +57,7 @@ public class MetricsController {
 				if (entry.getValue().equals(type)) {
 					String name = entry.getKey().getName();
 					Date timestamp = latestMetric.getTimestamp();
-					final List<Metrics> metricsList = metricsRepository.findByTimestamp(name, timestamp);
+					final List<Metrics> metricsList = metricsRepository.findAllOfTypeAndTimestamp(name, timestamp);
 					return new HashMap<String, List<Metrics>>() {{
 						put("data", metricsList);
 					}};
@@ -68,6 +68,25 @@ public class MetricsController {
 		}
 
 		throw new NotFoundException("no data found");
+	}
+
+	@RequestMapping(value = "/metrics/{type}/{name}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public Map<String, List<Metrics>> metricsOfType(@PathVariable("type") String type,
+		@PathVariable("name") String name, @RequestParam(value = "period", defaultValue = "21600000") Integer period) {
+		for (Map.Entry<Class, String> entry : METRIC_TYPES.entrySet()) {
+			if (entry.getValue().equals(type)) {
+				String className = entry.getKey().getName();
+				Date date = new Date(System.currentTimeMillis() - period); // default 6 hrs in ms
+				final List<Metrics> metricsList = metricsRepository.findAllOfTypeAndNameNewerThan(className, name, date);
+				return new HashMap<String, List<Metrics>>() {{
+					put("data", metricsList);
+				}};
+			}
+		}
+
+		throw new IllegalArgumentException(type);
 	}
 
 	private Map<String, List<Metrics>> createLatestMetricsMap() {

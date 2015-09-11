@@ -123,4 +123,32 @@ public class MetricsTest {
             .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void latestMetricsByTypeAndName() throws Exception {
+        Counter counter1 = new Counter();
+        counter1.setTimestamp(new Date(System.currentTimeMillis() - 1000));
+        counter1.setName("ccc");
+        metricsRepository.save(counter1);
+        Counter counter2 = new Counter();
+        counter2.setTimestamp(new Date());
+        counter2.setName("ccc");
+        metricsRepository.save(counter2);
+        Meter meter = new Meter();
+        meter.setTimestamp(new Date());
+        meter.setName("meter");
+        metricsRepository.save(meter);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/ccc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(2)))
+            .andExpect(jsonPath("data[0].name", is("ccc")))
+            .andExpect(jsonPath("data[1].name", is("ccc")));
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/ccc").param("period", "500"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(1)))
+            .andExpect(jsonPath("data[0].name", is("ccc")));
+    }
+
 }

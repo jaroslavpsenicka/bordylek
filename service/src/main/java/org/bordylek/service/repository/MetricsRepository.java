@@ -18,6 +18,8 @@ public interface MetricsRepository extends MongoRepository<Metrics, String> {
     List<Metrics> findByTimestamp(Date timestamp);
 
     @Query("{ _class: ?0, timestamp: ?1 }")
-    List<Metrics> findByTimestamp(String className, Date timestamp);
+    List<Metrics> findAllOfTypeAndTimestamp(String className, Date timestamp);
 
+    @Query("{ _class: ?0, name: ?1, timestamp: { $gte: ?2 }}")
+    List<Metrics> findAllOfTypeAndNameNewerThan(String className, String name, Date date);
 }

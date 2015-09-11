@@ -1,5 +1,7 @@
 package org.bordylek.service.model;
 
+import java.util.Date;
+
 public class Counter extends Metrics {
 
     private Object count;
@@ -7,8 +9,8 @@ public class Counter extends Metrics {
     public Counter() {
     }
 
-    public Counter(String name, com.codahale.metrics.Counter counter) {
-        super(name);
+    public Counter(String name, com.codahale.metrics.Counter counter, Date saveDate) {
+        super(name, saveDate);
         this.count = counter.getCount();
     }
 

@@ -2,6 +2,8 @@ package org.bordylek.service.model;
 
 import com.codahale.metrics.Snapshot;
 
+import java.util.Date;
+
 public class Histogram extends Metrics {
 
     private Long count;
@@ -19,8 +21,8 @@ public class Histogram extends Metrics {
     public Histogram() {
     }
 
-    public Histogram(String name, Snapshot snapshot) {
-        super(name);
+    public Histogram(String name, Snapshot snapshot, Date saveDate) {
+        super(name, saveDate);
         max = snapshot.getMax();
         mean = snapshot.getMean();
         min = snapshot.getMin();

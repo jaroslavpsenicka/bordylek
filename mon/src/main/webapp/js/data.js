@@ -12,4 +12,12 @@ app.registerCtrl('DataCtrl', ['$scope', 'metricsService', function ($scope, metr
 		$scope.timers = response.data;
 	});
 
+	metricsService.gauges(function(response) {
+		$scope.gauges = response.data;
+	});
+
+	metricsService.histograms(function(response) {
+		$scope.histograms = response.data;
+	});
+
 }]);

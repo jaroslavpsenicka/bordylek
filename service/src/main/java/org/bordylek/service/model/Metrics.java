@@ -15,9 +15,9 @@ public abstract class Metrics {
     public Metrics() {
     }
 
-    public Metrics(String name) {
+    public Metrics(String name, Date timestamp) {
         this.name = name;
-        this.timestamp = new Date();
+        this.timestamp = timestamp;
     }
 
     public String getId() {

@@ -1,6 +1,8 @@
 
 package org.bordylek.service.model;
 
+import java.util.Date;
+
 public class Gauge extends Metrics {
 
     private Object value;
@@ -8,8 +10,8 @@ public class Gauge extends Metrics {
     public Gauge() {
     }
 
-    public Gauge(String name, com.codahale.metrics.Gauge gauge) {
-        super(name);
+    public Gauge(String name, com.codahale.metrics.Gauge gauge, Date saveDate) {
+        super(name, saveDate);
         this.value = gauge.getValue();
     }
 
