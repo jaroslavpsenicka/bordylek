@@ -2,24 +2,6 @@
     <div class="container">
 
         <div class="row">
-            <h3>Counters</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="value in counters | orderBy:'name'">
-                        <td>{{value.name}}</td>
-                        <td>{{value.count}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="row">
             <h3>Meters</h3>
             <table class="table table-striped">
                 <thead>
@@ -72,24 +54,6 @@
         </div>
 
         <div class="row">
-            <h3>Gauges</h3>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="value in gauges | orderBy:'name'">
-                    <td>{{value.name}}</td>
-                    <td>{{value.value}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="row">
             <h3>Histograms</h3>
             <table class="table table-striped">
                 <thead>
@@ -125,6 +89,44 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Gauges</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in gauges | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td>{{value.value}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h3>Counters</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in counters | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td>{{value.count}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
     </div>
