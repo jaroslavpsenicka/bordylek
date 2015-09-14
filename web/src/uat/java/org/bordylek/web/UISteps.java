@@ -1,5 +1,6 @@
 package org.bordylek.web;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Function;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -41,6 +42,9 @@ public class UISteps {
     @Autowired
     private InMemoryUserDetailsManager userDetailsManager;
 
+    @Autowired
+    private MetricRegistry metricRegistry;
+
     private SharedDriver driver;
     private WebDriverWait wait;
     private EmbeddedHttpServer server;
@@ -63,6 +67,7 @@ public class UISteps {
 	@After
 	public void afterScenario() throws Exception {
         server.stop();
+
 	}
 
     @Given("^community \"(Prague)\" exists$")

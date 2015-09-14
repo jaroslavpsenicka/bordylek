@@ -6,9 +6,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -37,11 +35,8 @@ public class EmbeddedHttpServer {
         ServletContextHandler springHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         springHandler.setContextPath("/*");
         springHandler.addServlet(dispatcherServlet, "/rest/*");
-        springHandler.addEventListener(new ContextLoaderListener());
-        springHandler.addEventListener(new RequestContextListener());
-        springHandler.setInitParameter("contextConfigLocation", "classpath:/uat-context.xml");
 
-        FilterHolder springSecurityFilterChain = new FilterHolder(new DelegatingFilterProxy("springSecurityFilterChain"));
+        FilterHolder springSecurityFilterChain = new FilterHolder(new DelegatingFilterProxy("springSecurityFilterChain", ctx));
         springHandler.addFilter(springSecurityFilterChain, "/*", EnumSet.allOf(DispatcherType.class));
         handlers.addHandler(springHandler);
 
