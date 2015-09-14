@@ -19,12 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MongoDBReporter extends ScheduledReporter implements InitializingBean {
 
-//    private GaugeRepository gaugeRepository;
-//    private CounterRepository counterRepository;
-//    private HistogramRepository histogramRepository;
-//    private MeterRepository meterRepository;
-//    private TimerRepository timerRepository;
-
     @Autowired
     private MetricsRepository metricsRepository;
 

@@ -20,7 +20,6 @@ public class Meter extends Metrics {
         m5Rate = meter.getFiveMinuteRate();
         m15Rate = meter.getFifteenMinuteRate();
         meanRate = meter.getMeanRate();
-
     }
 
     public Long getCount() {

@@ -1,34 +1,24 @@
 app.registerCtrl('DataCtrl', ['$scope', 'metricsService', function ($scope, metricsService) {
 
 	metricsService.meters(function(response) {
-		$scope.meters = stripPackage(response.data);
+		$scope.meters = response.data;
 	});
 
 	metricsService.counters(function(response) {
-		$scope.counters = stripPackage(response.data);
+		$scope.counters = response.data;
 	});
 
 	metricsService.timers(function(response) {
-		$scope.timers = stripPackage(response.data);
+		$scope.timers = response.data;
 	});
 
 	metricsService.gauges(function(response) {
-		$scope.gauges = stripPackage(response.data);
+		$scope.gauges = response.data;
 	});
 
 	metricsService.histograms(function(response) {
-		$scope.histograms = stripPackage(response.data);
+		$scope.histograms = response.data;
 	});
 
-	stripPackage = function(objects) {
-		for (var i = 0; i < objects.length; i++) {
-			var name = objects[i].name;
-			if (name.indexOf('org.bordylek.web.') == 0) {
-				objects[i].name = name.substring('org.bordylek.web.'.length);
-			}
-		}
-
-		return objects;
-	}
 
 }]);
