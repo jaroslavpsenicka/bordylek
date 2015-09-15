@@ -1,7 +1,8 @@
 
 var app = angular.module('monitorApp', [
   'services',
-  'ui.bootstrap', 'ngRoute', 'ngAnimate'
+  'ui.bootstrap', 'ngRoute', 'ngAnimate',
+  'highcharts-ng'
 ]);
 
 app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $controllerProvider) {
