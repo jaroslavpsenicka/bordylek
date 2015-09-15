@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml", "/rules-context.xml", "/test-context.xml"})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RulesTest {
 
     @Autowired
@@ -37,7 +35,7 @@ public class RulesTest {
 
 	@Before
 	public void before() throws Exception {
-		mongoTemplate.remove(new Query(), "metrics");
+        mongoTemplate.remove(new Query(), "metrics");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	
@@ -71,15 +69,6 @@ public class RulesTest {
 
     @Test
     public void enableRule() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
-            .header("Content-Type", "application/json").content("rules.Name"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("enabled", is(false)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/rules"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("data.rules", hasSize(2)))
-            .andExpect(jsonPath("data.rules[0].name", is("Name")))
-            .andExpect(jsonPath("data.rules[0].enabled", is(false)));
         mockMvc.perform(MockMvcRequestBuilders.post("/rules/toggle")
             .header("Content-Type", "application/json").content("rules.Name"))
             .andExpect(status().isOk())
