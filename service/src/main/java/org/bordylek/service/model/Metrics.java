@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
-public abstract class Metrics {
+public class Metrics {
 
     @Id
     private String id;

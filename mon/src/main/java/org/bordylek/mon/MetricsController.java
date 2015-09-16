@@ -70,7 +70,7 @@ public class MetricsController {
 		throw new NotFoundException("no data found");
 	}
 
-	@RequestMapping(value = "/metrics/{type}/{name}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/metrics/{type}/{name:.+}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public Map<String, List<Metrics>> metricsOfType(@PathVariable("type") String type,
