@@ -15,8 +15,8 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', functi
 
     $scope.loadChartData('Memory', 'gauge', 'memory.heap.committed', function(title, data) {
 		$scope.memoryChartConfig = angular.copy($scope.chartTemplate);
-		$scope.memoryChartConfig.series.push({data: data});
-		$scope.memoryChartConfig.title.text = title;
+		$scope.memoryChartConfig.series = [{data: data}];
+		$scope.memoryChartConfig.title = {text: title};
     });
 
 	$scope.chartTemplate = {
@@ -50,10 +50,7 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', functi
                     }
 				}
 			}
-        }],
-        series: [],
-        title: {},
-        loading: false
+        }]
     };
 
 }]);
