@@ -1,6 +1,25 @@
-app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {
+app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', function ($scope, $routeParams, metricsService) {
 
-	$scope.memoryChartConfig = {
+    $scope.chartData = {};
+    $scope.loadChartData = function(title, type, name, callback) {
+        metricsService.data({type: type, name: name}, function(response) {
+        	chartData = [];
+        	for (var i = 0; i < response.data.length; i++) {
+				var val = response.data[i];
+				chartData.push([val.timestamp, val.value]);
+        	}
+
+        	callback(title, chartData);
+        });
+    }
+
+    $scope.loadChartData('Memory', 'gauge', 'memory.heap.committed', function(title, data) {
+		$scope.memoryChartConfig = angular.copy($scope.chartTemplate);
+		$scope.memoryChartConfig.series.push({data: data});
+		$scope.memoryChartConfig.title.text = title;
+    });
+
+	$scope.chartTemplate = {
         options: {
             legend: {
                 enabled: false,
@@ -9,6 +28,9 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', '$http', function ($scop
                 type: 'area',
                 zoomType: 'x'
             },
+			credits: {
+				enabled: false
+			},
             plotOptions: {
                 area: {
                     fillColor: {
@@ -42,32 +64,23 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', '$http', function ($scop
         yAxis: [{
             title: {
                 text: ''
-            }
+            },
+			labels: {
+				formatter: function () {
+                    var max = this.axis.getExtremes().max;
+                    if (max > 999999999) {
+                        return Math.round(this.value/1000000000) + 'G';
+                    } else if (max > 999999) {
+                        return Math.round(this.value/1000000) + 'M';
+                    } else if (max > 999) {
+                        return Math.round(this.value/1000) + 'k';
+                    }
+				}
+			}
         }],
-        series: [{
-            data: [[1323453847844,0.8873],
-                   [Date.UTC(2015,5,14),0.8913],
-                   [Date.UTC(2015,5,15),0.8862],
-                   [Date.UTC(2015,5,16),0.8891],
-                   [Date.UTC(2015,5,17),0.8821],
-                   [Date.UTC(2015,5,18),0.8802],
-                   [Date.UTC(2015,5,19),0.8808],
-                   [Date.UTC(2015,5,21),0.8794],
-                   [Date.UTC(2015,5,22),0.8818],
-                   [Date.UTC(2015,5,23),0.8952],
-                   [Date.UTC(2015,5,24),0.8924],
-                   [Date.UTC(2015,5,25),0.8925],
-                   [Date.UTC(2015,5,26),0.8955],
-                   [Date.UTC(2015,5,28),0.9113],
-                   [Date.UTC(2015,5,29),0.8900],
-                   [Date.UTC(2015,5,30),0.8950]
-                   ]
-        }],
-        title: {
-            text: 'Memory'
-        },
-
+        series: [],
+        title: {},
         loading: false
-    }
+    };
 
 }]);

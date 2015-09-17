@@ -1,5 +1,6 @@
 package org.bordylek.service.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.Date;
 public class Metrics {
 
     @Id
+    @JsonIgnore
     private String id;
 
     private String name;

@@ -27,7 +27,11 @@ services.factory('alertService', function($resource) {
 });
 
 services.factory('metricsService', function($resource) {
-    return $resource('', {}, {
+    return $resource('', {type: '@type', name: '@name'}, {
+        data: {
+            url: 'rest/metrics/:type/:name',
+            method: 'GET'
+        },
         meters: {
             url: 'rest/metrics/meter',
             method: 'GET'
