@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -24,11 +25,13 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
 
     private Long period;
     private TimeUnit timeUnit;
+    private Map<String, Long> lastValues;
 
     private static Logger LOG = LoggerFactory.getLogger(MongoDBReporter.class);
 
     private MongoDBReporter(MetricRegistry registry, TimeUnit rateUnit, TimeUnit durationUnit, MetricFilter filter) {
         super(registry, "mongodb-reporter", filter, rateUnit, durationUnit);
+        lastValues = new HashMap<>();
     }
 
     @Required
@@ -51,7 +54,8 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
         SortedMap<String, com.codahale.metrics.Meter> meters, SortedMap<String, com.codahale.metrics.Timer> timers) {
 
         Date saveDate = new Date();
-        LOG.debug("Saving metrics");
+        LOG.debug("Saving metrics: " + gauges.size() + " gauges, " + counters.size() + " counters, " +
+            histograms.size() + " histograms, " + meters.size() + " meters, " + timers.size() + " timers.");
 
         for (Map.Entry<String, com.codahale.metrics.Gauge> entry : gauges.entrySet()) try {
             metricsRepository.save(new Gauge(entry.getKey(), entry.getValue(), saveDate));
@@ -72,7 +76,9 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
         }
 
         for (Map.Entry<String, com.codahale.metrics.Meter> entry : meters.entrySet()) try {
-            metricsRepository.save(new Meter(entry.getKey(), entry.getValue(), saveDate));
+            Meter meter = new Meter(entry.getKey(), entry.getValue(), saveDate);
+            meter.setDiff(calculateDiff("meter." + entry.getKey(), meter.getCount()));
+            metricsRepository.save(meter);
         } catch (Exception ex) {
             LOG.error("Error writing meter " + entry, ex);
         }
@@ -82,6 +88,12 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
         } catch (Exception ex) {
             LOG.error("Error writing timer " + entry, ex);
         }
+    }
+
+    private Long calculateDiff(String key, Long count) {
+        Long lastValue = lastValues.get(key);
+        lastValues.put(key, count);
+        return count - (lastValue != null ? lastValue : 0);
     }
 
 }

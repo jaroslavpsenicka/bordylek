@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
@@ -26,8 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml",
-        "/rules-context.xml", "/test-context.xml"})
+@SpringApplicationConfiguration(classes = MonApplication.class, locations = {"classpath:/test-context.xml"})
 public class AlerterTest {
 
     @Autowired
@@ -52,7 +51,7 @@ public class AlerterTest {
 
     @Test
     public void metadata() {
-        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("rules");
+        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("Basic");
         Rule rule = knowledgePackage.getRules().iterator().next();
         assertEquals("Name", rule.getName());
     }

@@ -8,8 +8,6 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <context:property-placeholder location="classpath:/mon.properties"/>
-
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')" />
         <http-basic />

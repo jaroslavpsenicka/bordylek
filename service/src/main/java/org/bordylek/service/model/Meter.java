@@ -5,6 +5,7 @@ import java.util.Date;
 public class Meter extends Metrics {
 
     private Long count;
+    private Long diff;
     private Double m1Rate;
     private Double m5Rate;
     private Double m15Rate;
@@ -28,6 +29,14 @@ public class Meter extends Metrics {
 
     public void setCount(final Long count) {
         this.count = count;
+    }
+
+    public Long getDiff() {
+        return diff;
+    }
+
+    public void setDiff(Long diff) {
+        this.diff = diff;
     }
 
     public Double getM1Rate() {
