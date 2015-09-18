@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MonApplication.class, locations = {"classpath:/test-context.xml"})
+@SpringApplicationConfiguration(classes = {MonApplication.class, TestConfig.class})
 public class AlerterTest {
 
     @Autowired
@@ -51,7 +51,7 @@ public class AlerterTest {
 
     @Test
     public void metadata() {
-        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("Basic");
+        KnowledgePackage knowledgePackage = knowledgeBase.getKnowledgePackage("rules");
         Rule rule = knowledgePackage.getRules().iterator().next();
         assertEquals("Name", rule.getName());
     }

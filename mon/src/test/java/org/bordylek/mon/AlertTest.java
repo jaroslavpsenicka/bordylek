@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MonApplication.class, locations = {"classpath:/test-context.xml"})
+@SpringApplicationConfiguration(classes = {MonApplication.class, TestConfig.class})
 public class AlertTest {
 
     @Autowired
@@ -168,7 +168,7 @@ public class AlertTest {
         alertProcessor.process();
         assertEquals(1, alertRepository.findAll().size());
         Alert alert = alertRepository.findAll().iterator().next();
-        assertEquals("Basic.Age", alert.getFqName());
+        assertEquals("rules.Age", alert.getFqName());
         assertEquals("too old", alert.getMessage());
     }
 
