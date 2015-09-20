@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {MonApplication.class, TestConfig.class})
+@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml", "/rules-context.xml", "/test-context.xml"})
 public class MetricsTest {
 
     @Autowired
@@ -89,7 +89,7 @@ public class MetricsTest {
         counter3.setName("new");
         metricsRepository.save(counter3);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/metrics"))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
 
@@ -108,18 +108,18 @@ public class MetricsTest {
         meter.setName("meter");
         metricsRepository.save(meter);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics/counter"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("data", hasSize(2)))
             .andExpect(jsonPath("data[0].name", is("counter1")))
             .andExpect(jsonPath("data[1].name", is("counter2")));
-        mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics/meter"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/meter"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("data", hasSize(1)))
             .andExpect(jsonPath("data[0].name", is("meter")));
-        mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics/unknown"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/unknown"))
             .andExpect(status().isBadRequest());
     }
 
@@ -138,13 +138,13 @@ public class MetricsTest {
         meter.setName("meter");
         metricsRepository.save(meter);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics/counter/ccc"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/ccc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("data", hasSize(2)))
             .andExpect(jsonPath("data[0].name", is("ccc")))
             .andExpect(jsonPath("data[1].name", is("ccc")));
-        mockMvc.perform(MockMvcRequestBuilders.get("/rest/metrics/counter/ccc").param("period", "500"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/ccc").param("period", "500"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("data", hasSize(1)))

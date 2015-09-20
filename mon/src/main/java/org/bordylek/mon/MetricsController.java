@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController
-@RequestMapping("/rest")
 public class MetricsController {
 
 	@Autowired
