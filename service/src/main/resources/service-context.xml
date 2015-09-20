@@ -47,16 +47,13 @@
 	<task:annotation-driven executor="slowExecutor" />
     <task:executor id="slowExecutor" pool-size="2"/>
 
-	<!-- Services -->
-    <bean id="notificationService" class="org.bordylek.service.NotificationService">
-        <property name="mailSender" ref="mailSender"/>
-        <property name="configuration">
-            <bean class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
-                <property name="templateLoaderPath">
-                    <value>classpath:/email-templates/</value>
-                </property>
-            </bean>
-        </property>
+    <cache:annotation-driven />
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"/>
+    </bean>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache.xml"/>
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -66,13 +63,15 @@
         <property name="password" value="" />
     </bean>
 
-    <cache:annotation-driven />
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache"/>
-    </bean>
-
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/ehcache.xml"/>
+    <bean id="notificationService" class="org.bordylek.service.NotificationService">
+        <property name="mailSender" ref="mailSender"/>
+        <property name="configuration">
+            <bean class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+                <property name="templateLoaderPath">
+                    <value>classpath:/email-templates/</value>
+                </property>
+            </bean>
+        </property>
     </bean>
 
 </beans>
