@@ -35,6 +35,7 @@ public class RulesTest {
 
 	@Before
 	public void before() throws Exception {
+        mongoTemplate.remove(new Query(), "metrics");
         mongoTemplate.remove(new Query(), "monitor");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
