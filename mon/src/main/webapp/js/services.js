@@ -13,11 +13,12 @@ services.factory('rulesService', function($resource) {
     });
 });
 
-services.factory('alertService', function($resource) {
+services.factory('alertsService', function($resource) {
     return $resource('', {id: '@id'}, {
         get: {
             url: 'rest/alerts',
-            method: 'GET'
+            method: 'GET',
+            isArray: true
         },
         resolveAlert: {
             url: 'rest/alerts/:id/resolve',
@@ -51,6 +52,20 @@ services.factory('metricsService', function($resource) {
         histograms: {
             url: 'rest/metrics/histogram',
             method: 'GET'
+        }
+    });
+});
+
+services.factory('chartsService', function($resource) {
+    return $resource('', {}, {
+        get: {
+            url: 'rest/charts',
+            method: 'GET',
+            isArray: true
+        },
+        save: {
+            url: 'rest/charts',
+            method: 'POST'
         }
     });
 });

@@ -29,14 +29,6 @@ public class ChartController {
 		return chartRepository.findAll();
 	}
 
-    @RequestMapping(value = "/charts/series", method = RequestMethod.GET, produces = "application/json")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    @Cacheable("charts")
-    public List<Chart> getSeries() {
-        return chartRepository.findAll();
-    }
-
     @RequestMapping(value = "/charts", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "charts", allEntries = true)

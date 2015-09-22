@@ -26,7 +26,7 @@ public class Alert {
 
     public Alert(String fqName, Date timestamp, Severity severity, String message) {
         this.fqName = fqName;
-        this.timestamp = new Date();
+        this.timestamp = timestamp;
         this.severity = severity;
         this.message = message;
     }

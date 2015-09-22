@@ -1,6 +1,7 @@
 package org.bordylek.mon;
 
 import org.bordylek.mon.model.Alert;
+import org.bordylek.mon.model.Severity;
 import org.bordylek.mon.repository.AlertRepository;
 import org.bordylek.service.NotFoundException;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,8 +30,12 @@ public class AlertController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<Alert> getAlerts(@RequestParam(value = "all", required = false) Boolean showAll) {
-		return (showAll != null && showAll) ? alertRepository.findByOrderByTimestampDesc() :
-			alertRepository.findByResolvedOrderByTimestampDesc(false);
+		return new ArrayList<Alert>() {{
+			add(new Alert("Basic.memory", new Date(), Severity.WARNING, "Something wrong happened again."));
+			add(new Alert("Basic.memory", new Date(System.currentTimeMillis() - 1000*60*60*25), Severity.INFO, "Something wrong happened."));
+		}};
+//		return (showAll != null && showAll) ? alertRepository.findByOrderByTimestampDesc() :
+//			alertRepository.findByResolvedOrderByTimestampDesc(false);
 	}
 
 	@RequestMapping(value = "/alerts/{alertId}/resolve", method = RequestMethod.POST)

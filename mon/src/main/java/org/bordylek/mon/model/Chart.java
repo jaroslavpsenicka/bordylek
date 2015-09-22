@@ -11,7 +11,7 @@ public class Chart {
 
     private String name;
     private String serie;
-    private String widthClass;
+    private String size;
 
     public Chart() {
     }
@@ -40,11 +40,11 @@ public class Chart {
         this.serie = serie;
     }
 
-    public String getWidthClass() {
-        return widthClass;
+    public String getSize() {
+        return size;
     }
 
-    public void setWidthClass(String widthClass) {
-        this.widthClass = widthClass;
+    public void setSize(String size) {
+        this.size = size;
     }
 }

@@ -1,19 +1,6 @@
-app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, metricsService) {
+app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsService, metricsService, alertsService) {
 
-    $scope.chartData = {};
-    $scope.loadChartData = function(type, names, callback) {
-        for (var i = 0; i < names.length; i++) {
-            metricsService.data({type: type, name: names[i]}, function(response, request) {
-                var chartData = [];
-                for (var j = 0; j < response.data.length; j++) {
-                    chartData.push([response.data[j].timestamp, response.data[j].value]);
-                }
-                if (chartData.length > 0) callback([{name: response.data[0].name, data: chartData}]);
-            });
-        }
-    }
-
-	$scope.chartTemplate = {
+	var chartTemplate = {
 	    series: [],
         options: {
             legend: {
@@ -50,41 +37,30 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, metricsServ
         }]
     };
 
-    $scope.createChart = function() {
-        $modal.open({
-            templateUrl: 'template/create-chart.tpl.html',
-            controller: function ($scope, $modalInstance) {
-                $scope.submit = function () {
-                    $modalInstance.close(field);
-                }
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-            },
-            resolve: {
-                chart: function() {
-                    return {
-                        "size": "col-sm-3"
-                    };
-                }
+    $scope.charts = {};
+	chartsService.get(function(response) {
+	    for (var i = 0; i < response.length; i++) {
+	        var chartId = response[i].id;
+            $scope.charts[chartId] = angular.copy(chartTemplate);
+            $scope.charts[chartId].title = {text: response[i].name};
+            $scope.loadChartData('gauge', response[i].serie, function(serie) {
+                $scope.charts[chartId].series = serie;
+            });
+	    }
+	});
+
+    $scope.loadChartData = function(type, name, callback) {
+        metricsService.data({type: type, name: name}, function(response, request) {
+            var chartData = [];
+            for (var j = 0; j < response.data.length; j++) {
+                chartData.push([response.data[j].timestamp, response.data[j].value]);
             }
-        }).result.then(function(value) {
-            console.log(value);
+            if (chartData.length > 0) callback([{name: response.data[0].name, data: chartData}]);
         });
     };
 
-
-    $scope.memoryChartConfig = angular.copy($scope.chartTemplate);
-    $scope.memoryChartConfig.title = {text: 'Memory'};
-    $scope.loadChartData('gauge', ['memory.heap.committed', 'memory.pools.PS-Old-Gen.used'], function(serie) {
-		$scope.memoryChartConfig.series = $scope.memoryChartConfig.series.concat(serie);
-    });
-
-    $scope.threadsChartConfig = angular.copy($scope.chartTemplate);
-    $scope.threadsChartConfig.title = {text: 'Threads'};
-    $scope.loadChartData('gauge', ['threads.runnable.count', 'threads.waiting.count', 'threads.blocked.count',
-        'threads.deadlock.count'], function(serie) {
-		$scope.threadsChartConfig.series = $scope.threadsChartConfig.series.concat(serie);
+    alertsService.get(function(response) {
+        $scope.alerts = response;
     });
 
 });

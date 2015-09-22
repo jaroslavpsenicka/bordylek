@@ -1,16 +1,24 @@
 <div class="section home">
     <div class="container">
-
-        <div class="buttons">
-            <button id="new-chart-btn" type="button" class="btn btn-default" ng-click="createChart()">Add chart</button>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3">
-                <highchart class="chart" id="memory-chart" config="memoryChartConfig" class="span10"></highchart>
+        <div class="row charts">
+            <div class="col-md-3" ng-repeat="chart in charts">
+                <highchart class="chart" id="{{chart.id}}" config="charts[chart.id]" class="span10"></highchart>
             </div>
-            <div class="col-md-3">
-                <highchart class="chart" id="threads-chart" config="threadsChartConfig" class="span10"></highchart>
+        </div>
+        <div class="alerts" ng-if="alerts.length > 0">
+            <div ng-repeat="(key, value) in alerts | daygroup | groupBy: 'daygroup'">
+                <h3 ng-if="key === 'today'">Today</h3>
+                <h3 ng-if="key === 'yesterday'">Yesterday</h3>
+                <h3 ng-if="key === 'this-week'">This Week</h3>
+                <h3 ng-if="key === 'this-month'">This Month</h3>
+                <h3 ng-if="key === 'this-year'">This Year</h3>
+                <div class="row" ng-repeat="alert in value">
+                    <div class="col-md-1 alert-icon {{alert.severity}}"></div>
+                    <div class="col-md-2" ng-if="alert.daygroup == 'today'">{{alert.timestamp | date: 'mediumTime'}}</div>
+                    <div class="col-md-2" ng-if="alert.daygroup == 'yesterday'">{{alert.timestamp | date: 'mediumTime'}}</div>
+                    <div class="col-md-2" ng-if="alert.daygroup == 'this-week' || alert.daygroup == 'this-month' || alert.daygroup == 'this-year'">{{alert.timestamp | date: 'short'}}</div>
+                    <div class="col-md-9">{{alert.message}}</div>
+                </div>
             </div>
         </div>
     </div>

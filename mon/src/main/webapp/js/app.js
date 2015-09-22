@@ -1,7 +1,7 @@
 
 var app = angular.module('monitorApp', [
-  'services',
-  'ui.bootstrap', 'ngRoute', 'ngAnimate',
+  'services', 'filters',
+  'ui.bootstrap', 'ngRoute', 'ngAnimate', 'angular.filter',
   'highcharts-ng'
 ]);
 
@@ -43,5 +43,33 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 	});
 }]);
 
+app.filter('', function() {
+  return function(input) {
+    return input ? '\u2713' : '\u2718';
+  };
+});
+
+
 app.controller('PageCtrl', function (/* $scope, $location, $http */) {
+});
+
+app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsService) {
+
+    $scope.createChart = function() {
+        $modal.open({
+            templateUrl: 'template/create-chart.tpl.html',
+            controller: function ($scope, $modalInstance) {
+                $scope.chart = { "size": "col-sm-3" };
+                $scope.submit = function () {
+                    $modalInstance.close($scope.chart);
+                }
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
+            }
+        }).result.then(function(value) {
+            chartsService.save(value);
+        });
+    };
+
 });
