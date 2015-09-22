@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <h3>Add Chart</h3>
+</div>
+<form name="addform" class="form-horizontal" role="form" ng-submit="submit()">
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" placeholder="Untitled" focus
+                   required ng-model="chart.name" ng-minlength="1" ng-maxlength="100"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Serie</label>
+            <div class="col-sm-10">
+                <input name="format-value" type="text" class="form-control" placeholder="Undefined"
+                   required ng-model="chart.value" ng-minlength="1" ng-maxlength="200"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Size</label>
+            <div class="col-sm-10">
+                <select name="format-number" class="form-control" ng-model="chart.size">
+                    <option value="col-sm-3">Small</option>
+                    <option value="col-sm-6">Medium</option>
+                    <option value="col-sm-9">Large</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-ng-click="$dismiss('cancel')">Cancel</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="addform.$invalid">Save Field</button>
+    </div>
+</form>

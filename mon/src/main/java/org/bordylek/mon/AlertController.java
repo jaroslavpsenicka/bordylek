@@ -36,7 +36,6 @@ public class AlertController {
 	public void resolveAlert(@PathVariable("alertId") String alertId) {
 		Alert alert = alertRepository.findOne(alertId);
 		if (alert == null) throw new NotFoundException(alertId);
-
 		alert.setResolved(true);
 		alertRepository.save(alert);
 	}

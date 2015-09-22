@@ -1,4 +1,4 @@
-app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', function ($scope, $routeParams, metricsService) {
+app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, metricsService) {
 
     $scope.chartData = {};
     $scope.loadChartData = function(type, names, callback) {
@@ -50,6 +50,30 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', functi
         }]
     };
 
+    $scope.createChart = function() {
+        $modal.open({
+            templateUrl: 'template/create-chart.tpl.html',
+            controller: function ($scope, $modalInstance) {
+                $scope.submit = function () {
+                    $modalInstance.close(field);
+                }
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
+            },
+            resolve: {
+                chart: function() {
+                    return {
+                        "size": "col-sm-3"
+                    };
+                }
+            }
+        }).result.then(function(value) {
+            console.log(value);
+        });
+    };
+
+
     $scope.memoryChartConfig = angular.copy($scope.chartTemplate);
     $scope.memoryChartConfig.title = {text: 'Memory'};
     $scope.loadChartData('gauge', ['memory.heap.committed', 'memory.pools.PS-Old-Gen.used'], function(serie) {
@@ -63,4 +87,4 @@ app.registerCtrl('HomeCtrl', ['$scope', '$routeParams', 'metricsService', functi
 		$scope.threadsChartConfig.series = $scope.threadsChartConfig.series.concat(serie);
     });
 
-}]);
+});

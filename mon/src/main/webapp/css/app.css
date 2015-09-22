@@ -144,6 +144,17 @@ body {
     margin-left: 10px;
 }
 
+.home {
+    position: relative;
+}
+
+.home .buttons {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 20px;
+}
+
 .spacer {
     margin-top: 20px;
 }

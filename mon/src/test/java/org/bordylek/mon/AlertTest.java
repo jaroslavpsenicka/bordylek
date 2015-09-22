@@ -62,7 +62,7 @@ public class AlertTest {
 
     @Before
 	public void before() throws Exception {
-        mongoTemplate.remove(new Query(), "alerts");
+        mongoTemplate.remove(new Query(), "monitor");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	

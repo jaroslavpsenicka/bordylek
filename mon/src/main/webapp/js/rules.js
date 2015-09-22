@@ -1,4 +1,4 @@
-app.registerCtrl('RulesCtrl', ['$scope', 'rulesService', function ($scope, rulesService) {
+app.registerCtrl('RulesCtrl', function ($scope, rulesService) {
 
 	rulesService.readRules(function(response) {
 		$scope.rules = response.data;
@@ -15,4 +15,4 @@ app.registerCtrl('RulesCtrl', ['$scope', 'rulesService', function ($scope, rules
 		});
 	}
 
-}]);
+});

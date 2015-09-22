@@ -1,4 +1,4 @@
-app.registerCtrl('DataCtrl', ['$scope', 'metricsService', function ($scope, metricsService) {
+app.registerCtrl('DataCtrl', function ($scope, metricsService) {
 
 	metricsService.meters(function(response) {
 		$scope.meters = response.data;
@@ -21,4 +21,4 @@ app.registerCtrl('DataCtrl', ['$scope', 'metricsService', function ($scope, metr
 	});
 
 
-}]);
+});
