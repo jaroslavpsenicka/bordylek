@@ -21,7 +21,11 @@ public class Alert {
     private boolean resolved;
 
     public Alert() {
-        this.timestamp = new Date();
+        this(null, new Date(), null, null);
+    }
+
+    public Alert(String fqName, Severity severity, String message) {
+        this(fqName, new Date(), severity, message);
     }
 
     public Alert(String fqName, Date timestamp, Severity severity, String message) {

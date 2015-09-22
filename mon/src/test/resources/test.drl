@@ -1,5 +1,6 @@
 package rules
 
+import java.util.Date
 import org.bordylek.mon.AlerterTest
 import org.bordylek.service.model.*
 
@@ -21,5 +22,5 @@ rule "Age"
 when
     oldCounter : Counter(name == "very-old")
 then
-	alerter.info(this.getRule(), null, "too old")
+	alerter.info(this.getRule(), new Date(), "too old")
 end

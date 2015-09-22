@@ -36,8 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml",
-    "/rules-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"classpath:/service-context.xml", "classpath:/mon-context.xml",
+    "classpath:/security-context.xml", "classpath:/rules-context.xml", "classpath:/test-context.xml"})
 public class AlertTest {
 
     @Autowired
@@ -62,6 +62,7 @@ public class AlertTest {
 
     @Before
 	public void before() throws Exception {
+        mongoTemplate.remove(new Query(), "metrics");
         mongoTemplate.remove(new Query(), "monitor");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
