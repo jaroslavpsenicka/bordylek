@@ -42,6 +42,8 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
 	    for (var i = 0; i < response.length; i++) {
 	        var chartId = response[i].id;
             $scope.charts[chartId] = angular.copy(chartTemplate);
+            $scope.charts[chartId].id = chartId;
+            $scope.charts[chartId].size = response[i].size;
             $scope.charts[chartId].title = {text: response[i].name};
             $scope.loadChartData('gauge', response[i].serie, function(serie) {
                 $scope.charts[chartId].series = serie;
@@ -62,5 +64,10 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
     alertsService.get(function(response) {
         $scope.alerts = response;
     });
+
+    $scope.closeChart = function(chartId) {
+        chartsService.delete({id: chartId});
+        delete $scope.charts[chartId];
+    };
 
 });

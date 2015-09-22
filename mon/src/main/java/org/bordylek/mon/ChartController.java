@@ -36,4 +36,11 @@ public class ChartController {
 		chartRepository.save(chart);
 	}
 
+    @RequestMapping(value = "/charts/{chartId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    @CacheEvict(value = "charts", allEntries = true)
+    public void removeChart(@PathVariable("chartId") String chartId) {
+        chartRepository.delete(chartId);
+    }
+
 }

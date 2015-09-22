@@ -57,7 +57,7 @@ services.factory('metricsService', function($resource) {
 });
 
 services.factory('chartsService', function($resource) {
-    return $resource('', {}, {
+    return $resource('', {id: '@id'}, {
         get: {
             url: 'rest/charts',
             method: 'GET',
@@ -66,6 +66,10 @@ services.factory('chartsService', function($resource) {
         save: {
             url: 'rest/charts',
             method: 'POST'
+        },
+        delete: {
+            url: 'rest/charts/:id',
+            method: 'DELETE'
         }
     });
 });

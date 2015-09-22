@@ -14,6 +14,9 @@ angular.module('filters', [])
             if (input[i].timestamp < today.getTime()) {
                 input[i].daygroup = 'yesterday';
             }
+            if (input[i].timestamp < yesterday.getTime()) {
+                input[i].daygroup = 'earlier';
+            }
         }
 
         return input;
