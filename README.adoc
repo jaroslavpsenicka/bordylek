@@ -1,7 +1,7 @@
 = Bordylek
 :icons: asciidoctor
 
-Bordylek.cz je časová banka (https://en.wikipedia.org/wiki/Time-based_currency) - na počátku se ale může zdát, že jde o aplikaci pro organizaci úklidu nepořádku (to také jde).
+Bordylek.cz je časová banka (https://en.wikipedia.org/wiki/Time-based_currency) - na počátku se ale může zdát, že jde o aplikaci pro organizaci úklidu nepořádku (to také je).
 
 == Scénář 1
 Na zanedbaném pozemku u lesa se hromadí odpadky. Náhodný kolemjdoucí vyfotí situaci a odešle podnět do komunity. 
