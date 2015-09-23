@@ -20,6 +20,8 @@ public class Alert {
     private String message;
     private boolean resolved;
 
+    private String logId;
+
     public Alert() {
         this(null, new Date(), null, null);
     }
@@ -81,5 +83,13 @@ public class Alert {
 
     public void setResolved(boolean resolved) {
         this.resolved = resolved;
+    }
+
+    public String getLogId() {
+        return logId;
+    }
+
+    public void setLogId(String logId) {
+        this.logId = logId;
     }
 }

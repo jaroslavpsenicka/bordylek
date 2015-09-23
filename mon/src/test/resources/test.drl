@@ -22,5 +22,5 @@ rule "Age"
 when
     oldCounter : Counter(name == "very-old")
 then
-	alerter.info(this.getRule(), new Date(), "too old")
+	alerter.info(this.getRule(), oldCounter, "too old")
 end

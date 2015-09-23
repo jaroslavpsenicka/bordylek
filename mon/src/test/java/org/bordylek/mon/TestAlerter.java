@@ -1,8 +1,7 @@
 package org.bordylek.mon;
 
+import org.bordylek.service.model.Metrics;
 import org.drools.definition.rule.Rule;
-
-import java.util.Date;
 
 public class TestAlerter implements Alerter {
 
@@ -11,17 +10,17 @@ public class TestAlerter implements Alerter {
     private String error;
 
     @Override
-    public void info(Rule rule, Date date, String message) {
+    public void info(Rule rule, Metrics metrics, String message) {
         this.info = rule.getName() + " - " + message;
     }
 
     @Override
-    public void warning(Rule rule, Date date, String message) {
+    public void warning(Rule rule, Metrics metrics, String message) {
         this.warning = message;
     }
 
     @Override
-    public void error(Rule rule, Date date, String message) {
+    public void error(Rule rule, Metrics metrics, String message) {
         this.error = message;
     }
 

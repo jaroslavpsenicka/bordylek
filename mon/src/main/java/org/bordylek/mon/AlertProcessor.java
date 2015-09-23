@@ -41,26 +41,30 @@ public class AlertProcessor implements Alerter {
     }
 
     @Override
-    public void info(Rule rule, Date date, String message) {
-        createAlert(rule, date, Severity.INFO, message);
+    public void info(Rule rule, Metrics metrics, String message) {
+        createAlert(rule, metrics, Severity.INFO, message);
     }
 
     @Override
-    public void warning(Rule rule, Date date, String message) {
-        createAlert(rule, date, Severity.WARNING, message);
+    public void warning(Rule rule, Metrics metrics, String message) {
+        createAlert(rule, metrics, Severity.WARNING, message);
     }
 
     @Override
-    public void error(Rule rule, Date date, String message) {
-        createAlert(rule, date, Severity.ERROR, message);
+    public void error(Rule rule, Metrics metrics, String message) {
+        createAlert(rule, metrics, Severity.ERROR, message);
     }
 
-    private void createAlert(Rule rule, Date date, Severity severity, String message) {
+    private void createAlert(Rule rule, Metrics metrics, Severity severity, String message) {
         String fqName = rule.getPackageName() + "." + rule.getName();
         Set<String> disabledRules = configurationService.getDisabledRules();
         if (!disabledRules.contains(fqName)) {
+            Date date = metrics.getTimestamp();
             if (alertRepository.findByFqNameAndTimestampAndSeverity(fqName, date, severity).size() == 0) {
-                alertRepository.save(new Alert(fqName, date, severity, message));
+                Alert entity = new Alert(fqName, severity, message);
+                entity.setTimestamp(date);
+                entity.setLogId(metrics.getLogId());
+                alertRepository.save(entity);
             } else LOG.warn("Duplicite alert " + fqName + " severity " + severity + ": " + message);
         } else LOG.warn("Disabled alert " + fqName + " severity " + severity + ": " + message);
     }
