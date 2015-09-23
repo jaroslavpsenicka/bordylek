@@ -20,4 +20,13 @@
         <beans:property name="timeUnit" value="MINUTES"/>
     </beans:bean>
 
+    <!-- LogHistoryAppender queue -->
+    <beans:bean class="org.bordylek.web.log.LogQueue">
+        <beans:property name="buffer">
+            <beans:bean class="org.apache.commons.collections.buffer.BoundedFifoBuffer">
+                <beans:constructor-arg index="0" value="100"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
 </beans:beans>
