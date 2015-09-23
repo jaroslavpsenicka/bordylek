@@ -1,34 +1,30 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="HeaderCtrl">
+<nav id="myNavbar" class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="#/">
-                <div class="navbar-brand"></div>
-            </a>
+            <a class="navbar-brand" href="#"></a>
         </div>
-
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li>
-                    <a href="#/">Home</a>
-                </li>
-                <li>
-                    <a href="#/data">Data</a>
-                </li>
-                <li>
-                    <a href="#/rules">Rules</a>
+                <li><a href="#/">Home</a></li>
+                <li><a href="#/data">Data</a></li>
+                <li><a href="#/rules">Rules</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Admin <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" ng-click="createChart()">Add Chart</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" ng-click="settings()">Settings</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
-
-        <div class="navbar buttons">
-            <button id="new-chart-btn" type="button" class="btn btn-default" ng-click="createChart()">Add chart</button>
-        </div>
-
     </div>
 </nav>

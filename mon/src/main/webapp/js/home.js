@@ -34,7 +34,12 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
                     return this.value;
 				}
 			}
-        }]
+        }],
+        func: function(chart) {
+            window.setTimeout(function() {
+                chart.reflow();
+            }, 0);
+        }
     };
 
     $scope.charts = {};
@@ -43,10 +48,12 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
 	        var chartId = response[i].id;
             $scope.charts[chartId] = angular.copy(chartTemplate);
             $scope.charts[chartId].id = chartId;
-            $scope.charts[chartId].size = response[i].size;
+            $scope.charts[chartId].size = response[i].size || 'col-md-3';
             $scope.charts[chartId].title = {text: response[i].name};
             $scope.loadChartData('gauge', response[i].serie, function(serie) {
                 $scope.charts[chartId].series = serie;
+                $scope.charts[chartId].redraw();
+                window.resize();
             });
 	    }
 	});
@@ -66,8 +73,17 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
     });
 
     $scope.closeChart = function(chartId) {
-        chartsService.delete({id: chartId});
-        delete $scope.charts[chartId];
+        chartsService.delete({id: chartId}, function(response) {
+            delete $scope.charts[chartId];
+        });
+    };
+
+    $scope.resolveAlert = function(alertId) {
+        alertsService.resolveAlert({id: alertId}, function(response) {
+            alertsService.get(function(response) {
+                $scope.alerts = response;
+            });
+        });
     };
 
 });
