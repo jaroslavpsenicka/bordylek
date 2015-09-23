@@ -5,6 +5,7 @@ import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 import org.bordylek.service.model.*;
+import org.bordylek.service.repository.LogRepository;
 import org.bordylek.service.repository.MetricsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,12 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
 
     @Autowired
     private MetricsRepository metricsRepository;
+
+    @Autowired
+    private LogRepository logRepository;
+
+    @Autowired
+    private LogHistoryAppender logHistoryAppender;
 
     private Long period;
     private TimeUnit timeUnit;
@@ -54,37 +61,55 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
         SortedMap<String, com.codahale.metrics.Meter> meters, SortedMap<String, com.codahale.metrics.Timer> timers) {
 
         Date saveDate = new Date();
+        Log log = new Log(logHistoryAppender.getLog(), saveDate);
+
         LOG.debug("Saving metrics: " + gauges.size() + " gauges, " + counters.size() + " counters, " +
-            histograms.size() + " histograms, " + meters.size() + " meters, " + timers.size() + " timers.");
+            histograms.size() + " histograms, " + meters.size() + " meters, " + timers.size() + " timers, " +
+            log.getMessage().length() + " bytes of log.");
+
+        try {
+            logRepository.save(log);
+        } catch (Exception ex) {
+            LOG.error("Error writing log", ex);
+        }
 
         for (Map.Entry<String, com.codahale.metrics.Gauge> entry : gauges.entrySet()) try {
-            metricsRepository.save(new Gauge(entry.getKey(), entry.getValue(), saveDate));
+            Gauge entity = new Gauge(entry.getKey(), entry.getValue(), saveDate);
+            entity.setLogId(log.getId());
+            metricsRepository.save(entity);
         } catch (Exception ex) {
             LOG.error("Error writing gauge " + entry, ex);
         }
 
         for (Map.Entry<String, com.codahale.metrics.Counter> entry : counters.entrySet()) try {
-            metricsRepository.save(new Counter(entry.getKey(), entry.getValue(), saveDate));
+            Counter entity = new Counter(entry.getKey(), entry.getValue(), saveDate);
+            entity.setLogId(log.getId());
+            metricsRepository.save(entity);
         } catch (Exception ex) {
             LOG.error("Error writing counter " + entry, ex);
         }
 
         for (Map.Entry<String, com.codahale.metrics.Histogram> entry : histograms.entrySet()) try {
-            metricsRepository.save(new Histogram(entry.getKey(), entry.getValue().getSnapshot(), saveDate));
+            Histogram entity = new Histogram(entry.getKey(), entry.getValue().getSnapshot(), saveDate);
+            entity.setLogId(log.getId());
+            metricsRepository.save(entity);
         } catch (Exception ex) {
             LOG.error("Error writing histogram " + entry, ex);
         }
 
         for (Map.Entry<String, com.codahale.metrics.Meter> entry : meters.entrySet()) try {
-            Meter meter = new Meter(entry.getKey(), entry.getValue(), saveDate);
-            meter.setDiff(calculateDiff("meter." + entry.getKey(), meter.getCount()));
-            metricsRepository.save(meter);
+            Meter entity = new Meter(entry.getKey(), entry.getValue(), saveDate);
+            entity.setDiff(calculateDiff("entity." + entry.getKey(), entity.getCount()));
+            entity.setLogId(log.getId());
+            metricsRepository.save(entity);
         } catch (Exception ex) {
             LOG.error("Error writing meter " + entry, ex);
         }
 
         for (Map.Entry<String, com.codahale.metrics.Timer> entry : timers.entrySet()) try {
-            metricsRepository.save(new Timer(entry.getKey(), entry.getValue(), saveDate));
+            Timer entity = new Timer(entry.getKey(), entry.getValue(), saveDate);
+            entity.setLogId(log.getId());
+            metricsRepository.save(entity);
         } catch (Exception ex) {
             LOG.error("Error writing timer " + entry, ex);
         }

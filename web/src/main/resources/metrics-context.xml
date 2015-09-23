@@ -21,11 +21,11 @@
     </beans:bean>
 
     <!-- LogHistoryAppender queue -->
-    <beans:bean class="org.bordylek.web.log.LogQueue">
+    <beans:bean id="logHistoryAppender" class="org.bordylek.web.metrics.LogHistoryAppender">
         <beans:property name="buffer" ref="logQueueBuffer"/>
     </beans:bean>
 
-    <beans:bean id="logQueueBuffer" class="org.apache.commons.collections.buffer.BoundedFifoBuffer">
+    <beans:bean id="logQueueBuffer" class="org.apache.commons.collections.buffer.CircularFifoBuffer">
         <beans:constructor-arg index="0" value="100"/>
     </beans:bean>
 

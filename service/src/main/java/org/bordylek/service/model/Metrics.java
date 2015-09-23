@@ -14,6 +14,8 @@ public class Metrics {
     private String name;
     private Date timestamp;
 
+    private String logId;
+
     public Metrics() {
     }
 
@@ -51,4 +53,11 @@ public class Metrics {
         }
     }
 
+    public String getLogId() {
+        return logId;
+    }
+
+    public void setLogId(String logId) {
+        this.logId = logId;
+    }
 }
