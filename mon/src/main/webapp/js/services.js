@@ -1,5 +1,14 @@
 var services = angular.module('services', ['ngResource']);
 
+services.factory('userService', function($resource) {
+    return $resource('', {}, {
+        me: {
+            url: 'rest/user/me',
+            method: 'GET'
+        }
+    });
+});
+
 services.factory('rulesService', function($resource) {
     return $resource('', {}, {
         readRules: {
@@ -70,6 +79,15 @@ services.factory('chartsService', function($resource) {
         delete: {
             url: 'rest/charts/:id',
             method: 'DELETE'
+        }
+    });
+});
+
+services.factory('logsService', function($resource) {
+    return $resource('', {id: '@id'}, {
+        get: {
+            url: 'rest/logs/:id',
+            method: 'GET'
         }
     });
 });

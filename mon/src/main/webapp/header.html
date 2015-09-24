@@ -1,4 +1,4 @@
-<nav id="myNavbar" class="navbar navbar-default" role="navigation">
+<nav id="myNavbar" class="navbar navbar-default" role="navigation" ng-controller="HeaderCtrl">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -17,11 +17,13 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle">Admin <b class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle">{{user.name}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" ng-click="createChart()">Add Chart</a></li>
-                        <li class="divider"></li>
+                        <li ng-if="user.roles.ROLE_ADMIN"><a href="#" ng-click="createChart()">Add Chart</a></li>
+                        <li class="divider" ng-if="user.roles.ROLE_ADMIN"></li>
                         <li><a href="#" ng-click="settings()">Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout">Log Off</a></li>
                     </ul>
                 </li>
             </ul>

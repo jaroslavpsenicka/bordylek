@@ -46,7 +46,11 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 app.controller('PageCtrl', function (/* $scope, $location, $http */) {
 });
 
-app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsService) {
+app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsService, userService) {
+
+	userService.me(function(response) {
+		$scope.user = response;
+	});
 
     $scope.createChart = function() {
         $modal.open({
@@ -66,3 +70,4 @@ app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsServi
     };
 
 });
+

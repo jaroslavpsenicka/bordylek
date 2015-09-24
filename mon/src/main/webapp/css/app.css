@@ -214,6 +214,11 @@ html, body {
 	background-color: #f2dede;
 }
 
+.alerts .log {
+    font-family: Courier;
+    font-size: 9px;
+}
+
 .chart-col-md-3 {
     width: 250px !important;
     height: 150px !important;

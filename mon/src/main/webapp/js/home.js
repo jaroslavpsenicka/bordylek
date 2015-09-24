@@ -1,4 +1,5 @@
-app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsService, metricsService, alertsService) {
+app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
+    chartsService, metricsService, alertsService, logsService) {
 
 	var chartTemplate = {
 	    series: [],
@@ -43,6 +44,8 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
     };
 
     $scope.charts = {};
+    $scope.logs = {};
+
 	chartsService.get(function(response) {
 	    for (var i = 0; i < response.length; i++) {
 	        var chartId = response[i].id;
@@ -75,6 +78,13 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal, chartsServi
     $scope.closeChart = function(chartId) {
         chartsService.delete({id: chartId}, function(response) {
             delete $scope.charts[chartId];
+        });
+    };
+
+    $scope.showLog = function(logId) {
+        if ($scope.logs[logId]) delete $scope.logs[logId];
+        else logsService.get({id: logId}, function(response) {
+            $scope.logs[logId] = response.data;
         });
     };
 

@@ -17,7 +17,12 @@
                     <div class="col-md-2" ng-if="alert.daygroup == 'yesterday'">{{alert.timestamp | date: 'mediumTime'}}</div>
                     <div class="col-md-2" ng-if="alert.daygroup == 'earlier'">{{alert.timestamp | date: 'short'}}</div>
                     <div class="col-md-8">{{alert.message}}</div>
-                    <div class="col-md-1"><a href="#" ng-click="resolveAlert(alert.id)">Resolve</a></div>
+                    <div class="col-md-1">
+                        <a href="#" ng-click="showLog(alert.logId)">Log</a>
+                        <span>&nbsp;|&nbsp;</span>
+                        <a href="#" ng-click="resolveAlert(alert.id)">Resolve</a></div>
+                    </div>
+                    <div class="col-md-12 log">{{logs[alert.logId]}}</div>
                 </div>
             </div>
         </div>
