@@ -9,6 +9,7 @@ public class Timer extends Metrics {
     private Double m5Rate;
     private Double m15Rate;
     private Double meanRate;
+    private Long diff;
 
     public Timer() {
     }
@@ -62,4 +63,11 @@ public class Timer extends Metrics {
         this.meanRate = meanRate;
     }
 
+    public void setDiff(Long diff) {
+        this.diff = diff;
+    }
+
+    public Long getDiff() {
+        return diff;
+    }
 }

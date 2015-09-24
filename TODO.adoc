@@ -4,6 +4,8 @@
 
 == Monitor
 
+[x] User/Admin roles
+
 [x] Main page showing charts and alerts
 	[x] Add chart (ADMIN)
 	[x] Remove chart (ADMIN)

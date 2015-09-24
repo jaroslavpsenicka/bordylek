@@ -99,7 +99,7 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
 
         for (Map.Entry<String, com.codahale.metrics.Meter> entry : meters.entrySet()) try {
             Meter entity = new Meter(entry.getKey(), entry.getValue(), saveDate);
-            entity.setDiff(calculateDiff("entity." + entry.getKey(), entity.getCount()));
+            entity.setDiff(calculateDiff("meter." + entry.getKey(), entity.getCount()));
             entity.setLogId(log.getId());
             metricsRepository.save(entity);
         } catch (Exception ex) {
@@ -108,6 +108,7 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
 
         for (Map.Entry<String, com.codahale.metrics.Timer> entry : timers.entrySet()) try {
             Timer entity = new Timer(entry.getKey(), entry.getValue(), saveDate);
+            entity.setDiff(calculateDiff("timer." + entry.getKey(), entity.getCount()));
             entity.setLogId(log.getId());
             metricsRepository.save(entity);
         } catch (Exception ex) {
