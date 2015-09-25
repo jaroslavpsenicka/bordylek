@@ -31,4 +31,6 @@
         <constructor-arg value="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler"/>
     </bean>
 
+    <bean id="mailSender" class="org.bordylek.mon.TestMailSender"/>
+
 </beans>

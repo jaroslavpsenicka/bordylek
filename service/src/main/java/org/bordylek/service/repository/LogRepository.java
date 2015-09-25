@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface LogRepository extends MongoRepository<Log, String> {
     List<Log> findByTimestamp(Date timestamp);
+
+    Iterable<Log> findByTimestampLessThan(Date date);
 }

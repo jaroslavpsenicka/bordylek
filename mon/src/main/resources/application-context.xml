@@ -19,9 +19,14 @@
 
     <mongo:repositories base-package="org.bordylek.service.repository, org.bordylek.mon.repository" />
 
+    <bean id="logCleaner" class="org.bordylek.mon.LogCleaner">
+        <property name="timeToLive" value="172800000"/>
+    </bean>
+
     <task:scheduler id="alertScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="alertScheduler">
         <task:scheduled ref="alertProcessor" method="process" fixed-rate="600000"/>
+        <task:scheduled ref="logCleaner" method="clean" cron="0 0 0 * * *"/>
     </task:scheduled-tasks>
 
 </beans>

@@ -24,11 +24,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,8 +41,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/service-context.xml", "classpath:/mon-context.xml",
-    "classpath:/security-context.xml", "classpath:/rules-context.xml", "classpath:/test-context.xml"})
+@ContextConfiguration(locations = {"classpath:/service-context.xml", "classpath:/application-context.xml",
+    "classpath:/security-context.xml", "classpath:/rules-context.xml", "classpath:/test-context.xml",
+    "classpath:/integration-context.xml"})
 public class AlertTest {
 
     @Autowired
@@ -57,6 +63,9 @@ public class AlertTest {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private TestMailSender mailSender;
 
     private MockMvc mockMvc;
 
@@ -174,6 +183,24 @@ public class AlertTest {
         Alert alert = alertRepository.findAll().iterator().next();
         assertEquals("rules.Age", alert.getFqName());
         assertEquals("too old", alert.getMessage());
+    }
+
+    @Test
+    public void notification() throws IOException, MessagingException, InterruptedException {
+        Counter counter = new Counter();
+        counter.setTimestamp(new Date(0));
+        counter.setName("very-old");
+        metricsRepository.save(counter);
+
+        config.enableRule("rules.Age");
+        alertProcessor.process();
+        Thread.sleep(3000);
+
+        List<MimeMessage> messages = mailSender.getMessages();
+        assertEquals(1, messages.size());
+        MimeMessage message = messages.get(0);
+        assertTrue(message.getSubject().contains("rules.Age"));
+        assertTrue(message.getContent().toString().contains("too old"));
     }
 
 }

@@ -1,6 +1,7 @@
-package org.bordylek.service.event;
+package org.bordylek.web;
 
 import org.bordylek.service.NotificationService;
+import org.bordylek.service.event.NewUserEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

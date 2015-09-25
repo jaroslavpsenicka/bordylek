@@ -31,7 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/mon-context.xml", "/security-context.xml", "/rules-context.xml", "/test-context.xml"})
+@ContextConfiguration(locations = {"/service-context.xml", "/application-context.xml", "/security-context.xml",
+    "/rules-context.xml", "/test-context.xml", "/integration-context.xml"})
 public class MetricsTest {
 
     @Autowired
