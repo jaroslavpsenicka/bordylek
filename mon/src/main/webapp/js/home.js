@@ -2,17 +2,18 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
     chartsService, metricsService, alertsService, logsService) {
 
 	var chartTemplate = {
-	    series: [],
         options: {
             legend: {
                 enabled: false,
             },
             chart: {
-                zoomType: 'x'
+                zoomType: 'x',
+                width: 250,
+                height: 150
             },
 			credits: {
 				enabled: false
-			}
+			},
         },
         xAxis: [{
             type: 'datetime'
@@ -35,12 +36,7 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
                     return this.value;
 				}
 			}
-        }],
-        func: function(chart) {
-            window.setTimeout(function() {
-                chart.reflow();
-            }, 0);
-        }
+        }]
     };
 
     $scope.charts = {};
@@ -53,21 +49,28 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
             $scope.charts[chartId].id = chartId;
             $scope.charts[chartId].size = response[i].size || 'col-md-3';
             $scope.charts[chartId].title = {text: response[i].name};
-            $scope.loadChartData('gauge', response[i].serie, function(serie) {
-                $scope.charts[chartId].series = serie;
-                $scope.charts[chartId].redraw();
-                window.resize();
+            if ($scope.charts[chartId].size == 'col-md-6') {
+                $scope.charts[chartId].options.chart.width = 545;
+                $scope.charts[chartId].options.chart.height = 300;
+            } else if ($scope.charts[chartId].size == 'col-md-9') {
+                $scope.charts[chartId].options.chart.width = 835;
+                $scope.charts[chartId].options.chart.height = 450;
+            }
+            $scope.loadChartData('gauge', chartId, response[i].serie, function(id, name, data) {
+                $scope.charts[id].series = [{name: name, data: data}];
             });
 	    }
 	});
 
-    $scope.loadChartData = function(type, name, callback) {
+    $scope.loadChartData = function(type, id, name, callback) {
         metricsService.data({type: type, name: name}, function(response, request) {
             var chartData = [];
             for (var j = 0; j < response.data.length; j++) {
                 chartData.push([response.data[j].timestamp, response.data[j].value]);
             }
-            if (chartData.length > 0) callback([{name: response.data[0].name, data: chartData}]);
+            if (chartData.length > 0) {
+                callback(id, name, chartData);
+            }
         });
     };
 

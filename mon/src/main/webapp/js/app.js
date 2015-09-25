@@ -46,7 +46,7 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 app.controller('PageCtrl', function (/* $scope, $location, $http */) {
 });
 
-app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsService, userService) {
+app.controller('HeaderCtrl', function ($scope, $route, $routeParams, $modal, chartsService, userService) {
 
 	userService.me(function(response) {
 		$scope.user = response;
@@ -66,6 +66,7 @@ app.controller('HeaderCtrl', function ($scope, $routeParams, $modal, chartsServi
             }
         }).result.then(function(value) {
             chartsService.save(value);
+            $route.reload();
         });
     };
 

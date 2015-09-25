@@ -3,7 +3,7 @@
         <div class="row charts">
             <div class="{{chart.size}}" ng-repeat="chart in charts">
                 <div class="close-chart fa fa-times fa-lg" ng-click="closeChart(chart.id)" style="display: none;" showonhoverparent></div>
-                <highchart id="{{chart.id}}" config="charts[chart.id]"></highchart>
+                <highchart class="chart" id="{{chart.id}}" config="charts[chart.id]"></highchart>
             </div>
         </div>
         <div class="alerts" ng-if="alerts.length > 0">
