@@ -2,7 +2,7 @@
 var app = angular.module('monitorApp', [
   'services', 'filters', 'directives',
   'ui.bootstrap', 'ngRoute', 'ngAnimate', 'angular.filter',
-  'highcharts-ng'
+  'highcharts-ng', 'ngFileUpload'
 ]);
 
 app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $controllerProvider) {
@@ -46,7 +46,7 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 app.controller('PageCtrl', function (/* $scope, $location, $http */) {
 });
 
-app.controller('HeaderCtrl', function ($scope, $route, $routeParams, $window, $modal, chartsService, userService) {
+app.controller('HeaderCtrl', function ($scope, $route, $routeParams, $window, $modal, chartsService, userService, Upload) {
 
 	userService.me(function(response) {
 		$scope.user = response;
@@ -73,6 +73,26 @@ app.controller('HeaderCtrl', function ($scope, $route, $routeParams, $window, $m
     $scope.saveCharts = function() {
 		$window.open('rest/charts/save', '_blank');
 	};
+
+    $scope.$watch('files', function () {
+        if ($scope.files) {
+            $scope.loadCharts($scope.files);
+        }
+    });
+
+    $scope.loadCharts = function(files) {
+        angular.forEach(files, function(file) {
+            Upload.upload({
+                url: 'rest/charts/load',
+                file: file
+            }).success(function (data, status, headers, config) {
+            	$route.reload();
+            }).error(function (data, status) {
+                $scope.handleError(status, data, "Error reading " + file.name, "reading the file " + file.name,
+                    "Please make sure the file is a JSON file and is in proper format expected by the application.");
+            });
+        });
+    }
 
 });
 

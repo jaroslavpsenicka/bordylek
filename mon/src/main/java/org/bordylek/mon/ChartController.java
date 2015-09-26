@@ -1,6 +1,7 @@
 package org.bordylek.mon;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bordylek.mon.model.Chart;
 import org.bordylek.mon.repository.ChartRepository;
@@ -11,8 +12,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,6 +35,20 @@ public class ChartController {
 	public List<Chart> getCharts() {
 		return chartRepository.findAll();
 	}
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/charts/load", method = RequestMethod.POST, produces = "application/json")
+    public void load(@RequestParam("file") final MultipartFile[] files) throws IOException {
+        if (files.length != 1) {
+            throw new IllegalArgumentException("exactly one file should be provided");
+        }
+
+        List<Chart> charts = (List<Chart>) objectMapper.readValue(files[0].getInputStream(),
+            new TypeReference<List<Chart>>() {});
+        chartRepository.deleteAll();
+        chartRepository.save(charts);
+    }
 
     @RequestMapping(value = "/charts/save", method = RequestMethod.GET, produces = "application/octet-stream")
     @ResponseStatus(HttpStatus.OK)

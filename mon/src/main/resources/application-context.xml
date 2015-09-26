@@ -23,6 +23,8 @@
         <property name="timeToLive" value="172800000"/>
     </bean>
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
     <task:scheduler id="alertScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="alertScheduler">
         <task:scheduled ref="alertProcessor" method="process" fixed-rate="600000"/>
