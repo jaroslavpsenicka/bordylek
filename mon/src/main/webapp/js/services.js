@@ -73,7 +73,7 @@ services.factory('chartsService', function($resource) {
             isArray: true
         },
         save: {
-            url: 'rest/charts',
+            url: 'rest/charts/save',
             method: 'POST'
         },
         delete: {

@@ -1,5 +1,7 @@
 package org.bordylek.mon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bordylek.mon.model.Chart;
 import org.bordylek.mon.repository.ChartRepository;
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ public class ChartController {
 	@Autowired
 	private ChartRepository chartRepository;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
 	private static final Logger LOG = LoggerFactory.getLogger(ChartController.class);
 
 	@RequestMapping(value = "/charts", method = RequestMethod.GET, produces = "application/json")
@@ -28,6 +32,14 @@ public class ChartController {
 	public List<Chart> getCharts() {
 		return chartRepository.findAll();
 	}
+
+    @RequestMapping(value = "/charts/save", method = RequestMethod.GET, produces = "application/octet-stream")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @Cacheable("charts")
+    public String getChartsToSave() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(chartRepository.findAll());
+    }
 
     @RequestMapping(value = "/charts", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
