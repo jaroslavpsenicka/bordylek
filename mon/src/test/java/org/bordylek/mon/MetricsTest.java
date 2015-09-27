@@ -152,4 +152,31 @@ public class MetricsTest {
             .andExpect(jsonPath("data[0].name", is("ccc")));
     }
 
+    @Test
+    public void latestMetricsByTypeAndNameWildcard() throws Exception {
+        Counter counter1 = new Counter();
+        counter1.setTimestamp(new Date(System.currentTimeMillis() - 1000));
+        counter1.setName("c.c1");
+        metricsRepository.save(counter1);
+        Counter counter2 = new Counter();
+        counter2.setTimestamp(new Date());
+        counter2.setName("cc2");
+        metricsRepository.save(counter2);
+        Meter meter = new Meter();
+        meter.setTimestamp(new Date());
+        meter.setName("meter");
+        metricsRepository.save(meter);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/c*"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(2)))
+            .andExpect(jsonPath("data[0].name", is("c.c1")))
+            .andExpect(jsonPath("data[1].name", is("cc2")));
+        mockMvc.perform(MockMvcRequestBuilders.get("/metrics/counter/c*").param("period", "5000"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("data", hasSize(2)));
+    }
+
 }

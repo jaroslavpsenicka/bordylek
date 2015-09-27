@@ -78,7 +78,7 @@ public class MetricsController {
 			if (entry.getValue().equals(type)) {
 				String className = entry.getKey().getName();
 				Date date = new Date(System.currentTimeMillis() - period); // default 6 hrs in ms
-				final List<Metrics> metricsList = metricsRepository.findAllOfTypeAndNameNewerThan(className, name, date);
+				final List<Metrics> metricsList = metricsRepository.findAllOfTypeAndNameContainingNewerThan(className, name, date);
 				return new HashMap<String, List<Metrics>>() {{
 					put("data", metricsList);
 				}};
