@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -53,7 +54,6 @@ public class ChartController {
     @RequestMapping(value = "/charts/save", method = RequestMethod.GET, produces = "application/octet-stream")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @Cacheable("charts")
     public String getChartsToSave() throws JsonProcessingException {
         return objectMapper.writeValueAsString(chartRepository.findAll());
     }
@@ -70,6 +70,11 @@ public class ChartController {
     @CacheEvict(value = "charts", allEntries = true)
     public void removeChart(@PathVariable("chartId") String chartId) {
         chartRepository.delete(chartId);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public void handleIllegalArgumentException(IllegalArgumentException ex, HttpServletResponse response) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
     }
 
 }

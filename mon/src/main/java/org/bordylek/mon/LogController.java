@@ -33,9 +33,4 @@ public class LogController {
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 	}
 
-	@ExceptionHandler(IllegalArgumentException.class)
-	public void handleIllegalArgumentException(IllegalArgumentException ex, HttpServletResponse response) {
-		response.setStatus(HttpStatus.BAD_REQUEST.value());
-	}
-
 }

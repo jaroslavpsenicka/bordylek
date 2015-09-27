@@ -6,7 +6,8 @@
     <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
 
     <cache name="charts" maxElementsInMemory="100" eternal="false" transactionalMode="off"
-        timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false">
-    </cache>
+       timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false"/>
+    <cache name="users" maxElementsInMemory="100" eternal="false" transactionalMode="off"
+       timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false"/>
 
 </ehcache>

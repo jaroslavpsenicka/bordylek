@@ -16,6 +16,12 @@ public class Chart {
     public Chart() {
     }
 
+    public Chart(String name, String serie, String size) {
+        this.name = name;
+        this.serie = serie;
+        this.size = size;
+    }
+
     public String getId() {
         return id;
     }
