@@ -96,11 +96,13 @@ public class MetricsController {
 
 	@ExceptionHandler(NotFoundException.class)
 	public void handleNotFoundException(NotFoundException ex, HttpServletResponse response) {
+        LOG.error("Error processing metrics request", ex);
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
 	public void handleIllegalArgumentException(IllegalArgumentException ex, HttpServletResponse response) {
+        LOG.error("Error processing metrics request", ex);
 		response.setStatus(HttpStatus.BAD_REQUEST.value());
 	}
 

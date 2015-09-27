@@ -65,7 +65,7 @@ app.controller('HeaderCtrl', function ($scope, $route, $routeParams, $window, $m
                 };
             }
         }).result.then(function(value) {
-            chartsService.save(value);
+            chartsService.create(value);
             $route.reload();
         });
     };

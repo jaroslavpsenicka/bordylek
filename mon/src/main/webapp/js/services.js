@@ -72,6 +72,10 @@ services.factory('chartsService', function($resource) {
             method: 'GET',
             isArray: true
         },
+        create: {
+            url: 'rest/charts',
+            method: 'POST'
+        },
         save: {
             url: 'rest/charts/save',
             method: 'POST'
