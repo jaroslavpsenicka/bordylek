@@ -4,17 +4,35 @@ import org.bordylek.service.model.*
 
 global org.bordylek.mon.Alerter alerter
 
-rule "Name"
+rule "Log WARN"
  	dialect "mvel"
 when
-    oldCounter : Counter(name == "old")
+    log : Meter(name == "org.apache.log4j.Appender.warn", diff > 0)
 then
+	alerter.warning(this.getRule(), log, "Warning log issued.")
+end
+
+rule "Log ERROR"
+ 	dialect "mvel"
+when
+    log : Meter(name == "org.apache.log4j.Appender.error", diff > 0)
+then
+	alerter.error(this.getRule(), log, "Error log issued.")
+end
+
+rule "Log FATAL"
+ 	dialect "mvel"
+when
+    log : Meter(name == "org.apache.log4j.Appender.fatal", diff > 0)
+then
+	alerter.error(this.getRule(), log, "Fatal log issued.")
 end
 
 
-rule "Age"
+rule "Exceptions"
  	dialect "mvel"
 when
-    oldCounter : Counter(name == "very-old")
+    meter : Meter(name.endsWith("exceptions"), diff > 0)
 then
+	alerter.error(this.getRule(), meter, "Exception meter " + meter.name + " raised to " + meter.count)
 end

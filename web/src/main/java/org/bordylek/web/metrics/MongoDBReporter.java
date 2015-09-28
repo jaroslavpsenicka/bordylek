@@ -61,7 +61,7 @@ public class MongoDBReporter extends ScheduledReporter implements InitializingBe
         SortedMap<String, com.codahale.metrics.Meter> meters, SortedMap<String, com.codahale.metrics.Timer> timers) {
 
         Date saveDate = new Date();
-        Log log = new Log(logHistoryAppender.getLog(), saveDate);
+        Log log = new Log(logHistoryAppender.retrieveLog(), saveDate);
 
         LOG.debug("Saving metrics: " + gauges.size() + " gauges, " + counters.size() + " counters, " +
             histograms.size() + " histograms, " + meters.size() + " meters, " + timers.size() + " timers, " +

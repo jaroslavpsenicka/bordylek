@@ -19,7 +19,7 @@ public class LogHistoryAppender extends AppenderSkeleton implements Initializing
 
     private static final Logger LOG = LoggerFactory.getLogger(LogHistoryAppender.class);
 
-    public String getLog() {
+    public String retrieveLog() {
         StringBuilder builder = new StringBuilder();
         Iterator iterator = buffer.iterator();
         while (iterator.hasNext()) {
@@ -51,7 +51,7 @@ public class LogHistoryAppender extends AppenderSkeleton implements Initializing
 
     @Override
     public boolean requiresLayout() {
-        return true;
+        return false;
     }
 
     @Override

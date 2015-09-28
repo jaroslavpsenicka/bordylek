@@ -39,7 +39,7 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
     };
 
     $scope.charts = {};
-    $scope.logs = {};
+    $scope.shownLogs = {};
 
 	chartsService.get(function(response) {
 	    for (var i = 0; i < response.length; i++) {
@@ -70,13 +70,13 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
 
     $scope.decodeName = function(name) {
         var decoded = {type: 'gauge', name: name, attr: 'value'};
-        if (decoded.name.indexOf(':') > -1) {
+        if (decoded.name && decoded.name.indexOf(':') > -1) {
             var parts = decoded.name.split(':');
             decoded.type = parts[0];
             decoded.name = parts[1];
         }
 
-        if (decoded.name.indexOf('/') > -1) {
+        if (decoded.name && decoded.name.indexOf('/') > -1) {
             var parts = decoded.name.split('/');
             decoded.name = parts[0];
             decoded.attr = parts[1];
@@ -108,11 +108,9 @@ app.registerCtrl('HomeCtrl', function ($scope, $routeParams, $modal,
         });
     };
 
-    $scope.showLog = function(logId) {
-        if ($scope.logs[logId]) delete $scope.logs[logId];
-        else logsService.get({id: logId}, function(response) {
-            $scope.logs[logId] = response.data;
-        });
+    $scope.showLog = function(alertId) {
+        if ($scope.shownLogs[alertId]) delete $scope.shownLogs[alertId];
+        else $scope.shownLogs[alertId] = true;
     };
 
     $scope.resolveAlert = function(alertId) {
