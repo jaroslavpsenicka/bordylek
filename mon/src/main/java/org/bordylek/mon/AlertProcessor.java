@@ -77,8 +77,10 @@ public class AlertProcessor implements Alerter {
                 alert.setTimestamp(date);
                 if (metrics.getLogId() != null) {
                     Log log = logRepository.findOne(metrics.getLogId());
-                    alert.setLog(log != null ? log.getMessage() : null);
+                    alert.setLog(log != null ? log.getMessage() : "");
                 }
+
+                LOG.info("Creating alert " + alert.getSeverity() + " " + alert.getFqName());
                 alertRepository.save(alert);
                 notificationGateway.send(alert);
             } else LOG.warn("Duplicite alert " + fqName + " severity " + severity + ": " + message);

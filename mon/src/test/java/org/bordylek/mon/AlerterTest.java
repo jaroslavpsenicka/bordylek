@@ -1,7 +1,11 @@
 package org.bordylek.mon;
 
+import org.bordylek.mon.model.Alert;
+import org.bordylek.mon.repository.AlertRepository;
 import org.bordylek.service.model.Counter;
+import org.bordylek.service.model.Log;
 import org.bordylek.service.model.Metrics;
+import org.bordylek.service.repository.LogRepository;
 import org.bordylek.service.repository.MetricsRepository;
 import org.drools.KnowledgeBase;
 import org.drools.definition.KnowledgePackage;
@@ -23,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,13 +42,25 @@ public class AlerterTest {
 	private WebApplicationContext webApplicationContext;
 
     @Autowired
+    private LogRepository logRepository;
+
+    @Autowired
     private KnowledgeBase knowledgeBase;
 
     @Autowired
     private StatelessKnowledgeSession droolsSession;
 
+    @Autowired
+    private AlertProcessor alertProcessor;
+
+    @Autowired
+    private AlertRepository alertRepository;
+
 	@Before
 	public void before() throws Exception {
+        logRepository.deleteAll();
+        metricsRepository.deleteAll();
+        alertRepository.deleteAll();
 	}
 	
 	@After
@@ -89,5 +106,28 @@ public class AlerterTest {
         counter1.setName("very-old");
         droolsSession.execute(Collections.singletonList(counter1));
         assertEquals("Age - too old", alerter.getInfo());
+    }
+
+    @Test
+    public void logAssignment() {
+        Log log = new Log();
+        log.setId("1");
+        log.setMessage("MSG");
+        log.setTimestamp(new Date());
+        logRepository.save(log);
+
+        droolsSession.setGlobal("alerter", alertProcessor);
+        Counter counter1 = new Counter();
+        counter1.setTimestamp(new Date(0));
+        counter1.setName("very-old");
+        counter1.setLogId("1");
+        droolsSession.execute(Collections.singletonList(counter1));
+
+        List<Alert> alerts = alertRepository.findAll();
+        assertTrue(alerts.size() > 0);
+        assertEquals("rules.Age", alerts.get(0).getFqName());
+        assertEquals("INFO", alerts.get(0).getSeverity().toString());
+        assertEquals("too old", alerts.get(0).getMessage());
+        assertEquals("MSG", alerts.get(0).getLog());
     }
 }

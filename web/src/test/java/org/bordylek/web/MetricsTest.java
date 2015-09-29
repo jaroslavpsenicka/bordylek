@@ -6,7 +6,6 @@ import org.bordylek.service.model.User;
 import org.bordylek.service.repository.MetricsRepository;
 import org.bordylek.service.repository.UserRepository;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -90,7 +92,8 @@ public class MetricsTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/user/me")).andExpect(MockMvcResultMatchers.status().isOk());
         Thread.sleep(1500);
         List<Metrics> findMeMetrics = metricsRepository.findByName(UserController.class.getName() + ".findMe");
-        Assert.assertTrue(findMeMetrics.size() > 0);
+        assertTrue(findMeMetrics.size() > 0);
+        assertNotNull(findMeMetrics.get(0).getLogId());
     }
 
     private void authenticate(String email, final String role) {

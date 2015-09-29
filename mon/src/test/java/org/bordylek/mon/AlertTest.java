@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -71,8 +70,9 @@ public class AlertTest {
 
     @Before
 	public void before() throws Exception {
-        mongoTemplate.remove(new Query(), "metrics");
-        mongoTemplate.remove(new Query(), "monitor");
+        metricsRepository.deleteAll();
+        alertRepository.deleteAll();
+        mailSender.clear();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	
