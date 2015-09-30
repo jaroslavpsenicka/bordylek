@@ -275,7 +275,7 @@
         <profile>
             <id>openshift</id>
             <build>
-                <finalName>jbossews</finalName>
+                <finalName>web</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
