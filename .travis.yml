@@ -1,8 +1,18 @@
 language: java
 
-script: mvn install -Puat
+script: mvn install -P uat
 
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- sleep 3
+
+deploy:
+  provider: openshift
+  user: thelittlebighand@gmail.com
+  password:
+    secure: TM/mPiYNYFxp1ajrnr9QnNXBlhUhGRKJqA0ulAGEoWMSSW9cWinNPSr9b9oPFWSOCzN/s3U39pHdIn/Q6SThDSRTyyg80Ca5aYZtgzcIFGqp9wCkJ9vdH2wGl4ygLNdvwwT+x07bpYLEb7g1QvJJkYvL0v2jy5HjHhwWndrs8lSbiPR96of41A74DExnxmy8CA1Z+W/CxWfNgek4Yyxd4UMrIitiM3Kf0INFC4Fpjgk9zbAILDL1ZzDR2OXaEJHrBwbCtaMh1NsMKTnkIMRJztLONAwmyYWvY7CpbxL1OA2PYD4RFKDcoaMyLiF0OxUhGCvzSz9tVBdk6isjvXiU58YtdtCAPadxEmw+xdCcXJlvBKwxlvLRS9LVoVZYcjSXMeq7zsE/yyTXT3m47cciKW/bn6+yLzmdZvEm+SQQRVtTH+AF9AZbtVJTq7cwlvDJ07DW644N3Iqq5O+rZEIyWSIo2SU9+24xvlYK78nqmC4jTkupgWZQVN+gsVa2sJq2LPcGz3Am8cX6vR7bGBr8lil8CkDH5vt3b1uo/ljfjFxrZL5mM8EVNaUbLHri/8gfXx0OFinYo3OvDMhoqgj/sTxwCuztZRmxa0YSQnXb0WgwY9HLQ6spqiFKt61oR22CHIKBscciCeItYcDP6dvi2m3JC+0XmWBLElGvBDOShlk=
+  app: web
+  domain: thelittlebighand
+  on:
+    repo: jaroslavpsenicka/bordylek
