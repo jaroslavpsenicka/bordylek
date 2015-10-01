@@ -18,15 +18,15 @@
 
 	<!-- Mongo -->
 	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoClientFactoryBean">
-		<property name="host" value="localhost" />
+		<property name="host" value="${db_host}" />
 	</bean>
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongo" ref="mongo" />
-        <constructor-arg name="databaseName" value="bordylek" />
+        <constructor-arg name="databaseName" value="${db_name}" />
     </bean>
     <bean id="mongoFactory" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
         <constructor-arg name="mongo" ref="mongo" />
-        <constructor-arg name="databaseName" value="bordylek" />
+        <constructor-arg name="databaseName" value="${db_name}" />
     </bean>
     <bean id="mongoMessageStore" class="org.springframework.integration.mongodb.store.MongoDbMessageStore">
         <constructor-arg ref="mongoFactory"/>
