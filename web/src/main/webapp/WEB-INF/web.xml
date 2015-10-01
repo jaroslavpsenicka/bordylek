@@ -7,10 +7,10 @@
         <param-value>
             classpath:/service-context.xml
             classpath:/integration-context.xml
-            classpath:/web-context.xml
             classpath:/security-context.xml
             classpath:/social-context.xml
             classpath:/metrics-context.xml
+            classpath:/application-context.xml
         </param-value>
     </context-param>
 

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration  
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/service-context.xml", "/integration-context.xml", "/web-context.xml",
+@ContextConfiguration(locations = {"/service-context.xml", "/integration-context.xml", "/application-context.xml",
     "/security-context.xml", "/social-context.xml", "/metrics-context.xml", "/test-context.xml"})
 public class HealthCheckTest {
 
