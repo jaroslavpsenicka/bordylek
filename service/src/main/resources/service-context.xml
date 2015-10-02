@@ -24,8 +24,8 @@
         <constructor-arg name="databaseName" value="${db.name}" />
     </bean>
     <bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
-        <property name="username" value="${db.username}"/>
-        <property name="password" value="${db.password}"/>
+        <constructor-arg name="username" value="${db.username}"/>
+        <constructor-arg name="password" value="${db.password}"/>
     </bean>
     <bean id="mongoFactory" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
         <constructor-arg name="mongo" ref="mongo" />
