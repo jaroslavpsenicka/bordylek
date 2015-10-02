@@ -15,7 +15,7 @@
     <context:property-placeholder location="classpath:/application.properties" system-properties-mode="OVERRIDE"/>
     <context:component-scan base-package="org.bordylek.web" />
 
-    <mongo:repositories base-package="org.bordylek.service.repository, org.bordylek.web.repository" />
+    <mongo:repositories base-package="org.bordylek.service.repository" mongo-template-ref="mongoTemplate"/>
 
     <mvc:annotation-driven />
 
