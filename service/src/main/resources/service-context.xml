@@ -10,23 +10,27 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
-        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
-    ">
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-    <!-- @Component, @Service, @Controller, @Repository, @Configuration -->
+    <context:property-placeholder location="classpath:/application.properties" />
     <context:component-scan base-package="org.bordylek.service, org.bordylek.web" />
 
-	<!-- Mongo -->
 	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoClientFactoryBean">
-		<property name="host" value="${db_host}" />
+		<property name="host" value="${db.host}" />
+        <property name="port" value="${db.port}" />
 	</bean>
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongo" ref="mongo" />
-        <constructor-arg name="databaseName" value="${db_name}" />
+        <constructor-arg name="databaseName" value="${db.name}" />
+    </bean>
+    <bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
     </bean>
     <bean id="mongoFactory" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
         <constructor-arg name="mongo" ref="mongo" />
-        <constructor-arg name="databaseName" value="${db_name}" />
+        <constructor-arg name="databaseName" value="${db.name}" />
+        <constructor-arg name="credentials" ref="mongoCredentials"/>
     </bean>
     <bean id="mongoMessageStore" class="org.springframework.integration.mongodb.store.MongoDbMessageStore">
         <constructor-arg ref="mongoFactory"/>
