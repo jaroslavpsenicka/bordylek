@@ -1,6 +1,6 @@
 package Basic
 
-import org.bordylek.service.model.*
+import org.bordylek.service.model.metrics.*
 
 global org.bordylek.mon.Alerter alerter
 

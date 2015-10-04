@@ -2,7 +2,7 @@ package rules
 
 import java.util.Date
 import org.bordylek.mon.AlerterTest
-import org.bordylek.service.model.*
+import org.bordylek.service.model.metrics.*
 
 global org.bordylek.mon.Alerter alerter
 
