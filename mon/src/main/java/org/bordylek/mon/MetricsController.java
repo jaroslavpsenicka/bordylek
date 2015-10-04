@@ -1,8 +1,8 @@
 package org.bordylek.mon;
 
 import org.bordylek.service.NotFoundException;
-import org.bordylek.service.model.*;
-import org.bordylek.service.model.Timer;
+import org.bordylek.service.model.metrics.*;
+import org.bordylek.service.model.metrics.Timer;
 import org.bordylek.service.repository.MetricsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

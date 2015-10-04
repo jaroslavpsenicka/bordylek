@@ -1,6 +1,6 @@
 package org.bordylek.mon;
 
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Metrics;
 import org.drools.definition.rule.Rule;
 
 public interface Alerter {

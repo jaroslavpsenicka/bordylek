@@ -1,8 +1,8 @@
 package org.bordylek.mon;
 
-import org.bordylek.service.model.Counter;
-import org.bordylek.service.model.Meter;
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Counter;
+import org.bordylek.service.model.metrics.Meter;
+import org.bordylek.service.model.metrics.Metrics;
 import org.bordylek.service.repository.MetricsRepository;
 import org.junit.After;
 import org.junit.Assert;

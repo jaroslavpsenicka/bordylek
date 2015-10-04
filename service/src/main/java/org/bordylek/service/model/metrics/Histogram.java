@@ -1,4 +1,4 @@
-package org.bordylek.service.model;
+package org.bordylek.service.model.metrics;
 
 import com.codahale.metrics.Snapshot;
 

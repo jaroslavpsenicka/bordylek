@@ -1,7 +1,7 @@
 package org.bordylek.web;
 
 import net.sf.ehcache.Ehcache;
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Metrics;
 import org.bordylek.service.model.User;
 import org.bordylek.service.repository.MetricsRepository;
 import org.bordylek.service.repository.UserRepository;

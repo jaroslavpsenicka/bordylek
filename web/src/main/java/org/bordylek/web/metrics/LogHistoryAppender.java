@@ -45,7 +45,8 @@ public class LogHistoryAppender extends AppenderSkeleton implements Initializing
     @Override
     protected void append(LoggingEvent event) {
         if (buffer != null) {
-            buffer.add(event.getRenderedMessage());
+            String[] log = event.getThrowableStrRep();
+            buffer.add(log != null ? log : event.getRenderedMessage());
         }
     }
 

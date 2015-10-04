@@ -214,9 +214,14 @@ html, body {
 	background-color: #f2dede;
 }
 
-.alerts .log {
+.alerts .log pre {
     font-family: Courier;
-    font-size: 9px;
+    font-size: 11px;
+    margin: 10px 0px 0px 20px;
+    padding: 10px;
+    background-color: #eee;
+    overflow: auto;
+    max-height: 30em;
 }
 
 /* Footer Styles */

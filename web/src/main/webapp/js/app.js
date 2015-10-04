@@ -19,38 +19,40 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 	};
 
 	$routeProvider.when("/", {
-			templateUrl: "partials/home.html",
-			controller: "PageCtrl"
-		}).when("/login", {
-			templateUrl: "login/login.html",
-			controller: "PageCtrl"
-		}).when("/profile", {
-			templateUrl: "profile/profile.html",
-			controller: "ProfileCtrl",
-		  	resolve: {
-		  		deps: app.resolveDeps(['profile/profile.js'])
-			}
-		}).when("/comms/create", {
-			templateUrl: "comms/comm-create.html",
-			controller: "NewCommCtrl",
-		  	resolve: {
-		  		deps: app.resolveDeps(['comms/comms.js'])
-			}
-		}).when("/comms/:commId", {
-			templateUrl: "comms/comm.html",
-			controller: "CommsCtrl",
-		  	resolve: {
-		  		deps: app.resolveDeps(['comms/comms.js'])
-			}
-		})
+		templateUrl: "home.html",
+		controller: "PageCtrl"
+	}).when("/login", {
+		templateUrl: "login.html",
+		controller: "PageCtrl"
+	}).when("/profile", {
+		templateUrl: "profile.html",
+		controller: "ProfileCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/profile.js'])
+		}
+	}).when("/comms/create", {
+		templateUrl: "comms-create.html",
+		controller: "NewCommCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/comms.js'])
+		}
+	}).when("/comms/:commId", {
+		templateUrl: "comms.html",
+		controller: "CommsCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/comms.js'])
+		}
+	}).when("/blog", {
+		templateUrl: "blog.html",
+		controller: "BlogCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/blog.js'])
+		}
+	}).otherwise("/404", {
+		templateUrl: "404.html",
+		controller: "PageCtrl"
+	});
 
-		.when("/about", {templateUrl: "partials/about.html", controller: "PageCtrl"})
-		.when("/faq", {templateUrl: "partials/faq.html", controller: "PageCtrl"})
-		.when("/pricing", {templateUrl: "partials/pricing.html", controller: "PageCtrl"})
-		.when("/contact", {templateUrl: "partials/contact.html", controller: "PageCtrl"})
-		.when("/blog", {templateUrl: "partials/blog.html", controller: "BlogCtrl"})
-		.when("/blog/post", {templateUrl: "partials/blog_item.html", controller: "BlogCtrl"})
-		.otherwise("/404", {templateUrl: "partials/404.html", controller: "PageCtrl"});
 }]);
 
 app.run(["$http", "$rootScope", "$q", "userService", function($http, $rootScope, $q, userService) {

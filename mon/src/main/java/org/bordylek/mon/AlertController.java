@@ -27,11 +27,6 @@ public class AlertController {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<Alert> getAlerts(@RequestParam(value = "all", required = false) Boolean showAll) {
-//		return new ArrayList<Alert>() {{
-//			add(new Alert("Basic.memory", new Date(), Severity.WARNING, "Something wrong happened again."));
-//			add(new Alert("Basic.memory", new Date(), Severity.ERROR, "Something wrong happened again."));
-//			add(new Alert("Basic.memory", new Date(System.currentTimeMillis() - 1000*60*60*25), Severity.INFO, "Something wrong happened."));
-//		}};
 		return (showAll != null && showAll) ? alertRepository.findByOrderByTimestampDesc() :
 			alertRepository.findByResolvedOrderByTimestampDesc(false);
 	}
@@ -47,6 +42,7 @@ public class AlertController {
 
 	@ExceptionHandler(NotFoundException.class)
 	public void handleNotFoundException(NotFoundException ex, HttpServletResponse response) {
+		LOG.error("Alert " + ex.getMessage() + " not found.");
 		response.setStatus(HttpStatus.NOT_FOUND.value());
 	}
 

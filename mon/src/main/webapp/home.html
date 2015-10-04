@@ -8,9 +8,9 @@
         </div>
         <div class="alerts" ng-if="alerts.length > 0">
             <div ng-repeat="(key, value) in alerts | daygroup | groupBy: 'daygroup'">
-                <h3 ng-if="key === 'today'">Today</h3>
-                <h3 ng-if="key === 'yesterday'">Yesterday</h3>
-                <h3 ng-if="key === 'earlier'">Earlier</h3>
+                <h4 ng-if="key === 'today'">Today</h4>
+                <h4 ng-if="key === 'yesterday'">Yesterday</h4>
+                <h4 ng-if="key === 'earlier'">Earlier</h4>
                 <div class="row alert-row" ng-repeat="alert in value">
                     <div class="col-md-1 alert-icon {{alert.severity}}"></div>
                     <div class="col-md-2" ng-if="alert.daygroup == 'today'">{{alert.timestamp | date: 'mediumTime'}}</div>
@@ -18,11 +18,13 @@
                     <div class="col-md-2" ng-if="alert.daygroup == 'earlier'">{{alert.timestamp | date: 'short'}}</div>
                     <div class="col-md-7">{{alert.message}}</div>
                     <div class="col-md-2 text-right">
-                        <a href="#/" ng-click="showLog(alert.id)">Log {{shownLogs[alert.id]}}</a>
+                        <a href="#/" ng-click="showLog(alert.id)">Log</a>
                         <span>&nbsp;|&nbsp;</span>
-                        <a href="#/" ng-click="resolveAlert(alert.id)">Resolve</a></div>
+                        <a href="#/" ng-click="resolveAlert(alert.id)">Resolve</a>
                     </div>
-                    <div class="col-md-12 log" ng-show="shownLogs[alert.id] == 1">{{alert.log}}</div>
+                    <div class="col-md-12 log" ng-show="shownLogs[alert.id] == 1">
+                        <pre>{{alert.log}}</pre>
+                    </div>
                 </div>
             </div>
         </div>

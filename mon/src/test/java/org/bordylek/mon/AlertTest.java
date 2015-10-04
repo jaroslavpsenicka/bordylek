@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bordylek.mon.model.Alert;
 import org.bordylek.mon.model.Severity;
 import org.bordylek.mon.repository.AlertRepository;
-import org.bordylek.service.model.Counter;
+import org.bordylek.service.model.metrics.Counter;
 import org.bordylek.service.repository.MetricsRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +35,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebAppConfiguration  
@@ -118,7 +117,6 @@ public class AlertTest {
         alertRepository.save(alert);
         alertRepository.save(new Alert("rules.Name2", new Date(1000), Severity.INFO, "Hello"));
         mockMvc.perform(get("/alerts").param("all", "true"))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$", hasSize(2)))
@@ -194,7 +192,7 @@ public class AlertTest {
 
         config.enableRule("rules.Age");
         alertProcessor.process();
-        Thread.sleep(3000);
+        Thread.sleep(2000);
 
         List<MimeMessage> messages = mailSender.getMessages();
         assertEquals(1, messages.size());

@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Document(collection = "monitor")
+@Document(collection = "alerts")
 public class Alert {
 
     @Id

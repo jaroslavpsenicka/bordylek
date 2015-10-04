@@ -1,6 +1,6 @@
 package org.bordylek.service.repository;
 
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Metrics;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

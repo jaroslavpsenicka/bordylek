@@ -1,4 +1,4 @@
-package org.bordylek.service.model;
+package org.bordylek.service.model.metrics;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;

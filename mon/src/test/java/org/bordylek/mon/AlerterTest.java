@@ -2,9 +2,9 @@ package org.bordylek.mon;
 
 import org.bordylek.mon.model.Alert;
 import org.bordylek.mon.repository.AlertRepository;
-import org.bordylek.service.model.Counter;
+import org.bordylek.service.model.metrics.Counter;
 import org.bordylek.service.model.Log;
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Metrics;
 import org.bordylek.service.repository.LogRepository;
 import org.bordylek.service.repository.MetricsRepository;
 import org.drools.KnowledgeBase;

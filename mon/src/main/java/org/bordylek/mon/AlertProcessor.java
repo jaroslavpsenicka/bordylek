@@ -4,7 +4,7 @@ import org.bordylek.mon.model.Alert;
 import org.bordylek.mon.model.Severity;
 import org.bordylek.mon.repository.AlertRepository;
 import org.bordylek.service.model.Log;
-import org.bordylek.service.model.Metrics;
+import org.bordylek.service.model.metrics.Metrics;
 import org.bordylek.service.repository.LogRepository;
 import org.bordylek.service.repository.MetricsRepository;
 import org.drools.definition.rule.Rule;

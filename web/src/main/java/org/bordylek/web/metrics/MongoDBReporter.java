@@ -5,6 +5,7 @@ import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 import org.bordylek.service.model.*;
+import org.bordylek.service.model.metrics.*;
 import org.bordylek.service.repository.LogRepository;
 import org.bordylek.service.repository.MetricsRepository;
 import org.slf4j.Logger;

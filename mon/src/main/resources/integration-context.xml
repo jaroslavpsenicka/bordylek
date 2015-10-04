@@ -16,7 +16,7 @@
     </channel>
 
     <service-activator input-channel="notifications" ref="userNotifier" method="notify">
-        <poller task-executor="slowExecutor" fixed-rate="1" time-unit="SECONDS"/>
+        <poller task-executor="slowExecutor" fixed-rate="1" time-unit="MINUTES"/>
     </service-activator>
 
 </beans:beans>
