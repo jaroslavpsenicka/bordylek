@@ -2,17 +2,20 @@ package org.bordylek.mon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class DataController {
 
+    @Autowired
 	private MongoTemplate mongoTemplate;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataController.class);
@@ -50,7 +53,7 @@ public class DataController {
             String key = tokens[0].trim();
             String value = tokens[1].trim();
             return (criteria != null) ? criteria.and(key).is(value) : Criteria.where(key).is(value);
-        }
+        } else LOG.warn("Error reading criteria: " + Arrays.asList(tokens)+ ", must contain exactly 2 elements");
 
         return criteria;
     }
@@ -60,7 +63,7 @@ public class DataController {
             String key = tokens[0].trim();
             String value = tokens[1].trim();
             return (criteria != null) ? criteria.and(key).regex(value) : Criteria.where(key).regex(value);
-        }
+        } else LOG.warn("Error reading criteria: " + Arrays.asList(tokens)+ ", must contain exactly 2 elements");
 
         return criteria;
     }
@@ -70,7 +73,7 @@ public class DataController {
             String key = tokens[0].trim();
             String value = tokens[1].trim();
             return (criteria != null) ? criteria.and(key).gt(value) : Criteria.where(key).gt(value);
-        }
+        } else LOG.warn("Error reading criteria: " + Arrays.asList(tokens)+ ", must contain exactly 2 elements");
 
         return criteria;
     }
@@ -80,7 +83,7 @@ public class DataController {
             String key = tokens[0].trim();
             String value = tokens[1].trim();
             return (criteria != null) ? criteria.and(key).lt(value) : Criteria.where(key).lt(value);
-        }
+        } else LOG.warn("Error reading criteria: " + Arrays.asList(tokens)+ ", must contain exactly 2 elements");
 
         return criteria;
     }
