@@ -24,12 +24,11 @@ public class DataController {
 		@RequestParam(value = "queryString", required = false) String queryString,
         @RequestParam(value = "skip", defaultValue = "0") Integer skip,
         @RequestParam(value = "limit", defaultValue = "100") Integer limit) throws ClassNotFoundException {
-        Class<?> entityClass = Class.forName(className);
-        Query q = createQuery(queryString).skip(skip).limit(limit);
-        return mongoTemplate.find(q, entityClass);
+        Query query = createQuery(queryString).skip(skip).limit(limit);
+        return mongoTemplate.find(query, Class.forName(className));
 	}
 
-    private Query createQuery(@RequestParam(value = "query", required = false) String queryString) {
+    private Query createQuery(String queryString) {
         Criteria criteria = null;
         for (String condition : queryString.split(",")) {
             if (condition.contains(":")) {
