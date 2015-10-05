@@ -1,0 +1,173 @@
+<div class="section">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Timers</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-6">Name</th>
+                        <th class="col-md-1 text-right">Count</th>
+                        <th class="col-md-1 text-right">Diff</th>
+                        <th class="col-md-1 text-right">M1</th>
+                        <th class="col-md-1 text-right">M5</th>
+                        <th class="col-md-1 text-right">M15</th>
+                        <th class="col-md-1 text-right">Mean</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in timers | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td class="text-right">{{value.count}}</td>
+                        <td class="text-right">{{value.diff}}</td>
+                        <td class="text-right">{{value.m1Rate | number:3}}ms</td>
+                        <td class="text-right">{{value.m5Rate | number:3}}ms</td>
+                        <td class="text-right">{{value.m15Rate | number:3}}ms</td>
+                        <td class="text-right">{{value.meanRate | number:3}}ms</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Logs</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-6">Name</th>
+                        <th class="col-md-1 text-right">Count</th>
+                        <th class="col-md-1 text-right">Diff</th>
+                        <th class="col-md-1 text-right">M1</th>
+                        <th class="col-md-1 text-right">M5</th>
+                        <th class="col-md-1 text-right">M15</th>
+                        <th class="col-md-1 text-right">Mean</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in meters | filter: {name: 'org.apache.log4j'} |  orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td class="text-right">{{value.count}}</td>
+                        <td class="text-right">{{value.diff}}</td>
+                        <td class="text-right">{{value.m1Rate | number:3}}</td>
+                        <td class="text-right">{{value.m5Rate | number:3}}</td>
+                        <td class="text-right">{{value.m15Rate | number:3}}</td>
+                        <td class="text-right">{{value.meanRate | number:3}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Meters</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-6">Name</th>
+                        <th class="col-md-1 text-right">Count</th>
+                        <th class="col-md-1 text-right">Diff</th>
+                        <th class="col-md-1 text-right">M1</th>
+                        <th class="col-md-1 text-right">M5</th>
+                        <th class="col-md-1 text-right">M15</th>
+                        <th class="col-md-1 text-right">Mean</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in meters | filter: {name: 'org.bordylek'} | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td class="text-right">{{value.count}}</td>
+                        <td class="text-right">{{value.diff}}</td>
+                        <td class="text-right">{{value.m1Rate | number:3}}</td>
+                        <td class="text-right">{{value.m5Rate | number:3}}</td>
+                        <td class="text-right">{{value.m15Rate | number:3}}</td>
+                        <td class="text-right">{{value.meanRate | number:3}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" ng-if="histograms.length">
+            <div class="col-md-12">
+                <h3>Histograms</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Min</th>
+                        <th>Mean</th>
+                        <th>Max</th>
+                        <th>StdDev</th>
+                        <th>Median</th>
+                        <th>p75</th>
+                        <th>p95</th>
+                        <th>p98</th>
+                        <th>p99</th>
+                        <th>p999</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in histograms | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td>{{value.count}}</td>
+                        <td>{{value.min}}</td>
+                        <td>{{value.mean}}</td>
+                        <td>{{value.max}}</td>
+                        <td>{{value.stdDev}}</td>
+                        <td>{{value.median}}</td>
+                        <td>{{value.p75}}</td>
+                        <td>{{value.p95}}</td>
+                        <td>{{value.p98}}</td>
+                        <td>{{value.p99}}</td>
+                        <td>{{value.p999}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6" ng-if="gauges.length">
+                <h3>Gauges</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-5">Name</th>
+                        <th class="col-md-1 text-right">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in gauges | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td class="text-right">{{value.value}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6" ng-if="counters.length">
+                <h3>Counters</h3>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="col-md-5">Name</th>
+                        <th class="col-md-1 text-right">Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="value in counters | orderBy:'name'">
+                        <td>{{value.name}}</td>
+                        <td>{{value.count}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+</div>

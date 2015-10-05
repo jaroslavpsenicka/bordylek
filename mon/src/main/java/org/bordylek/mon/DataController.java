@@ -1,5 +1,6 @@
 package org.bordylek.mon;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,18 +20,42 @@ public class DataController {
     @Autowired
 	private MongoTemplate mongoTemplate;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
 	private static final Logger LOG = LoggerFactory.getLogger(DataController.class);
 
     @RequestMapping(value = "/data", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public List<?> getData(@RequestParam(value = "class") String className,
-		@RequestParam(value = "queryString", required = false) String queryString,
+        @RequestParam(value = "queryString", required = false) String queryString,
         @RequestParam(value = "skip", defaultValue = "0") Integer skip,
         @RequestParam(value = "limit", defaultValue = "100") Integer limit) throws ClassNotFoundException {
         Query query = createQuery(queryString).skip(skip).limit(limit);
         return mongoTemplate.find(query, Class.forName(className));
 	}
+
+    @RequestMapping(value = "/data/{id}", method = RequestMethod.GET, produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Object getDataById(@PathVariable(value = "id") String id,
+        @RequestParam(value = "class") String className) throws ClassNotFoundException {
+        return mongoTemplate.findById(id, Class.forName(className));
+    }
+
+    @RequestMapping(value = "/data", method = RequestMethod.POST, consumes = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public void saveData(@RequestBody String body,
+        @RequestParam(value = "class") String className) throws ClassNotFoundException, IOException {
+        mongoTemplate.save(objectMapper.readValue(body, Class.forName(className)));
+    }
+
+    @RequestMapping(value = "/data/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteById(@PathVariable(value = "id") String id,
+        @RequestParam(value = "class") String className) throws ClassNotFoundException {
+        mongoTemplate.remove(mongoTemplate.findById(id, Class.forName(className)));
+    }
 
     private Query createQuery(String queryString) {
         Criteria criteria = null;

@@ -25,6 +25,12 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 		resolve: {
 			deps: app.resolveDeps(['js/home.js'])
 		}
+	}).when("/metrics", {
+		templateUrl: "/metrics.html",
+		controller: "MetricsCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/metrics.js'])
+		}
 	}).when("/data", {
 		templateUrl: "/data.html",
 		controller: "DataCtrl",
