@@ -108,7 +108,7 @@ services.factory('dataService', function($resource) {
             method: 'GET'
         },
         save: {
-            url: 'rest/data/:id',
+            url: 'rest/data',
             method: 'POST'
         },
         delete: {

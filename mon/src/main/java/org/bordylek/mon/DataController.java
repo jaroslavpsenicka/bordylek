@@ -1,5 +1,7 @@
 package org.bordylek.mon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +22,14 @@ public class DataController {
     @Autowired
 	private MongoTemplate mongoTemplate;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DataController.class);
+
+    public DataController() {
+        objectMapper = new ObjectMapper();
+        objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
+    }
 
     @RequestMapping(value = "/data", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
@@ -39,8 +46,8 @@ public class DataController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object getDataById(@PathVariable(value = "id") String id,
-        @RequestParam(value = "class") String className) throws ClassNotFoundException {
-        return mongoTemplate.findById(id, Class.forName(className));
+        @RequestParam(value = "class") String className) throws ClassNotFoundException, JsonProcessingException {
+        return objectMapper.writeValueAsString(mongoTemplate.findById(id, Class.forName(className)));
     }
 
     @RequestMapping(value = "/data", method = RequestMethod.POST, consumes = "application/json")

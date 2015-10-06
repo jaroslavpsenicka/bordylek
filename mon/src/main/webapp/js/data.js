@@ -1,61 +1,92 @@
-app.registerCtrl('DataCtrl', function ($scope, dataService) {
+app.registerCtrl('DataCtrl', function ($scope, $routeParams, $location, dataService) {
 
     $scope.query = '';
 	$scope.metadata = {
 		'org.bordylek.service.model.blog.Article': {
-			'name': 'blog',
-			'fields': {
-			    'name': {
-			        'title': 'Name',
-			        'type': 'String'
-			    },
-			    'createDate': {
-			        'title': 'Created',
-			        'type': 'Date'
-			    },
-			    'author': {
-			        'title': 'Author',
-			        'type': 'User'
-			    }
-			}
+			name: 'blog',
+			fields: [{
+				name: 'id',
+				title: 'Id',
+				type: 'text',
+				required: true,
+				locked: true
+			}, {
+				name: 'name',
+				title: 'Name',
+				type: 'text',
+				required: true,
+				list: true
+			}, {
+				name: 'createDate',
+				title: 'Created',
+				type: 'datetime',
+				list: true
+			}, {
+				name: 'author',
+				title: 'Author',
+				type: 'User',
+				list: true
+			}]}
 		},
 		'org.bordylek.service.model.Community': {
-			'name': 'communities',
-			'fields': {
-			    'name': {
-			        'title': 'Name',
-			        'type': 'String'
-			    },
-			    'createDate': {
-			        'title': 'Created',
-			        'type': 'Date'
-			    },
-			    'createdBy': {
-			        'title': 'By',
-			        'type': 'User'
-			    }
-			}
+			name: 'communities',
+			fields: [{
+				name: 'id',
+				title: 'Id',
+				type: 'text',
+				required: true,
+				locked: true
+			}, {
+				name: 'name',
+				title: 'Name',
+				type: 'text',
+				required: true,
+				list: true
+			}, {
+			    name: 'createDate',
+				title: 'Created',
+				type: 'datetime',
+				list: true
+			}, {
+			    name: 'createdBy',
+				title: 'By',
+				type: 'User',
+				list: true
+			}]
 		},
 		'org.bordylek.service.model.User': {
-			'name': 'users',
-			'fields': {
-			    'name': {
-			        'title': 'Name',
-			        'type': 'String'
-			    },
-			    'email': {
-			        'title': 'Email',
-			        'type': 'String'
-			    },
-			    'status': {
-			        'title': 'Status',
-			        'type': 'String'
-			    },
-			    'location': {
-                    'title': 'Location',
-                    'type': 'String'
-			    }
-			}
+			name: 'users',
+			fields: [{
+				name: 'id',
+				title: 'Id',
+				type: 'text',
+				required: true,
+				locked: true
+			}, {
+				name: 'name',
+				title: 'Name',
+				type: 'text',
+				required: true,
+				list: true
+			}, {
+			    name: 'email',
+				title: 'Email',
+				type: 'text',
+				required: true,
+				list: true
+			}, {
+			    name: 'status',
+				title: 'Status',
+				type: 'text',
+				required: true,
+                list: true
+			}, {
+			    name: 'regId',
+				title: 'Registrar ID',
+				type: 'text',
+				required: true,
+                list: true
+			}]
 		}
 	};
 
@@ -71,6 +102,12 @@ app.registerCtrl('DataCtrl', function ($scope, dataService) {
         });
     }
 
+    $scope.save = function() {
+        dataService.save({class: $scope.selectedClass}, $scope.selectedEntity, function(result) {
+            $location.path('/data');
+        });
+    }
+
     $scope.remove = function(id) {
         dataService.remove({id: id}, function(result) {
             $scope.findData();
@@ -79,4 +116,15 @@ app.registerCtrl('DataCtrl', function ($scope, dataService) {
 
 	$scope.selectClass('org.bordylek.service.model.User');
 
+	if ($routeParams.id) {
+		dataService.load({class: $scope.selectedClass, id: $routeParams.id}, function(result) {
+			$scope.selectedEntity = result;
+		});
+	}
+
+	$scope.unlockedFields = {};
+
+	$scope.unlock = function(fieldName) {
+		$scope.unlockedFields[fieldName] = 1;
+	}
 });
