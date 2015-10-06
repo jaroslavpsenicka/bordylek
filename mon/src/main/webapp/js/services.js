@@ -95,3 +95,25 @@ services.factory('logsService', function($resource) {
         }
     });
 });
+
+services.factory('dataService', function($resource) {
+    return $resource('', {id: '@id'}, {
+        list: {
+            url: 'rest/data',
+            method: 'GET',
+            isArray: true
+        },
+        load: {
+            url: 'rest/data/:id',
+            method: 'GET'
+        },
+        save: {
+            url: 'rest/data/:id',
+            method: 'POST'
+        },
+        delete: {
+            url: 'rest/data/:id',
+            method: 'DELETE'
+        }
+    });
+});

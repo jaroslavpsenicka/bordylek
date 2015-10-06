@@ -224,6 +224,10 @@ html, body {
     max-height: 30em;
 }
 
+.searchbox {
+    margin-bottom: 40px;
+}
+
 /* Footer Styles */
 footer {
     margin: 50px 0;

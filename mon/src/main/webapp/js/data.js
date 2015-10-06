@@ -1,24 +1,76 @@
-app.registerCtrl('DataCtrl', function ($scope, metricsService) {
+app.registerCtrl('DataCtrl', function ($scope, dataService) {
 
-	metricsService.meters(function(response) {
-		$scope.meters = response.data;
-	});
+    $scope.query = '';
+	$scope.metadata = {
+		'org.bordylek.service.model.blog.Article': {
+			'name': 'blog',
+			'fields': {
+			    'name': {
+			        'title': 'Name',
+			        'type': 'String'
+			    },
+			    'createDate': {
+			        'title': 'Created',
+			        'type': 'Date'
+			    },
+			    'author': {
+			        'title': 'Author',
+			        'type': 'User'
+			    }
+			}
+		},
+		'org.bordylek.service.model.Community': {
+			'name': 'communities',
+			'fields': {
+			    'name': {
+			        'title': 'Name',
+			        'type': 'String'
+			    },
+			    'createDate': {
+			        'title': 'Created',
+			        'type': 'Date'
+			    },
+			    'createdBy': {
+			        'title': 'By',
+			        'type': 'User'
+			    }
+			}
+		},
+		'org.bordylek.service.model.User': {
+			'name': 'users',
+			'fields': {
+			    'name': {
+			        'title': 'Name',
+			        'type': 'String'
+			    },
+			    'email': {
+			        'title': 'Email',
+			        'type': 'String'
+			    },
+			    'status': {
+			        'title': 'Status',
+			        'type': 'String'
+			    },
+			    'location': {
+                    'title': 'Location',
+                    'type': 'String'
+			    }
+			}
+		}
+	};
 
-	metricsService.counters(function(response) {
-		$scope.counters = response.data;
-	});
+	$scope.selectClass = function(entityClass) {
+		$scope.selectedClass = entityClass;
+		$scope.selectedClassName = $scope.metadata[entityClass].name;
+		$scope.selectedClassFields = $scope.metadata[entityClass].fields;
+	}
 
-	metricsService.timers(function(response) {
-		$scope.timers = response.data;
-	});
+    $scope.findData = function() {
+        dataService.list({class: $scope.selectedClass, query: $scope.query}, function(result) {
+            $scope.data = result;
+        });
+    }
 
-	metricsService.gauges(function(response) {
-		$scope.gauges = response.data;
-	});
-
-	metricsService.histograms(function(response) {
-		$scope.histograms = response.data;
-	});
-
+	$scope.selectClass('org.bordylek.service.model.User');
 
 });

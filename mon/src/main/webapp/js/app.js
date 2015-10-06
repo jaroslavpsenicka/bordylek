@@ -37,6 +37,12 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 		resolve: {
 			deps: app.resolveDeps(['js/data.js'])
 		}
+	}).when("/data/:id", {
+		templateUrl: "/data-edit.html",
+		controller: "DataCtrl",
+		resolve: {
+			deps: app.resolveDeps(['js/data.js'])
+		}
 	}).when("/rules", {
 		templateUrl: "/rules.html",
 		controller: "RulesCtrl",

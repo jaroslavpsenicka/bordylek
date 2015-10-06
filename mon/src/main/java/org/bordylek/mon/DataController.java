@@ -59,16 +59,18 @@ public class DataController {
 
     private Query createQuery(String queryString) {
         Criteria criteria = null;
-        for (String condition : queryString.split(",")) {
-            if (condition.contains(":")) {
-                criteria = createIsCriteria(criteria, condition.split(":"));
-            } else if (condition.contains("~")) {
-                criteria = createLikeCriteria(criteria, condition.split(">"));
-            } else if (condition.contains(">")) {
-                criteria = createGtCriteria(criteria, condition.split(">"));
-            } else if (condition.contains("<")) {
-                criteria = createLtCriteria(criteria, condition.split(">"));
-            } else LOG.warn("Error reading query: '" + queryString + "', does not contain any of known operators: :~><");
+        if (queryString != null && queryString.length() > 0) {
+            for (String condition : queryString.split(",")) {
+                if (condition.contains(":")) {
+                    criteria = createIsCriteria(criteria, condition.split(":"));
+                } else if (condition.contains("~")) {
+                    criteria = createLikeCriteria(criteria, condition.split(">"));
+                } else if (condition.contains(">")) {
+                    criteria = createGtCriteria(criteria, condition.split(">"));
+                } else if (condition.contains("<")) {
+                    criteria = createLtCriteria(criteria, condition.split(">"));
+                } else LOG.warn("Error reading query: '" + queryString + "', does not contain any of known operators: :~><");
+            }
         }
 
         return criteria != null ? new Query(criteria) : new Query();

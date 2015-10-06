@@ -1,23 +1,52 @@
 <div class="section">
     <div class="container">
 
+        <div class="row searchbox">
+            <div class="col-sm-2"></div>
+            <div class="col-lg-8">
+                <form ng-submit="findData()">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Search {{selectedClassName}} <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="selectClass('org.bordylek.service.model.blog.Article')">Blog entries</a></li>
+                                <li><a ng-click="selectClass('org.bordylek.service.model.Community')">Communities</a></li>
+                                <li><a ng-click="selectClass('org.bordylek.service.model.User')">Users</a></li>
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control" aria-label="..." ng-model="query"
+                           placeholder="Search query, format <prop> <oper> <value>,... operators: :~><">
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+
         <div class="row">
-            <div class="form-group">
-                <div class="col-sm-3">
-                    <select name="strategy" class="form-control" ng-model="field.strategy">
-                        <option value="value">Value</option>
-                        <option value="number">Number</option>
-                        <option value="boolean">Boolean</option>
-                        <option value="datetime">Date</option>
-                    </select>
-                </div>
-                <div class="col-md-8 form-group">
-                    <input class="form-control" type="text">
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-default">Search</button>
+            <div class="col-lg-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="(key, value) in selectedClassFields">{{value.title}}</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="data.length > 0">
+                        <tr ng-repeat="rec in data">
+                            <td ng-repeat="(key, value) in selectedClassFields">
+                                <span ng-if="!$first" ng-bind="rec[key]"></span>
+                                <a ng-if="$first" href="#/data/{rec.id}" ng-bind="rec[key]"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-if="data.length == 0">
+                    <div class="text-center">Nothing to show.</div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
