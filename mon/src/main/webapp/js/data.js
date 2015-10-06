@@ -71,6 +71,12 @@ app.registerCtrl('DataCtrl', function ($scope, dataService) {
         });
     }
 
+    $scope.remove = function(id) {
+        dataService.remove({id: id}, function(result) {
+            $scope.findData();
+        });
+    }
+
 	$scope.selectClass('org.bordylek.service.model.User');
 
 });

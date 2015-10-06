@@ -29,6 +29,7 @@
                     <thead>
                         <tr>
                             <th ng-repeat="(key, value) in selectedClassFields">{{value.title}}</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody ng-if="data.length > 0">
@@ -36,6 +37,9 @@
                             <td ng-repeat="(key, value) in selectedClassFields">
                                 <span ng-if="!$first" ng-bind="rec[key]"></span>
                                 <a ng-if="$first" href="#/data/{rec.id}" ng-bind="rec[key]"></a>
+                            </td>
+                            <td class="text-right">
+                                <a href="#" ng-click="remove(rec.id)">Remove</a>
                             </td>
                         </tr>
                     </tbody>
