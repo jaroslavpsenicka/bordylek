@@ -1,4 +1,4 @@
-app.registerCtrl('DataCtrl', function ($scope, $routeParams, $location, dataService) {
+app.registerCtrl('DataCtrl', function ($scope, $rootScope, $routeParams, $location, dataService) {
 
     $scope.query = '';
 	$scope.metadata = {
@@ -11,22 +11,39 @@ app.registerCtrl('DataCtrl', function ($scope, $routeParams, $location, dataServ
 				required: true,
 				locked: true
 			}, {
-				name: 'name',
-				title: 'Name',
+				name: 'title',
+				title: 'Title',
 				type: 'text',
 				required: true,
 				list: true
 			}, {
+				name: 'resume',
+				title: 'Resume',
+				type: 'text',
+				required: true
+			}, {
+				name: 'text',
+				title: 'Text',
+				type: 'html',
+				required: true
+			}, {
 				name: 'createDate',
 				title: 'Created',
-				type: 'datetime',
+				type: 'datetime-local',
 				list: true
+			}, {
+				name: 'valid',
+				title: 'Valid',
+				type: 'boolean'
 			}, {
 				name: 'author',
 				title: 'Author',
-				type: 'User',
-				list: true
-			}]}
+				type: 'User'
+			}, {
+				name: 'category',
+				title: 'Category',
+				type: 'Category'
+			}]
 		},
 		'org.bordylek.service.model.Community': {
 			name: 'communities',
@@ -91,8 +108,8 @@ app.registerCtrl('DataCtrl', function ($scope, $routeParams, $location, dataServ
 	};
 
 	$scope.selectClass = function(entityClass) {
-		$scope.selectedClass = entityClass;
-		$scope.selectedClassName = $scope.metadata[entityClass].name;
+		$rootScope.selectedClass = entityClass;
+		$rootScope.selectedClassName = $scope.metadata[entityClass].name;
 		$scope.selectedClassFields = $scope.metadata[entityClass].fields;
 	}
 
@@ -114,12 +131,13 @@ app.registerCtrl('DataCtrl', function ($scope, $routeParams, $location, dataServ
         });
     }
 
-	$scope.selectClass('org.bordylek.service.model.User');
-
-	if ($routeParams.id) {
-		dataService.load({class: $scope.selectedClass, id: $routeParams.id}, function(result) {
+	if ($routeParams.class && $routeParams.id) {
+		dataService.load({class: $routeParams.class, id: $routeParams.id}, function(result) {
+			$scope.selectClass($routeParams.class);
 			$scope.selectedEntity = result;
 		});
+	} else {
+    	$scope.selectClass('org.bordylek.service.model.User');
 	}
 
 	$scope.unlockedFields = {};

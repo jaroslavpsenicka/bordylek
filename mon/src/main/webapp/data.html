@@ -36,7 +36,7 @@
                         <tr ng-repeat="rec in data">
                             <td ng-repeat="field in selectedClassFields | filter: { list: true }">
                                 <span ng-if="!$first" ng-bind="rec[field.name]"></span>
-                                <a ng-if="$first" href="#/data/{{rec.id}}" ng-bind="rec[field.name]"></a>
+                                <a ng-if="$first" href="#/data/{{selectedClass}}/{{rec.id}}" ng-bind="rec[field.name]"></a>
                             </td>
                             <td class="text-right">
                                 <a href="#" ng-click="remove(rec.id)">Remove</a>

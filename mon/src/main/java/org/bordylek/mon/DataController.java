@@ -3,6 +3,7 @@ package org.bordylek.mon;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 public class DataController {
@@ -29,17 +29,18 @@ public class DataController {
     public DataController() {
         objectMapper = new ObjectMapper();
         objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     @RequestMapping(value = "/data", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	public List<?> getData(@RequestParam(value = "class") String className,
+	public Object getData(@RequestParam(value = "class") String className,
         @RequestParam(value = "queryString", required = false) String queryString,
         @RequestParam(value = "skip", defaultValue = "0") Integer skip,
-        @RequestParam(value = "limit", defaultValue = "100") Integer limit) throws ClassNotFoundException {
+        @RequestParam(value = "limit", defaultValue = "100") Integer limit) throws ClassNotFoundException, JsonProcessingException {
         Query query = createQuery(queryString).skip(skip).limit(limit);
-        return mongoTemplate.find(query, Class.forName(className));
+        return objectMapper.writeValueAsString(mongoTemplate.find(query, Class.forName(className)));
 	}
 
     @RequestMapping(value = "/data/{id}", method = RequestMethod.GET, produces = "application/json")
