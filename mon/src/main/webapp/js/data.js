@@ -121,7 +121,7 @@ app.registerCtrl('DataCtrl', function ($scope, $rootScope, $routeParams, $locati
 
     $scope.save = function() {
         dataService.save({class: $scope.selectedClass}, $scope.selectedEntity, function(result) {
-            $location.path('/data');
+            $location.path('/data').search({ class: $scope.selectedClass });
         });
     }
 
@@ -131,11 +131,13 @@ app.registerCtrl('DataCtrl', function ($scope, $rootScope, $routeParams, $locati
         });
     }
 
-	if ($routeParams.class && $routeParams.id) {
-		dataService.load({class: $routeParams.class, id: $routeParams.id}, function(result) {
-			$scope.selectClass($routeParams.class);
-			$scope.selectedEntity = result;
-		});
+	if ($routeParams.class) {
+		$scope.selectClass($routeParams.class);
+		if ($routeParams.id) {
+    		dataService.load({class: $routeParams.class, id: $routeParams.id}, function(result) {
+    			$scope.selectedEntity = result;
+    		});
+		}
 	} else {
     	$scope.selectClass('org.bordylek.service.model.User');
 	}
