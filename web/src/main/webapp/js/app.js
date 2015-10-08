@@ -19,7 +19,9 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 	};
 
 	$routeProvider.when("/", {
-		templateUrl: "home.html",
+		templateUrl: function(params) {
+			return (user.status == 'NEW') ? "welcome.html" : "home.html";
+		},
 		controller: "PageCtrl"
 	}).when("/login", {
 		templateUrl: "login.html",
@@ -108,16 +110,10 @@ app.controller('WelcomeCtrl', ['$scope', '$q', '$http', 'userService', function 
 	};
 }]);
 
-/**
- * Controls the Blog
- */
 app.controller('BlogCtrl', function (/* $scope, $location, $http */) {
   console.log("Blog Controller reporting for duty.");
 });
 
-/**
- * Controls all other Pages
- */
 app.controller('PageCtrl', function (/* $scope, $location, $http */) {
   console.log("Page Controller reporting for duty.");
 
