@@ -18,7 +18,7 @@
         <beans:constructor-arg index="1" value="MILLISECONDS"/>
         <beans:constructor-arg index="2" value="MILLISECONDS"/>
         <beans:constructor-arg index="3" value="ALL"/>
-        <beans:property name="period" value="${metrics.period:5}"/>
+        <beans:property name="period" value="${metrics.period:60}"/>
         <beans:property name="timeUnit" value="MINUTES"/>
     </beans:bean>
 

@@ -17,4 +17,10 @@
             properties="metric-registry-name=metrics"/>
     </cache>
 
+    <cache name="blog" maxElementsInMemory="50" eternal="false" transactionalMode="off"
+        timeToIdleSeconds="10" timeToLiveSeconds="3600" overflowToDisk="false">
+        <cacheDecoratorFactory class="com.codahale.metrics.ehcache.InstrumentedCacheDecoratorFactory"
+            properties="metric-registry-name=metrics"/>
+    </cache>
+
 </ehcache>

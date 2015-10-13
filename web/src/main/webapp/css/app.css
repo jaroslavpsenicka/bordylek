@@ -6,9 +6,10 @@ All Start Bootstrap themes are licensed under Apache 2.0.
 For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap.com!
 */
 
-@import 'css/login.css';
-@import 'css/profile.css';
-@import 'css/comms.css';
+@import 'login.css';
+@import 'profile.css';
+@import 'comms.css';
+@import 'blog.css';
 
 /* Global Styles */
 

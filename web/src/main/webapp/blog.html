@@ -1,118 +1,20 @@
 <div class="container">
-
     <div class="row">
-
-        <div class="col-lg-12">
-            <h1 class="page-header">Blog Home 2
-                <small>Blog Homepage</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="../index.html">Home</a>
-                </li>
-                <li class="resolved">Blog Home 2</li>
-            </ol>
-        </div>
-
+        <article id="post-{{post.id}}" class="col-lg-10" ng-repeat="post in posts">
+            <header class="entry-header">
+                <h3 class="entry-title">{{post.title}}</h3>
+                <div class="entry-meta">
+                    <span>
+                        <i class="fa fa-calendar"></i>
+                        <span>{{post.published | date:simple}}</span>
+                    </span>
+                    <span>
+                        <i class="fa fa-user"></i>
+                        <span>{{post.author.displayName}}</span>
+                    </span>
+                </div>
+            </header>
+            <div class="entry-content">{{post.content}}</div>
+        </article>
     </div>
-
-    <div class="row">
-
-        <div class="col-md-1">
-            <p><i class="fa fa-camera fa-4x"></i>
-            </p>
-
-            <p>May 24, 2013</p>
-        </div>
-        <div class="col-md-5">
-            <a href="blog-post.html">
-                <img src="http://placehold.it/600x300" class="img-responsive">
-            </a>
-        </div>
-        <div class="col-md-6">
-            <h3><a href="blog-post.html">A Blog Home Template for Bootstrap 3</a>
-            </h3>
-
-            <p>by <a href="#">Start Bootstrap</a>
-            </p>
-
-            <p>This is a very basic starter template for a blog homepage. It makes use of Font Awesome icons that are
-                built into the 'Modern Business' template, and it makes use of the Bootstrap 3 pager at the bottom of
-                the page.</p>
-            <a class="btn btn-primary" href="blog-post.html">Read More <i class="fa fa-angle-right"></i></a>
-        </div>
-
-    </div>
-
-    <hr>
-
-    <div class="row">
-
-        <div class="col-md-1">
-            <p><i class="fa fa-film fa-4x"></i>
-            </p>
-
-            <p>May 24, 2013</p>
-        </div>
-        <div class="col-md-5">
-            <a href="blog-post.html">
-                <img src="http://placehold.it/600x300" class="img-responsive">
-            </a>
-        </div>
-        <div class="col-md-6">
-            <h3><a href="blog-post.html">A Blog Home Template for Bootstrap 3</a>
-            </h3>
-
-            <p>by <a href="#">Start Bootstrap</a>
-            </p>
-
-            <p>This is a very basic starter template for a blog homepage. It makes use of Font Awesome icons that are
-                built into the 'Modern Business' template, and it makes use of the Bootstrap 3 pager at the bottom of
-                the page.</p>
-            <a class="btn btn-primary" href="blog-post.html">Read More <i class="fa fa-angle-right"></i></a>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-
-        <div class="col-md-1">
-            <p><i class="fa fa-file-text fa-4x"></i>
-            </p>
-
-            <p>May 24, 2013</p>
-        </div>
-        <div class="col-md-5">
-            <a href="blog-post.html">
-                <img src="http://placehold.it/600x300" class="img-responsive">
-            </a>
-        </div>
-        <div class="col-md-6">
-            <h3><a href="blog-post.html">A Blog Home Template for Bootstrap 3</a>
-            </h3>
-
-            <p>by <a href="#">Start Bootstrap</a>
-            </p>
-
-            <p>This is a very basic starter template for a blog homepage. It makes use of Font Awesome icons that are
-                built into the 'Modern Business' template, and it makes use of the Bootstrap 3 pager at the bottom of
-                the page.</p>
-            <a class="btn btn-primary" href="blog-post.html">Read More <i class="fa fa-angle-right"></i></a>
-        </div>
-    </div>
-
-    <hr>
-
-    <div class="row">
-
-        <ul class="pager">
-            <li class="previous"><a href="#">&larr; Older</a>
-            </li>
-            <li class="next"><a href="#">Newer &rarr;</a>
-            </li>
-        </ul>
-
-    </div>
-
 </div>
-<!-- /.container -->

@@ -22,3 +22,15 @@ services.factory('commService', function($resource) {
     });
 });
 
+services.factory('blogService', function($resource) {
+    return $resource('', {}, {
+        blog: {
+            url: 'rest/blog',
+            method: 'GET'
+        },
+        posts: {
+            url: 'rest/blog/posts',
+            method: 'GET'
+        }
+    });
+});
