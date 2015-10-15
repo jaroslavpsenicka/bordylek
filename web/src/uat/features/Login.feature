@@ -4,7 +4,7 @@ Feature: Login
 
     Given new user "John Doe" with email john@doe.com exists
     When the index page is shown
-    Then welcome-header is shown with value "Welcome, John Doe It's Nice to Meet You!"
+    Then welcome-header is shown with value "Welcome, John Doe"
     And username is not shown
     And field name is shown with value "John Doe"
 

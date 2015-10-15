@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div id="welcome-header" class="modal-header">
     <h3>Welcome, {{newUser.name}}</h3>
 </div>
 <form name="welcomeform" class="form-horizontal" role="form" ng-submit="submit()">
@@ -21,6 +21,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" ng-disabled="welcomeform.$invalid">Proceed</button>
+        <button type="submit" id="welcomeform-submit" class="btn btn-primary" ng-disabled="welcomeform.$invalid">Proceed</button>
     </div>
 </form>
