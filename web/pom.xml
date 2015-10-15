@@ -127,10 +127,6 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-blogger</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

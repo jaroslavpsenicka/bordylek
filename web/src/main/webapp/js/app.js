@@ -19,9 +19,7 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 	};
 
 	$routeProvider.when("/", {
-		templateUrl: function(params) {
-			return (user.status == 'NEW') ? "welcome.html" : "home.html";
-		},
+		templateUrl: "home.html",
 		controller: "HomeCtrl"
 	}).when("/login", {
 		templateUrl: "login.html",
@@ -57,22 +55,14 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 
 }]);
 
-app.run(["$http", "$rootScope", "$q", "userService", function($http, $rootScope, $q, userService) {
+app.run(["$http", "$rootScope", "$q", "$modal", "userService", function($http, $rootScope, $q, $modal, userService) {
 	var language = window.navigator.userLanguage || window.navigator.language;
 	if (language) {
 		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
 			window.i18n = messages;
 		});
 	}
-}]);
 
-app.controller('HeaderCtrl', function ($scope, userService) {
-	userService.me(function(response) {
-		$scope.userData = response;
-	});
-});
-
-app.controller('HomeCtrl', function ($scope, userService, $modal) {
 	userService.me(function(response) {
 		var user = response.user;
 		if (user.status == 'NEW') {
@@ -113,8 +103,18 @@ app.controller('HomeCtrl', function ($scope, userService, $modal) {
 					};
 				}
 			}).result.then(function() {
-				$window.location.reload();
+				// $window.location.reload();
 		   	});
 		}
 	});
+
+}]);
+
+app.controller('HeaderCtrl', function ($scope, userService) {
+	userService.me(function(response) {
+		$scope.userData = response;
+	});
+});
+
+app.controller('HomeCtrl', function ($scope, userService, $modal) {
 });
