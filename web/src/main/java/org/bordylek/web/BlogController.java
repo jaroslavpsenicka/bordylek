@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
-
 @Controller
 @RequestMapping(value = "/blog")
 public class BlogController {
@@ -28,19 +26,19 @@ public class BlogController {
     private String blogKey;
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @Cacheable("blog")
     public String findBlog() {
         String url = blogUrl + "/blogs/" + blogId + "?key=" + blogKey;
-        return new String(restTemplate.getForObject(url, byte[].class), Charset.forName("UTF-8"));
+        return new String(restTemplate.getForObject(url, byte[].class));
     }
 
     @ResponseBody
-    @RequestMapping(value = "/posts", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/posts", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @Cacheable("blog")
     public String findPosts() {
         String url = blogUrl + "/blogs/" + blogId + "/posts?key=" + blogKey;
-        return new String(restTemplate.getForObject(url, byte[].class), Charset.forName("UTF-8"));
+        return new String(restTemplate.getForObject(url, byte[].class));
     }
 
 }

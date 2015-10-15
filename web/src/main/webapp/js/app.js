@@ -1,6 +1,6 @@
 
 var app = angular.module('bordylekApp', [
-  'services', 'localize',
+  'services', 'filters', 'localize',
   'ui.bootstrap', 'ngRoute', 'ngAnimate'
 ]);
 
@@ -21,9 +21,6 @@ app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $
 	$routeProvider.when("/", {
 		templateUrl: "home.html",
 		controller: "HomeCtrl"
-	}).when("/login", {
-		templateUrl: "login.html",
-		controller: "PageCtrl"
 	}).when("/profile", {
 		templateUrl: "profile.html",
 		controller: "ProfileCtrl",
@@ -117,4 +114,10 @@ app.controller('HeaderCtrl', function ($scope, userService) {
 });
 
 app.controller('HomeCtrl', function ($scope, userService, $modal) {
+	userService.me(function(response) {
+		$scope.userData = response;
+	}, function(error) {
+		$scope.userData = {};
+	});
+
 });

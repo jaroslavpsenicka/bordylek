@@ -4,7 +4,8 @@ services.factory('userService', function($resource) {
     return $resource('', {id: '@id'}, {
         me: {
             url: 'rest/user/me',
-            method: 'GET'
+            method: 'GET',
+            cache: true
         },
         update: {
             url: 'rest/user/:id',
@@ -26,11 +27,13 @@ services.factory('blogService', function($resource) {
     return $resource('', {}, {
         blog: {
             url: 'rest/blog',
-            method: 'GET'
+            method: 'GET',
+            cache: true
         },
         posts: {
             url: 'rest/blog/posts',
-            method: 'GET'
+            method: 'GET',
+            cache: true
         }
     });
 });

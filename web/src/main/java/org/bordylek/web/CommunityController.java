@@ -108,15 +108,6 @@ public class CommunityController {
 		return community;
 	}
 
-//	@RequestMapping(value = "/comm/{id}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-//	@ResponseStatus(HttpStatus.OK)
-//	@ResponseBody
-//	@PreAuthorize("hasRole('ADMIN')")
-//	public Community update(@PathVariable("id") String id, @Valid @RequestBody Community comm) {
-//		comm.setId(id);
-//		return (Community) this.communityRepository.save(comm);
-//	}
-
 	@ExceptionHandler(ValidationException.class)
 	public void handleConstraintViolationException(ValidationException ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.BAD_REQUEST.value());

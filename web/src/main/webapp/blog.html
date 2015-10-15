@@ -1,20 +1,22 @@
-<div class="container">
-    <div class="row">
-        <article id="post-{{post.id}}" class="col-lg-10" ng-repeat="post in posts">
-            <header class="entry-header">
-                <h3 class="entry-title">{{post.title}}</h3>
-                <div class="entry-meta">
-                    <span>
-                        <i class="fa fa-calendar"></i>
-                        <span>{{post.published | date:simple}}</span>
-                    </span>
-                    <span>
-                        <i class="fa fa-user"></i>
-                        <span>{{post.author.displayName}}</span>
-                    </span>
-                </div>
-            </header>
-            <div class="entry-content">{{post.content}}</div>
-        </article>
+<div class="spacer">
+    <div class="container">
+        <div class="row">
+            <article id="post-{{post.id}}" class="col-lg-10" ng-repeat="post in posts">
+                <header class="entry-header">
+                    <h3 class="entry-title">{{post.title}}</h3>
+                    <div class="entry-meta">
+                        <span>
+                            <i class="fa fa-calendar"></i>
+                            <span>{{post.published | date:simple}}</span>
+                        </span>
+                        <span>
+                            <i class="fa fa-user"></i>
+                            <span>{{post.author.displayName}}</span>
+                        </span>
+                    </div>
+                </header>
+                <div class="entry-content" ng-bind-html="post.content | trusted"></div>
+            </article>
+        </div>
     </div>
 </div>

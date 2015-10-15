@@ -88,7 +88,6 @@ public class UserController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    @PreAuthorize("hasRole('USER')")
     @Timed
     @ExceptionMetered
     public User update(@PathVariable("id") String id, @RequestBody @Valid UserUpdateReq req) throws Exception {
@@ -101,13 +100,10 @@ public class UserController {
             : authentication.getPrincipal().toString();
         User updatingUser = this.repository.findByRegId(principal);
         if (updatingUser == null || !updatingUser.getId().equals(id)) throw new IllegalAccessException();
-
-        User dbUser = this.repository.findOne(id);
-        if (dbUser == null) throw new NotFoundException(id);
-        dbUser.setName(req.getName());
-        dbUser.setLocation(req.getLocation());
-        dbUser.setStatus(UserStatus.VERIFIED);
-        return this.repository.save(dbUser);
+        updatingUser.setName(req.getName());
+        updatingUser.setLocation(req.getLocation());
+        updatingUser.setStatus(UserStatus.VERIFIED);
+        return this.repository.save(updatingUser);
     }
 
 	@ExceptionHandler(NotFoundException.class)
