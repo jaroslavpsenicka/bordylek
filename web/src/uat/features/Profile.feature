@@ -38,16 +38,16 @@ Feature: Profile
     And xpath //li[contains(@class, 'available-community')]/a is not shown
 
 
-  Scenario: Profile of known user, no community, one nearby
-
-    Given verified user "John Doe" with email john@doe.com exists
-    And community "Prague" exists
-    And lives in "Prague, Czech Republic"
-
-    When the profile page is shown
-    Then xpath //a[contains(@class, 'new-community')] is not shown
-    And xpath //li[contains(@class, 'profile-community')]/a is not shown
-    And xpath //li[contains(@class, 'available-community')]/a is shown with value "Prague"
+#  Scenario: Profile of known user, no community, one nearby
+#
+#    Given verified user "John Doe" with email john@doe.com exists
+#    And community "Prague" exists
+#    And lives in "Prague, Czech Republic"
+#
+#    When the profile page is shown
+#    Then xpath //a[contains(@class, 'new-community')] is not shown
+#    And xpath //li[contains(@class, 'profile-community')]/a is not shown
+#    And xpath //li[contains(@class, 'available-community')]/a is shown with value "Prague"
 
 
   Scenario: Profile of known user, no community, nothing nearby

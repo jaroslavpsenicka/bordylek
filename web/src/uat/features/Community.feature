@@ -37,6 +37,4 @@ Feature: Community
     And the comms/create page is shown
 
     When id newcommform-submit is clicked
-    Then xpath //li[contains(@class, 'profile-community')]/a is shown with value "Prague"
-    And xpath //li[contains(@class, 'available-community')]/a is not shown
-    And xpath //a[contains(@class, 'new-community')] is not shown
+    Then commname is shown with value "Prague"

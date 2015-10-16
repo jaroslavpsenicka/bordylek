@@ -6,6 +6,7 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 	}, function(error) {
 		alert(error);
 	});
+
 }]);
 
 app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', 'userService', function ($scope, $q, commService, userService) {
@@ -20,8 +21,8 @@ app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', 'userService', f
 	});
 
     $scope.submit = function() {
-		commService.create({}, $scope.newComm, function() {
-			window.location.href = '/#/profile';
+		commService.create({}, $scope.newComm, function(response) {
+			window.location.href = '/#/comms/' + response.id;
 		});
 	};
 
