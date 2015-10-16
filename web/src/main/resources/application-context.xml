@@ -18,6 +18,7 @@
     <mongo:repositories base-package="org.bordylek.service.repository" />
 
     <mvc:annotation-driven/>
+    <mvc:resources mapping="/img/**" location="/img/" />
 
     <bean class="org.springframework.web.client.RestTemplate"/>
 
