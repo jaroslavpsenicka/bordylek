@@ -17,7 +17,16 @@
 
     <mongo:repositories base-package="org.bordylek.service.repository" />
 
-    <mvc:resources mapping="/img/**" location="/img/" cache-period="31556926"/>
+    <mvc:interceptors>
+        <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+            <property name="cacheSeconds" value="0"/>
+            <property name="useExpiresHeader" value="true"/>
+            <property name="useCacheControlHeader" value="true"/>
+            <property name="useCacheControlNoStore" value="true"/>
+        </bean>
+    </mvc:interceptors>
+
+    <mvc:resources mapping="/img/**" location="/img" cache-period="31556926"/>
     <mvc:annotation-driven/>
 
     <bean class="org.springframework.web.client.RestTemplate"/>
