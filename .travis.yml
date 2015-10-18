@@ -19,3 +19,7 @@ deploy:
   domain: thelittlebighand
   on:
     repo: jaroslavpsenicka/bordylek
+
+notifications:
+  email:
+    - jaroslav.psenicka@gmail.com
