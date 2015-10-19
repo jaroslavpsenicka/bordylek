@@ -21,6 +21,9 @@
         <logout logout-url="/signout" />
         <anonymous enabled="false"/>
         <csrf disabled="true"/>
+        <headers>
+            <cache-control disabled="true"/>
+        </headers>
         <custom-filter ref="socialAuthenticationFilter" before="PRE_AUTH_FILTER" />
     </http>
 
