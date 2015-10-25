@@ -8,8 +8,10 @@ import org.bordylek.service.event.NewCommunityEvent;
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.CommunityRef;
 import org.bordylek.service.model.User;
+import org.bordylek.service.model.process.RenameCommunityVoting;
 import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
+import org.bordylek.service.repository.VotingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class CommunityController {
@@ -41,7 +40,10 @@ public class CommunityController {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Autowired
+	private VotingRepository votingRepository;
+
 	@Autowired
 	private EventGateway eventGateway;
 
@@ -50,6 +52,15 @@ public class CommunityController {
 
 	@Value("${comm.defaultDistance:20}")
 	private int defaultDistance;
+
+	@Value("${voting.comm.defaultDuration:604800000}")
+	private int defaultVoteDuration;
+
+	@Value("${voting.comm.minInterest:0.5}")
+	private double voteMinInterest;
+
+	@Value("${voting.comm.minResult:0.5}")
+	private double voteMinResult;
 
 	private static final Logger LOG = LoggerFactory.getLogger(CommunityController.class);
 
@@ -106,6 +117,31 @@ public class CommunityController {
 		LOG.info("New community created: "+community.getTitle());
         eventGateway.send(new NewCommunityEvent(community));
 		return community;
+	}
+
+	@RequestMapping(value = "/comm/{id}/rename", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	@PreAuthorize("hasRole('USER')")
+	@Timed
+	@ExceptionMetered
+	public void rename(@PathVariable("id") String id, @RequestBody String newName) {
+		Community community = this.communityRepository.findOne(id);
+		if (community == null) throw new NotFoundException(id);
+		User user = getUser();
+
+		RenameCommunityVoting voting = new RenameCommunityVoting();
+		voting.setName("Rename community " + community.getTitle());
+		voting.setCreator(user);
+		voting.setCommunity(community);
+		voting.setStartDate(new Date());
+		voting.setEndDate(new Date(System.currentTimeMillis() + defaultVoteDuration));
+		voting.setMinInterest(voteMinInterest);
+		voting.setMinResult(voteMinResult);
+		voting.setEntityId(community.getId());
+		voting.setOldValue(community.getTitle());
+		voting.setNewValue(newName);
+		votingRepository.save(voting);
 	}
 
 	@ExceptionHandler(ValidationException.class)
