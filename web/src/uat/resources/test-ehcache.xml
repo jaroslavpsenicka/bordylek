@@ -13,4 +13,8 @@
         timeToIdleSeconds="10" timeToLiveSeconds="300" overflowToDisk="false">
     </cache>
 
+    <cache name="votes" maxElementsInMemory="50" eternal="false" transactionalMode="off"
+       timeToIdleSeconds="10" timeToLiveSeconds="3600" overflowToDisk="false">
+    </cache>
+
 </ehcache>

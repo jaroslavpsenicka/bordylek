@@ -9,9 +9,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
+    <!-- Notifications -->
+
     <gateway id="eventGateway" service-interface="org.bordylek.service.event.EventGateway" default-request-channel="events"/>
 
     <channel id="events">
+        <queue message-store="mongoMessageStore"/>
+    </channel>
+
+    <channel id="requests">
         <queue message-store="mongoMessageStore"/>
     </channel>
 
@@ -23,5 +29,19 @@
     <channel id="notifications"/>
 
     <service-activator input-channel="notifications" ref="userNotifier" method="notify"/>
-    
+
+    <!-- Requests -->
+
+    <gateway id="requestGateway" service-interface="org.bordylek.service.RequestGateway" default-request-channel="requests"/>
+
+    <payload-type-router input-channel="requests">
+        <poller task-executor="slowExecutor" fixed-rate="1" time-unit="SECONDS"/>
+        <mapping type="org.bordylek.service.model.process.VotingScoreChangeRequest" channel="votingRequests"/>
+    </payload-type-router>
+
+    <channel id="votingRequests"/>
+
+    <service-activator input-channel="votingRequests" ref="changeRequestHandler" method="handle"/>
+
+
 </beans:beans>

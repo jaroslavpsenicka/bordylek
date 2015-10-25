@@ -1,4 +1,4 @@
-package org.bordylek.service.process;
+package org.bordylek.service.model.process;
 
 import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
@@ -10,9 +10,11 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@Document(collection = "process")
-public class AbstractProcess implements Process {
+@Document(collection = "voting")
+public class Voting {
 
     @Id
     private String id;
@@ -27,10 +29,10 @@ public class AbstractProcess implements Process {
     private Community community;
 
     @NotNull
-    private Date createDate;
+    private Date startDate;
 
-    @Min(1)
-    private int duration;
+    @NotNull
+    private Date endDate;
 
     @Min(0)
     @Max(1)
@@ -40,7 +42,12 @@ public class AbstractProcess implements Process {
     @Max(1)
     private double minResult;
 
-    @Override
+    private Map<String, Vote> votes;
+
+    public Voting() {
+        this.votes = new HashMap<>();
+    }
+
     public String getId() {
         return id;
     }
@@ -49,7 +56,6 @@ public class AbstractProcess implements Process {
         this.id = id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -74,20 +80,20 @@ public class AbstractProcess implements Process {
         this.community = community;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public int getDuration() {
-        return duration;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public double getMinInterest() {
@@ -104,5 +110,13 @@ public class AbstractProcess implements Process {
 
     public void setMinResult(double minResult) {
         this.minResult = minResult;
+    }
+
+    public Map<String, Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Map<String, Vote> votes) {
+        this.votes = votes;
     }
 }
