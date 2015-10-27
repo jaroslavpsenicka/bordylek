@@ -174,25 +174,6 @@ public class CommunityController {
 		return this.userRepository.findByRegId(principal);
 	}
 
-	private List<Community> exclude(List<Community> communities, List<CommunityRef> subscribedCommunities) {
-		if (subscribedCommunities != null && subscribedCommunities.size() > 0) {
-			List<Community> filtered = new ArrayList<Community>();
-			Set<String> subscribedIds = new HashSet<>();
-			for (CommunityRef subscribedCommunity : subscribedCommunities) {
-				subscribedIds.add(subscribedCommunity.getId());
-			}
-			for (Community community : communities) {
-				if (!subscribedIds.contains(community.getId())) {
-					filtered.add(community);
-				}
-			}
-
-			return filtered;
-		}
-
-		return communities;
-	}
-
 	private static class CommunityCreateReq {
 
 		@NotNull

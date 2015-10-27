@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -123,18 +125,8 @@ public class UserController {
 
     private List<Community> exclude(List<Community> communities, List<CommunityRef> subscribedCommunities) {
         if (subscribedCommunities != null && subscribedCommunities.size() > 0) {
-            List<Community> filtered = new ArrayList<Community>();
-            Set<String> subscribedIds = new HashSet<>();
-            for (CommunityRef subscribedCommunity : subscribedCommunities) {
-                subscribedIds.add(subscribedCommunity.getId());
-            }
-            for (Community community : communities) {
-                if (!subscribedIds.contains(community.getId())) {
-                    filtered.add(community);
-                }
-            }
-
-            return filtered;
+            List<String> ids = subscribedCommunities.stream().map(CommunityRef::getId).collect(Collectors.toList());
+            return communities.stream().filter(comm -> !ids.contains(comm.getId())).collect(Collectors.toList());
         }
 
         return communities;
@@ -142,10 +134,9 @@ public class UserController {
 
     private List<CommunityRef> toRefs(List<Community> communities) {
         List<CommunityRef> refs = new ArrayList<>();
-        for (Community community : communities) {
+        communities.stream().forEach(community -> {
             refs.add(new CommunityRef(community.getId(), community.getTitle()));
-        }
-
+        });
         return refs;
     }
 

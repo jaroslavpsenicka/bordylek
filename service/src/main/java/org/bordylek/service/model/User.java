@@ -128,12 +128,6 @@ public class User implements Unique {
 
 	public boolean isMemberOf(Community community) {
 		Assert.notNull(community);
-		for (CommunityRef ref : this.communities) {
-			if (community.getId().equals(ref.getId())) {
-				return true;
-			}
-		}
-
-		return false;
+		return this.communities.stream().anyMatch(ref -> community.getId().equals(ref.getId()));
 	}
 }
