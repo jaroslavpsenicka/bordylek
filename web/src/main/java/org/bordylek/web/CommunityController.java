@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -120,15 +121,20 @@ public class CommunityController {
 	}
 
 	@RequestMapping(value = "/comm/{id}/rename", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	@PreAuthorize("hasRole('USER')")
 	@Timed
 	@ExceptionMetered
-	public void rename(@PathVariable("id") String id, @RequestBody String newName) {
+	public ResponseEntity<Void> rename(@PathVariable("id") String id, @RequestBody String newName) throws IllegalAccessException {
 		Community community = this.communityRepository.findOne(id);
 		if (community == null) throw new NotFoundException(id);
 		User user = getUser();
+		if (!user.isMemberOf(community)) throw new IllegalAccessException(community.getTitle());
+		if (userRepository.countMembersOf(community.getId()) == 1) {
+			community.setTitle(newName);
+			communityRepository.save(community);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
 
 		RenameCommunityVoting voting = new RenameCommunityVoting();
 		voting.setName("Rename community " + community.getTitle());
@@ -142,16 +148,22 @@ public class CommunityController {
 		voting.setOldValue(community.getTitle());
 		voting.setNewValue(newName);
 		votingRepository.save(voting);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@ExceptionHandler(ValidationException.class)
-	public void handleConstraintViolationException(ValidationException ex, HttpServletResponse response) {
+	public void handleConstraintViolationException(Exception ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.BAD_REQUEST.value());
 	}
 
 	@ExceptionHandler(NotFoundException.class)
-	public void handleNotFoundException(NotFoundException ex, HttpServletResponse response) {
+	public void handleNotFoundException(Exception ex, HttpServletResponse response) {
 		response.setStatus(HttpStatus.NOT_FOUND.value());
+	}
+
+	@ExceptionHandler(IllegalAccessException.class)
+	public void handleIllegalAceessException(Exception ex, HttpServletResponse response) {
+		response.setStatus(HttpStatus.FORBIDDEN.value());
 	}
 
 	private User getUser() {

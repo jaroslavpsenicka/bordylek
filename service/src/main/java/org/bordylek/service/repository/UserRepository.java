@@ -1,10 +1,10 @@
 package org.bordylek.service.repository;
 
-import org.bordylek.service.model.Community;
 import org.bordylek.service.model.User;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,4 +23,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 	@CacheEvict(value = "users", allEntries = true)
 	User save(User user);
 
+	@Query(value = "{'communities.id': ?0}", count = true)
+	int countMembersOf(String communityId);
 }

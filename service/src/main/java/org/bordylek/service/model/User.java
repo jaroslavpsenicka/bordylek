@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.Assert;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -125,4 +126,14 @@ public class User implements Unique {
 		this.communities = communities;
 	}
 
+	public boolean isMemberOf(Community community) {
+		Assert.notNull(community);
+		for (CommunityRef ref : this.communities) {
+			if (community.getId().equals(ref.getId())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

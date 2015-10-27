@@ -2,8 +2,10 @@ package org.bordylek.web;
 
 import net.sf.ehcache.Ehcache;
 import org.bordylek.service.model.Community;
+import org.bordylek.service.model.CommunityRef;
 import org.bordylek.service.model.User;
 import org.bordylek.service.model.process.RenameCommunityVoting;
+import org.bordylek.service.model.process.VoteAnswer;
 import org.bordylek.service.model.process.Voting;
 import org.bordylek.service.repository.CommunityRepository;
 import org.bordylek.service.repository.UserRepository;
@@ -77,12 +79,7 @@ public class RenameCommunityVotingTest {
         mongoTemplate.remove(new Query(), "user");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-		user = new User();
-		user.setRegId("GOOGLE/1");
-		user.setName("John Doe");
-		user.setEmail("john@doe.com");
-        user.setCreateDate(new Date());
-        user = userRepository.save(user);
+        user = createUser("GOOGLE/1", "John Doe", "john@doe.com");
         authenticate(user.getRegId(), "ROLE_USER");
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
             user.getRegId(), "pwd", AuthorityUtils.createAuthorityList("ROLE_USER")));
@@ -93,8 +90,8 @@ public class RenameCommunityVotingTest {
         community.setCreatedBy(user);
         communityRepository.save(community);
 	}
-	
-	@After
+
+    @After
 	public void after() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
         userDetailsManager.deleteUser(user.getRegId());
@@ -103,12 +100,30 @@ public class RenameCommunityVotingTest {
     }
 
     @Test
-    public void startVoting() throws Exception {
+    public void directUpdate() throws Exception {
+        user.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user);
         authenticate(user.getRegId(), "ROLE_USER");
         mockMvc.perform(post("/comm/" + community.getId() + "/rename")
             .content("Community 2").header("Content-Type", "application/json"))
             .andExpect(status().isOk());
-        Thread.sleep(2000);
+
+        assertEquals(0, votingRepository.findByCommunity(community.getId()).size());
+    }
+
+    @Test
+    public void startVoting() throws Exception {
+        user.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user);
+        User user2 = createUser("GOOGLE/2", "Mary Doe", "mary@doe.com");
+        user2.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user2);
+
+        authenticate(user.getRegId(), "ROLE_USER");
+        mockMvc.perform(post("/comm/" + community.getId() + "/rename")
+            .content("Community 2").header("Content-Type", "application/json"))
+            .andExpect(status().isCreated());
+        Thread.sleep(1000);
 
         List<Voting> votings = votingRepository.findByCommunity(community.getId());
         assertEquals(1, votings.size());
@@ -119,6 +134,75 @@ public class RenameCommunityVotingTest {
         assertEquals(new Double(0.5), new Double(voting.getMinResult()));
         assertEquals("Community", voting.getOldValue());
         assertEquals("Community 2", voting.getNewValue());
+        assertEquals(0, voting.getVotes().size());
+    }
+
+    @Test
+    public void startVotingAndVote() throws Exception {
+        user.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user);
+        User user2 = createUser("GOOGLE/2", "Mary Doe", "mary@doe.com");
+        user2.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user2);
+
+        authenticate(user.getRegId(), "ROLE_USER");
+        mockMvc.perform(post("/comm/" + community.getId() + "/rename")
+            .content("Community 2").header("Content-Type", "application/json"))
+            .andExpect(status().isCreated());
+
+        List<Voting> votings = votingRepository.findByCommunity(community.getId());
+        assertEquals(1, votings.size());
+        RenameCommunityVoting voting = (RenameCommunityVoting) votings.get(0);
+        assertEquals(0, voting.getVotes().size());
+
+        authenticate(user2.getRegId(), "ROLE_USER");
+        mockMvc.perform(post("/vote/" + voting.getId()).content("\"YES\"").header("Content-Type", "application/json"))
+            .andExpect(status().isOk());
+        Thread.sleep(1000);
+
+        votings = votingRepository.findByCommunity(community.getId());
+        voting = (RenameCommunityVoting) votings.get(0);
+        assertEquals(1, voting.getVotes().size());
+        assertEquals(VoteAnswer.YES, voting.getVotes().get(user2.getId()).getAnswer());
+    }
+
+    @Test
+    public void voteAndApplyChange() throws Exception {
+        user.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user);
+        User user2 = createUser("GOOGLE/2", "Mary Doe", "mary@doe.com");
+        user2.getCommunities().add(new CommunityRef(community.getId(), community.getTitle()));
+        userRepository.save(user2);
+
+        authenticate(user.getRegId(), "ROLE_USER");
+        mockMvc.perform(post("/comm/" + community.getId() + "/rename")
+            .content("Community 2").header("Content-Type", "application/json"))
+            .andExpect(status().isCreated());
+
+        authenticate(user2.getRegId(), "ROLE_USER");
+        Voting voting = votingRepository.findByCommunity(community.getId()).get(0);
+        mockMvc.perform(post("/vote/" + voting.getId()).content("\"YES\"").header("Content-Type", "application/json"))
+            .andExpect(status().isOk());
+        Thread.sleep(1000);
+
+        // TODO apply change test
+    }
+
+    @Test
+    public void notCommunityMember() throws Exception {
+        authenticate(user.getRegId(), "ROLE_USER");
+        mockMvc.perform(post("/comm/" + community.getId() + "/rename")
+            .content("Community 2").header("Content-Type", "application/json"))
+            .andExpect(status().isForbidden());
+    }
+
+    private User createUser(String regId, String name, String email) {
+        User user = new User();
+        user.setRegId(regId);
+        user.setName(name);
+        user.setEmail(email);
+        user.setCreateDate(new Date());
+        return userRepository.save(user);
     }
 
     private void authenticate(String email, final String role) {
