@@ -1,4 +1,5 @@
-angular.module('filters', [])
+angular.module('filters', [
+])
 
 .filter('capitalize', function() {
     return function(input, scope) {

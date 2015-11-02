@@ -2,15 +2,27 @@
     <div class="row">
 
         <div class="col-lg-12">
-            <div class="col-sm-2">
-                <img src="{{comm.imageUrl}}" ng-if="comm.imageUrl"/>
-                <div class="defaultImg" ng-if="!comm.imageUrl"/>
+            <div class="col-lg-2">
+                <img src="{{comm.imageUrl}}" ng-if="comm.imageUrl">
+                <div class="defaultImg" ng-if="!comm.imageUrl"></div>
             </div>
-            <div class="col-sm-10">
+            <div class="col-lg-9">
                 <h2 id="commname" class="comm-header">{{comm.title}}</h2>
                 <div id="location">{{comm.location.name}}</div>
             </div>
-
+            <div class="col-lg-1">
+                <h4 uib-dropdown>
+                    <a role="button" class="dropdown-toggle" uib-dropdown-toggle class="pull-right">
+                        <i class="fa fa-cog"></i>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" ng-click="rename()">Rename</a>
+                        </li>
+                    </ul>
+                </h4>
+            </div>
         </div>
 
     </div>

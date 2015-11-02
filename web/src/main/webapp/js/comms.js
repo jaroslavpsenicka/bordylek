@@ -1,4 +1,9 @@
-app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {
+angular.module('comms', [
+  'services', 'localize',
+  'ui.bootstrap', 'ngRoute', 'ngAnimate'
+])
+
+.controller('CommsCtrl', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {
 
 	$http.get('/rest/comm/' + $routeParams.commId, {
 	}).then(function(response) {
@@ -7,9 +12,9 @@ app.registerCtrl('CommsCtrl', ['$scope', '$routeParams', '$http', function ($sco
 		alert(error);
 	});
 
-}]);
+}])
 
-app.registerCtrl('NewCommCtrl', ['$scope', '$q', 'commService', 'userService', function ($scope, $q, commService, userService) {
+.controller('NewCommCtrl', ['$scope', '$q', 'commService', 'userService', function ($scope, $q, commService, userService) {
 
 	$scope.newComm = {};
 

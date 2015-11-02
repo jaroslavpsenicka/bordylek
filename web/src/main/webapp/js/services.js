@@ -1,6 +1,8 @@
-var services = angular.module('services', ['ngResource']);
+angular.module('services', [
+	'ngResource'
+])
 
-services.factory('userService', function($resource) {
+.factory('userService', function($resource) {
     return $resource('', {id: '@id'}, {
         me: {
             url: 'rest/user/me',
@@ -12,18 +14,18 @@ services.factory('userService', function($resource) {
             method: 'POST'
         }
     });
-});
+})
 
-services.factory('commService', function($resource) {
+.factory('commService', function($resource) {
     return $resource('', {}, {
         create: {
             url: 'rest/comm',
             method: 'POST'
         }
     });
-});
+})
 
-services.factory('blogService', function($resource) {
+.factory('blogService', function($resource) {
     return $resource('', {}, {
         blog: {
             url: 'rest/blog',

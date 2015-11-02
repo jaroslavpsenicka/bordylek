@@ -2,11 +2,11 @@
     <div class="row">
 
         <div class="col-lg-12">
-            <div class="col-sm-2">
-                <img src="{{user.imageUrl}}" ng-if="userData.user.imageUrl"/>
-                <div class="defaultImg" ng-if="!user.imageUrl"/>
+            <div class="col-lg-2">
+                <img src="{{user.imageUrl}}" ng-if="userData.user.imageUrl">
+                <div class="defaultImg" ng-if="!user.imageUrl"></div>
             </div>
-            <div class="col-sm-10">
+            <div class="col-lg-10">
                 <h2 id="profilename" class="profile-header">{{userData.user.name}}</h2>
                 <div id="location">{{userData.user.location.name}}</div>
                 <div class="spacer"></div>
@@ -18,7 +18,7 @@
                 </ul>
                 <p localize ng-show="userData.nearby.length == 0 && userData.user.communities.length == 0">
                     There is no community around, why not to
-                    <a class="new-community" href="/comm/create">create one</a>?
+                    <a class="new-community" href="/#/comms/create">create one</a>?
                 </p>
                 <p localize ng-show="userData.nearby.length > 0">There are following communities around:
                 <ul>

@@ -1,58 +1,34 @@
 
-var app = angular.module('bordylekApp', [
-  'services', 'filters', 'localize',
+angular.module('bordylek', [
+  'services', 'blog', 'comms', 'profile', 'filters', 'localize',
   'ui.bootstrap', 'ngRoute', 'ngAnimate'
-]);
+])
 
-app.config(['$routeProvider', '$controllerProvider', function ($routeProvider, $controllerProvider) {
-	app.registerCtrl = $controllerProvider.register;
-	app.resolveDeps = function(dependencies){
-	  	return function($q, $rootScope) {
-			var deferred = $q.defer();
-			$script(dependencies, function() {
-		  		$rootScope.$apply(function() {
-					deferred.resolve();
-		  		});
-			});
-			return deferred.promise;
-	  	}
-	};
+.config(['$routeProvider', function ($routeProvider) {
 
 	$routeProvider.when("/", {
 		templateUrl: "home.html",
 		controller: "HomeCtrl"
 	}).when("/profile", {
 		templateUrl: "profile.html",
-		controller: "ProfileCtrl",
-		resolve: {
-			deps: app.resolveDeps(['js/profile.js'])
-		}
+		controller: "ProfileCtrl"
 	}).when("/comms/create", {
 		templateUrl: "comms-create.html",
-		controller: "NewCommCtrl",
-		resolve: {
-			deps: app.resolveDeps(['js/comms.js'])
-		}
+		controller: "NewCommCtrl"
 	}).when("/comms/:commId", {
 		templateUrl: "comms.html",
-		controller: "CommsCtrl",
-		resolve: {
-			deps: app.resolveDeps(['js/comms.js'])
-		}
+		controller: "CommsCtrl"
 	}).when("/blog", {
 		templateUrl: "blog.html",
-		controller: "BlogCtrl",
-		resolve: {
-			deps: app.resolveDeps(['js/blog.js'])
-		}
+		controller: "BlogCtrl"
 	}).otherwise("/404", {
 		templateUrl: "404.html",
 		controller: "PageCtrl"
 	});
 
-}]);
+}])
 
-app.run(["$http", "$rootScope", "$q", "$modal", "userService", function($http, $rootScope, $q, $modal, userService) {
+.run(["$http", "$rootScope", "$q", "$modal", "userService", function($http, $rootScope, $q, $modal, userService) {
 	var language = window.navigator.userLanguage || window.navigator.language;
 	if (language) {
 		$http({url: '/messages-' + language + '.json'}).success(function(messages) {
@@ -105,15 +81,15 @@ app.run(["$http", "$rootScope", "$q", "$modal", "userService", function($http, $
 		}
 	});
 
-}]);
+}])
 
-app.controller('HeaderCtrl', function ($scope, userService) {
+.controller('HeaderCtrl', function ($scope, userService) {
 	userService.me(function(response) {
 		$scope.userData = response;
 	});
-});
+})
 
-app.controller('HomeCtrl', function ($scope, userService, $modal) {
+.controller('HomeCtrl', function ($scope, userService, $modal) {
 	userService.me(function(response) {
 		$scope.userData = response;
 	}, function(error) {
