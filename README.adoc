@@ -82,5 +82,3 @@ Server bordylek.cz by měl posílat informační email 1x denně se souhrnem ud�
 Zneužití především, chování jednotlivývh členů komunity by mělo být průběžně vyhodnocováno. Například spolupráce dvou či více členů, kteří si vzájemně “přihrávají” čas (tedy organizují akce, kterých se neúčastní nikdo jiný) by měl být odhalitelná. Všechna podezření budou komunikována ostatním členům komunity v denním mailu.
 
 Velikost komunity - příliš malá komunita si nevystačí, v příliš velké lze snadno ztratit přehled. Optimální velikost se jeví v rozmezí 1000-3000 členů, na úrovni menšího města, několika sousedících vesnic nebo městské čtvrti.
-
-

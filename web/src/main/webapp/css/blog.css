@@ -18,3 +18,9 @@ article {
     font-size: 13px;
     color: #6B6B6B;
 }
+
+.loading {
+    margin-top: 40px;
+    color: #ddd;
+    text-align: center;
+}
